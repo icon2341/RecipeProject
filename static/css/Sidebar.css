@@ -1,0 +1,53 @@
+.sidebar {
+    margin: 0;
+    padding: 0;
+    width: 10%px;
+    position: fixed;
+    height: 100%;
+    overflow: auto;
+    text-align: center;
+    text-decoration: none;
+    flex-direction: column;
+}
+.sidebar .top {
+  display: block;
+  color: gray;
+  padding: 16px;
+  text-decoration: none;
+  
+
+}
+.sidebar .item {
+  display: block;
+  color: black;
+  padding: 16px;
+  text-decoration: none;
+  
+}
+
+.sidebar .bottom {
+  position: fixed;
+  bottom: 0;
+  padding: 20px;
+}
+
+.sidebar .accountLabel {
+  color: gray;
+  margin-bottom: 10px;
+  padding: 5px;
+  display: block;
+}
+.sidebar .settings {
+  color: gray;
+  padding: 5px;
+  display: block;
+}
+.sidebar .logout {
+  color:#0243e7;
+  padding: 5px;
+  display: block;
+}
+
+.sidebar .item:hover {
+    background-color: gray;
+}

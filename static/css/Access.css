@@ -1,0 +1,55 @@
+.accessPage {
+    width: 30%;
+    height: 80%;
+    text-align: center;
+    display: flex;
+    justify-content:center;
+    flex-direction: column;
+    margin: auto;
+    margin-top: 10%;
+}
+
+.welcomeBanner{
+    width: 100%;
+    margin-bottom: 10%;
+}
+
+.bigText {
+    font-size: 24px;
+    font-weight: bold;
+    color: black;
+}
+
+.welcomeSubtext {
+    font-size: 12px;
+    margin-top: 2%;
+}
+
+.loginSignUpButton {
+    width: 100%;
+    height: 30px;
+    background-color: #0243e7;;
+    color: #f8f8f8;
+    border: 0px;
+
+}
+
+.formSection {
+    display: flex;
+    justify-content:center;
+    flex-direction: column;
+    margin: auto;
+    margin-top: 10%;   
+    width: 80%;
+}
+
+.formSection .labelText {
+    font-size: 12px;
+    text-align: left;
+}
+
+.formSection .notMember {
+    font-size: 12px;
+    text-align: center;
+
+}

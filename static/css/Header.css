@@ -1,0 +1,31 @@
+a:link {
+    color:#0243e7;
+    text-decoration: none;
+}
+a:visited {
+    color:#0243e7;
+}
+
+.heading {
+    color: #0243e7;
+    overflow: hidden;
+    font-weight: bold;
+    padding: 10px;
+}
+
+.heading .leftText {
+    font-size: 24px;
+    display:block;
+    float:left;
+
+    
+}
+
+
+.heading .rightText {
+    font-size: 18px;
+    display:block;
+    float:right;
+
+}
+

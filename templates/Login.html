@@ -1,0 +1,27 @@
+{% extends "Access.html"%}
+
+{% block title %}
+Login
+{% endblock title %}
+
+{%block content %}
+<div class="accessPage">
+    <div class="welcomeBanner">
+        <div class="bigText"> Welcome to Ryan Gosling!</div>
+        <div class="welcomeSubtext">Your recipe and grocery tracker</div>
+    </div>
+    <div class="formSection">
+        <div class="bigText">Member Login</div>
+
+        <form class="formSection">
+            <label for="username" class="labelText">Username:</label>
+            <input type="text" id="username"><br>
+            <label for="password" class="labelText">Password:</label>
+            <input type="password" id="password"><br>
+            <input type="submit" value="LOG IN" class="loginSignUpButton">
+        </form>
+
+        <div class="notMember">Not a member? <a href="/SignUp">Sign up here</a></div>
+    </div>
+</div>
+{% endblock content %}

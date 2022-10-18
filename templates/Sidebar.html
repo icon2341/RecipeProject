@@ -1,0 +1,26 @@
+{% extends "Base.html"%}
+
+
+{% block header %}
+<link href="{{ url_for('static', filename='css/Header.css') }}" rel="stylesheet">
+<div class="heading">
+    <div class="leftText">Ryan Gosling</div>
+</div>
+{% endblock header %}
+
+{%block sidebar %}
+<link href="{{ url_for('static', filename='css/Sidebar.css') }}" rel="stylesheet">
+<div class="sidebar">
+
+    <div class="top">Menu</div>
+    <a href="/Home" class="item">Home</a>
+    <a href="/Pantry" class="item">Pantry</a>
+    <a href="/Recipes" class="item">My Recipes</a>
+
+    <div class="bottom">
+        <div class="accountLabel">Your Account</div>
+        <div class="settings"><a href="Settings">Settings</a></div>
+        <div class="logout"><a href="/Login">Log Out</a></div>
+    </div>
+</div>
+{% endblock sidebar%}

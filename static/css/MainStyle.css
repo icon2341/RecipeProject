@@ -1,0 +1,16 @@
+html {
+    background-color: #f8f8f8;
+    font-family: proxima-nova,sans-serif;
+}
+
+.content {
+    background-color: #f1f1f1;
+    margin: auto;
+    width: 100%;
+    height: 100%;
+}
+
+.horizontalAlign {
+    display: flex;
+    flex-direction: row;
+}
