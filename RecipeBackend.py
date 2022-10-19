@@ -1,6 +1,17 @@
 """
 Flask Backend to the recipe project web interface
 Author: Group 7 CSCI 320 01-02
+
+RUNNING INSTRUCTIONS:
+
+if in pycharm
+you can do "cntl + shift + f10" and it will attempt to run this file and create a run config, that will run the flask server
+note you will need to run
+
+COPY PASTE THIS INTO YOUR TERMINAL (ALT-F12):
+
+pip install flask-wtf flask wtforms flask_sqlalchemy SQLAlchemy
+
 """
 
 import SQLInterface
@@ -13,6 +24,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 
+# this is a config file, need this for some security crap, not relevant I think, but makes it run happy
 app.config['SECRET_KEY'] = '3f07e17a6aca41b3409e6e84af01dfd62ec479a6df127cc58485de51e2488383'
 
 
@@ -25,8 +37,17 @@ app.config["SQLALCHEMY_DATABASE_URI"] = f"postgresql://{username}:{password}@loc
 
 db = SQLAlchemy(app)
 
+#
+"""
+Example code, this is a Table (can be called anything). This is not the same as the postgresql table in our remote server
+this essentially is a client-side representation of what the server looks like for querying purposes. For each new table
+in SQL, you will have have one of these to define it. Feel free to change it up.
+"""
 class Table(db.model):
+
+    # table is named users
     __tablename__ = "users"
+    # the "id" (should be called username ig) attribute is added (a column)
     id = db.Column(db.Integer, primary_key=True)
 
 # Login form
@@ -61,6 +82,7 @@ login route for when user attempts to log in button
 # from the user
 def Login():
     form = LoginForm()
+    # if button is pressed, post is sent, this listens and its all gooooooood manananna
     if request.method == "POST":
 
        # login_user(user)
@@ -70,6 +92,8 @@ def Login():
 
 @app.route("/SignUp", methods=["GET", 'POST'])
 def SignUp():
+
+    # the object we created above
     form = RegistrationForm()
     # if form.validate_on_submit(): # We would like to use this but it might not work so oh well
     if request.method == "POST":
