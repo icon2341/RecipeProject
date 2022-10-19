@@ -4,6 +4,8 @@
 Sign Up
 {% endblock title %}
 
+
+
 {%block content %}
 <div class="accessPage">
     <div class="bigText">Welcome to Ryan Gosling!</div>
@@ -12,8 +14,18 @@ Sign Up
     <div class="formSection">
         <div class="bigText">New Member</div>
 
-        <form class="formSection">
-            <label for="username" class="labelText">Username:</label>
+        <form class="formSection" action="" method="POST">
+
+            {{form.username.label()}}
+            {{form.username()}}
+            {{form.email.label()}}
+            {{form.email()}}
+            {{form.password.label()}}
+            {{form.password()}}
+            {{form.confirm_password.label()}}
+            {{form.confirm_password()}}
+            {{form.submit()}}
+            <!--label for="username" class="labelText">Username:</label>
             <input type="text" id="username"><br>
             <label for="email" class="labelText">Email:</label>
             <input type="text" id="email"><br>
@@ -22,6 +34,7 @@ Sign Up
             <label for="re-enter-password" class="labelText">Re-enter Password:</label>
             <input type="password" id="re-enter-password"><br>
             <input type="submit" value="SIGN UP" class="loginSignUpButton">
+             -->
         </form>
     </div>
 </div>
