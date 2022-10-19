@@ -32,14 +32,26 @@ class User(db.Model, UserMixin):  # UserMixin tracks user sessions
         return f"User {self.username}, Email: {self.email}, Created: {self.create_datetime}"
 
 
+class Ingredient(db.Model):
+    __tablename__ = "Ingredient"
+    #Was not sure if this should be string or int
+    iuid = db.column(db.Integer, primary_key=True) #Primary key
+
+    #Other Attributes
+    item_name = db.Column(db.String(ITEM_MAX), nullable=False)
+    quantity_bought = db.Column(db.Integer, nullable=False)
+    current_quantity = db.Column(db.Integer)
+    unit = db.Column(db.String(UNIT_MAX))
+    purchase_date = db.Column(db.Integer, nullable=False)
+    expiration_date = db.Column(db.Integer)
+
+    def __repr__(self):
+        return f"Ingredient: {self.item_name}, Quantity: {self.current_bought}, Expiration Date: " \
+               f"{self.expiration_date}, Unit: {self.unit}"
+
 # Todo Uncomment this block and implement each database entity
 
 """
-class Ingredient(db.Model):
-    # Todo Implement (Entity)
-    pass
-
-
 class Recipe(db.Model):
     # Todo Implement (Entity)
     pass
