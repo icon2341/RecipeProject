@@ -2,16 +2,24 @@
 Flask Backend to the recipe project web interface
 Author: Group 7 CSCI 320 01-02
 """
+
+
+
 import SQLInterface
 from flask import Flask, render_template, request, redirect
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Length, Email, EqualTo
 
+from flask_sqlalchemy import SQLAlchemy
+
+
+
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = '3f07e17a6aca41b3409e6e84af01dfd62ec479a6df127cc58485de51e2488383'
 
+#db = SQLAlchemy(app)
 
 # from flask import Flask, render_template
 # from flask_restful import Api, Resource, reqparse
@@ -46,7 +54,6 @@ def Login():
 @app.route("/SignUp", methods=["GET", 'POST'])
 def SignUp():
     form = RegistrationForm()
-    print("Test")
     # if form.validate_on_submit():
     if request.method == "POST":
         SQLInterface.create_user(form.username.data, form.email.data, form.password.data)
