@@ -9,12 +9,6 @@ from RecipeProject import app, bcrypt, db
 from RecipeProject.DatabaseEntities import User
 from RecipeProject.Forms import *
 
-"""
-Example code, this is a Table (can be called anything). This is not the same as the postgresql table in our remote server
-this essentially is a client-side representation of what the server looks like for querying purposes. For each new table
-in SQL, you will have have one of these to define it. Feel free to change it up.
-"""
-
 
 # Login Route
 @app.route("/Login", methods=["GET", 'POST'])  # GET method is for going to the page, POST is for getting data

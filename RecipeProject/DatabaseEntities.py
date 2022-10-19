@@ -13,10 +13,10 @@ from RecipeProject.Globals import *
 #    return User.query.get(user_email)
 
 """
-Represents the user entity in the database
+This is the user, it represents a table. This is not the same as the postgresql table in our remote server
+this essentially is a client-side representation of what the server looks like for querying purposes. For each new table
+in SQL, you will have have one of these to define it.
 """
-
-
 class User(db.Model, UserMixin):  # UserMixin tracks user sessions
 
     __tablename__ = "User"
