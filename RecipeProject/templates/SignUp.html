@@ -5,7 +5,6 @@ Sign Up
 {% endblock title %}
 
 
-
 {%block content %}
 <div class="accessPage">
     <div class="bigText">Welcome to Ryan Gosling!</div>
@@ -14,7 +13,7 @@ Sign Up
     <div class="formSection">
         <div class="bigText">New Member</div>
 
-        <form class="formSection" action="" method="POST">
+        <form action="" class="formSection" method="POST">
             {{ form.hidden_tag() }}
             {{form.username.label(class="labelText")}}
             {{form.username()}}<br>

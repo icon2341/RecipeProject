@@ -1,3 +1,7 @@
+"""
+This file is strictly for demonstration purposes and servers no other use
+"""
+
 from flask import Flask
 
 app = Flask(__name__)

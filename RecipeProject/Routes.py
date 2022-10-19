@@ -16,9 +16,9 @@ pip install flask-wtf flask wtforms flask_sqlalchemy SQLAlchemy
 
 from flask import render_template, request, redirect
 
+from RecipeProject import app, bcrypt, db
 from RecipeProject.DatabaseEntities import User
 from RecipeProject.Forms import *
-from RecipeProject import app, bcrypt, db
 
 """
 Example code, this is a Table (can be called anything). This is not the same as the postgresql table in our remote server
@@ -27,26 +27,7 @@ in SQL, you will have have one of these to define it. Feel free to change it up.
 """
 
 
-# class Table(db.model):
-
-# table is named users
-#    __tablename__ = "users"
-# the "id" (should be called username ig) attribute is added (a column)
-#    id = db.Column(db.Integer, primary_key=True)
-# Each route designates how to get to each page from
-# the site
-@app.route("/wonk", methods=["GET"])  # This is a demo of how a get request from a table might work
-def wonk():
-    pass
-    # posts = Table.query.all
-    # return render_template("Home.html", posts=posts)
-
-
-"""
-login route for when user attempts to log in button
-"""
-
-
+# Login Route
 @app.route("/Login", methods=["GET", 'POST'])  # GET method is for going to the page, POST is for getting data
 # from the user
 def Login():
@@ -54,7 +35,7 @@ def Login():
     # if button is pressed, post is sent, this listens and its all gooooooood manananna
     if request.method == "POST":
         if form.validate_on_submit():
-             #user = User.query.
+            # user = User.query.
             print(f"Welcome back: {form.username.data}, your password is {form.password.data}")
             # login_user(user)
         return redirect('/Home')
@@ -67,7 +48,6 @@ def SignUp():
     form = RegistrationForm()
     if request.method == "POST":  # We would like to use this but it might not work so oh well
         if form.validate_on_submit():
-
             # Hashing the password
             hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
             print(f"Password: {form.password.data}, Hashed:{hashed_password}")
@@ -79,9 +59,6 @@ def SignUp():
             )
 
             db.session.add(user)
-
-            SQLInterface.create_user(form.username.data, form.email.data, form.password.data)  # Example of how you
-        # guys might wanna call a function with the database to create a user
 
     return render_template("SignUp.html", form=form)
 

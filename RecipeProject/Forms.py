@@ -6,18 +6,18 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Length, Email, EqualTo
 
-
-# Login form
-# Each form shows how the form on the webpage will be set up, and what constraints to put on them
 from RecipeProject.Globals import USERNAME_MAX, PASSWORD_MAX
 
 
+# Login form
+# Each form shows how the form on the webpage will be set up, and what constraints to put on them
 class LoginForm(FlaskForm):
-    username = StringField('Username:', validators=[DataRequired(), Length(min=2, max=USERNAME_MAX)])  # validators
-    # tell you what must happen Ex: Datarequired means you need that bit filled out, length means it must be a certain
-    # length
+    # Validators tell you what must happen Ex: Datarequired means you need that bit filled out, length means it must
+    # be a certain length
+    username = StringField('Username:', validators=[DataRequired(), Length(min=2, max=USERNAME_MAX)])
     password = PasswordField("Password", validators=[DataRequired(), Length(min=2, max=PASSWORD_MAX)])
-    submit = SubmitField("Log In")  # Submit button
+    # Submit button
+    submit = SubmitField("Log In")
 
 
 # Registration Form
