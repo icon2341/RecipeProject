@@ -14,30 +14,12 @@ pip install flask-wtf flask wtforms flask_sqlalchemy SQLAlchemy
 
 """
 
-import SQLInterface
-from flask import Flask, render_template, request, redirect
-from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
-from wtforms.validators import DataRequired, Length, Email, EqualTo
-from flask_login import UserMixin, login_user
-from flask_sqlalchemy import SQLAlchemy
-from Forms import *
+from flask import render_template, request, redirect
 
-app = Flask(__name__)
+from RecipeProject.DatabaseEntities import User
+from RecipeProject.Forms import *
+from RecipeProject import app, bcrypt, db
 
-# this is a config file, need this for some security crap, not relevant I think, but makes it run happy
-app.config['SECRET_KEY'] = '3f07e17a6aca41b3409e6e84af01dfd62ec479a6df127cc58485de51e2488383'
-
-# Demonstration of how to connect to the postgres server
-# Todo make this work
-username = "group7"
-password = "password"
-db_name = "db_name"
-app.config["SQLALCHEMY_DATABASE_URI"] = f"postgresql://{username}:{password}@localhost:5432/{db_name}"
-
-db = SQLAlchemy(app)
-
-#
 """
 Example code, this is a Table (can be called anything). This is not the same as the postgresql table in our remote server
 this essentially is a client-side representation of what the server looks like for querying purposes. For each new table
@@ -72,6 +54,7 @@ def Login():
     # if button is pressed, post is sent, this listens and its all gooooooood manananna
     if request.method == "POST":
         if form.validate_on_submit():
+             #user = User.query.
             print(f"Welcome back: {form.username.data}, your password is {form.password.data}")
             # login_user(user)
         return redirect('/Home')
@@ -84,6 +67,19 @@ def SignUp():
     form = RegistrationForm()
     if request.method == "POST":  # We would like to use this but it might not work so oh well
         if form.validate_on_submit():
+
+            # Hashing the password
+            hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+            print(f"Password: {form.password.data}, Hashed:{hashed_password}")
+
+            # Creating the user object
+            user = User(
+                username=form.username.data,
+                password=hashed_password,
+            )
+
+            db.session.add(user)
+
             SQLInterface.create_user(form.username.data, form.email.data, form.password.data)  # Example of how you
         # guys might wanna call a function with the database to create a user
 
@@ -117,4 +113,5 @@ def FrontPage():
 
 
 # This command actually runs the server on port 80
-app.run(host='0.0.0.0', port=80)
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=80)
