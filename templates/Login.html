@@ -13,12 +13,13 @@ Login
     <div class="formSection">
         <div class="bigText">Member Login</div>
 
-        <form class="formSection">
-            <label for="username" class="labelText">Username:</label>
-            <input type="text" id="username"><br>
-            <label for="password" class="labelText">Password:</label>
-            <input type="password" id="password"><br>
-            <input type="submit" value="LOG IN" class="loginSignUpButton">
+        <form class="formSection" action="" method="POST">
+            {{ form.hidden_tag() }}
+            {{form.username.label(class="labelText")}}
+            {{form.username()}}<br>
+            {{form.password.label(class="labelText")}}
+            {{form.password()}}<br>
+            {{form.submit(class="loginSignUpButton")}}
         </form>
 
         <div class="notMember">Not a member? <a href="/SignUp">Sign up here</a></div>

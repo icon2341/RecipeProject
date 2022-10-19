@@ -15,16 +15,16 @@ Sign Up
         <div class="bigText">New Member</div>
 
         <form class="formSection" action="" method="POST">
-
-            {{form.username.label()}}
-            {{form.username()}}
-            {{form.email.label()}}
-            {{form.email()}}
-            {{form.password.label()}}
-            {{form.password()}}
-            {{form.confirm_password.label()}}
-            {{form.confirm_password()}}
-            {{form.submit()}}
+            {{ form.hidden_tag() }}
+            {{form.username.label(class="labelText")}}
+            {{form.username()}}<br>
+            {{form.email.label(class="labelText")}}
+            {{form.email()}}<br>
+            {{form.password.label(class="labelText")}}
+            {{form.password()}}<br>
+            {{form.confirm_password.label(class="labelText")}}
+            {{form.confirm_password()}}<br>
+            {{form.submit(class="loginSignUpButton")}}
             <!--label for="username" class="labelText">Username:</label>
             <input type="text" id="username"><br>
             <label for="email" class="labelText">Email:</label>
