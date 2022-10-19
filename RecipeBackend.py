@@ -15,6 +15,9 @@ app = Flask(__name__)
 
 app.config['SECRET_KEY'] = '3f07e17a6aca41b3409e6e84af01dfd62ec479a6df127cc58485de51e2488383'
 
+
+# Demonstration of how to connect to the postgres server
+# Todo make this work
 username = "group7"
 password = "password"
 db_name = "db_name"
@@ -26,45 +29,36 @@ class Table(db.model):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
 
-
-
-# from flask import Flask, render_template
-# from flask_restful import Api, Resource, reqparse
-#
-# app = Flask(__name__)
-# api = Api(app)
-#
-#
-# # temp function location
-# def getUserSignUpForm():
-#     print("LEMON")
-#     return "<h1>DOGMA<h1>"
-#
-# @app.route('/')
-# def tuna():
-#     return render_template("SignUp.html", func= getUserSignUpForm)
-#class User(db.Model, UserMixin):
-    #username
-
+# Login form
+# Each form shows how the form on the webpage will be set up, and what constraints to put on them
 class LoginForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
+    username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)]) # validators tell you
+    # what must happen Ex: Datarequired means you need that bit filled out, length means it must be a certain length
     password = PasswordField("Password", validators=[DataRequired()])
-    submit = SubmitField("Log In")
+    submit = SubmitField("Log In") # Submit button
 
+# Registration Form
+# same thing as above, but more in depth because the actual registration form, has more steps
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField("Password", validators=[DataRequired()])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
-
     submit = SubmitField("Sign Up")
 
-@app.route("/wonk", methods=["GET"])
+
+# Each route designates how to get to each page from
+# the site
+@app.route("/wonk", methods=["GET"]) # This is a demo of how a get request from a table might work
 def wonk():
     posts = Table.query.all
     return render_template("Home.html", posts=posts)
 
-@app.route("/Login", methods=["GET", 'POST'])
+"""
+login route for when user attempts to log in button
+"""
+@app.route("/Login", methods=["GET", 'POST']) # GET method is for going to the page, POST is for getting data
+# from the user
 def Login():
     form = LoginForm()
     if request.method == "POST":
@@ -77,19 +71,15 @@ def Login():
 @app.route("/SignUp", methods=["GET", 'POST'])
 def SignUp():
     form = RegistrationForm()
-    # if form.validate_on_submit():
+    # if form.validate_on_submit(): # We would like to use this but it might not work so oh well
     if request.method == "POST":
-        SQLInterface.create_user(form.username.data, form.email.data, form.password.data)
+        SQLInterface.create_user(form.username.data, form.email.data, form.password.data) # Example of how you
+        # guys might wanna call a function with the database to create a user
 
     return render_template("SignUp.html", form=form)
 
 
-@app.route("/SignUp", methods=['POST'])
-def signupuser():
-    print(request.json)
-    return "<div><hi/div>"
-
-
+# TODO BELOW IS NOT DONE
 @app.route("/Pantry")
 def Pantry():
     return render_template("Pantry.html")
@@ -112,7 +102,7 @@ def Settings():
 
 @app.route("/")
 def FrontPage():
-    return redirect("/Login", code=302)
+    return redirect("/Login", code=302) # Redirects the user from one site to another
 
-
+# This command actually runs the server on port 80
 app.run(host='0.0.0.0', port=80)
