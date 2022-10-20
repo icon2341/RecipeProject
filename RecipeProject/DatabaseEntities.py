@@ -35,7 +35,7 @@ class User(db.Model, UserMixin):  # UserMixin tracks user sessions
 class Ingredient(db.Model):
     __tablename__ = "Ingredient"
     #Was not sure if this should be string or int
-    iuid = db.column(db.Integer, primary_key=True) #Primary key
+    iuid = db.Column(db.Integer, primary_key=True) #Primary key
 
     #Other Attributes
     item_name = db.Column(db.String(ITEM_MAX), nullable=False)
