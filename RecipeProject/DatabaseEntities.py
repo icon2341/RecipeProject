@@ -17,6 +17,8 @@ This is the user, it represents a table. This is not the same as the postgresql 
 this essentially is a client-side representation of what the server looks like for querying purposes. For each new table
 in SQL, you will have have one of these to define it.
 """
+
+
 class User(db.Model, UserMixin):  # UserMixin tracks user sessions
 
     __tablename__ = "User"
@@ -24,7 +26,7 @@ class User(db.Model, UserMixin):  # UserMixin tracks user sessions
 
     # Other attributes
     create_datetime = db.Column(db.DateTime(timezone=True), server_default=func.now())
-    last_access_datetime = db.Column(db.Integer)
+    last_access_datetime = db.Column(db.DateTime(timezone=True), server_default=func.now())
     username = db.Column(db.String(USERNAME_MAX), unique=True, nullable=False)
     password = db.Column(db.String(PASSWORD_SIZE), nullable=False)
 
@@ -34,10 +36,10 @@ class User(db.Model, UserMixin):  # UserMixin tracks user sessions
 
 class Ingredient(db.Model):
     __tablename__ = "Ingredient"
-    #Was not sure if this should be string or int
-    iuid = db.Column(db.Integer, primary_key=True) #Primary key
+    # Was not sure if this should be string or int
+    iuid = db.Column(db.Integer, primary_key=True)  # Primary key
 
-    #Other Attributes
+    # Other Attributes
     item_name = db.Column(db.String(ITEM_MAX), nullable=False)
     quantity_bought = db.Column(db.Integer, nullable=False)
     current_quantity = db.Column(db.Integer)
@@ -48,6 +50,7 @@ class Ingredient(db.Model):
     def __repr__(self):
         return f"Ingredient: {self.item_name}, Quantity: {self.current_bought}, Expiration Date: " \
                f"{self.expiration_date}, Unit: {self.unit}"
+
 
 # Todo Uncomment this block and implement each database entity
 

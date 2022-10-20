@@ -22,6 +22,7 @@ username = UserData["USERNAME"]
 password = UserData["PASSWORD"]
 db_name = "p32001_07"
 
+"""
 try:
     with SSHTunnelForwarder(('starbug.cs.rit.edu', 22),
                             ssh_username=username,
@@ -65,9 +66,29 @@ try:
 
 except:
     print("CONNECTION FAILED")
-
+"""
 
 
 #str = "jdbc:postgresql://localhost:5432/p32001_07"
 
+server = SSHTunnelForwarder(('starbug.cs.rit.edu', 22),
+                        ssh_username=username,
+                        ssh_password=password,
+                        remote_bind_address=('localhost', 5432))
+print("Blah")
+server.start()
+print("SSH tunnel established")
+params = {
+    'database': db_name,
+    'user': username,
+    'password': password,
+    'host': 'localhost',
+    'port': server.local_bind_port
+}
+
+string = f"postgresql://{params['user']}:{params['password']}@127.0.0.1:{server.local_bind_port}/{params['database']}"
+
+app.config["SQLALCHEMY_DATABASE_URI"] = string
+bcrypt = Bcrypt(app)
+db = SQLAlchemy(app)
 
