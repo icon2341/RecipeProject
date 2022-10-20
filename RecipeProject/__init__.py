@@ -1,15 +1,11 @@
 import json
-import sys
 
-import psycopg2
 from flask import Flask
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from sshtunnel import SSHTunnelForwarder
-from sqlalchemy import create_engine
 
 app = Flask(__name__)
-
 
 # this is a config file, need this for some security crap, not relevant I think, but makes it run happy
 app.config['SECRET_KEY'] = '3f07e17a6aca41b3409e6e84af01dfd62ec479a6df127cc58485de51e2488383'
@@ -68,13 +64,12 @@ except:
     print("CONNECTION FAILED")
 """
 
-
-#str = "jdbc:postgresql://localhost:5432/p32001_07"
+# str = "jdbc:postgresql://localhost:5432/p32001_07"
 
 server = SSHTunnelForwarder(('starbug.cs.rit.edu', 22),
-                        ssh_username=username,
-                        ssh_password=password,
-                        remote_bind_address=('localhost', 5432))
+                            ssh_username=username,
+                            ssh_password=password,
+                            remote_bind_address=('localhost', 5432))
 print("Blah")
 server.start()
 print("SSH tunnel established")
@@ -92,3 +87,4 @@ app.config["SQLALCHEMY_DATABASE_URI"] = string
 bcrypt = Bcrypt(app)
 db = SQLAlchemy(app)
 
+from RecipeProject import Routes
