@@ -4,8 +4,9 @@ Author: Group 7 CSCI 320 01-02
 """
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
-from wtforms.validators import DataRequired, Length, Email, EqualTo
+from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 
+from RecipeProject.DatabaseEntities import User
 from RecipeProject.Globals import USERNAME_MAX, PASSWORD_MAX
 
 
@@ -28,3 +29,15 @@ class RegistrationForm(FlaskForm):
     password = PasswordField("Password", validators=[DataRequired(), Length(min=2, max=PASSWORD_MAX)])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField("Sign Up")
+
+    def validate_username(self, username):
+        user = User.query.filter_by(username=username.data).first()
+        if user:
+            print("USERNAME IS TAKEN")
+            raise ValidationError("USERNAME IS TAKEN")
+
+    def validate_email(self, email):
+        user = User.query.filter_by(email=email.data).first()
+        if user:
+            print("EMAIL IS TAKEN")
+            raise ValidationError("EMAIL IS TAKEN")

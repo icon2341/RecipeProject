@@ -4,9 +4,9 @@ Author: Group 7 CSCI 320 01-02
 """
 
 from flask import render_template, request, redirect
+from flask_login import login_user, login_required, logout_user
 
 from RecipeProject import app, bcrypt, db
-from RecipeProject.DatabaseEntities import User
 from RecipeProject.Forms import *
 
 
@@ -18,10 +18,11 @@ def Login():
     # if button is pressed, post is sent, this listens and its all gooooooood manananna
     if request.method == "POST":
         if form.validate_on_submit():
-            # user = User.query.
-            print(f"Welcome back: {form.username.data}, your password is {form.password.data}")
-            # login_user(user)
-        return redirect('/Home')
+            user = User.query.filter_by(username=form.username.data).first()
+            if user and bcrypt.check_password_hash(user.password, form.password.data):
+            #print(f"Welcome back: {form.username.data}, your password is {form.password.data}")
+                login_user(user)
+                return redirect('/Home')
     return render_template("Login.html", form=form)
 
 
@@ -33,21 +34,24 @@ def SignUp():
         if form.validate_on_submit():
             # Hashing the password
             hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-            print(f"Password: {form.password.data}, Hashed:{hashed_password}")
 
             # Creating the user object
             user = User(
                 username=form.username.data,
+                email=form.email.data,
                 password=hashed_password,
             )
-
+            #flash(f"Welcome to Ryan Gosling {form.username.data}", "success")
             db.session.add(user)
+            db.session.commit()
+            return redirect("/Login")
 
     return render_template("SignUp.html", form=form)
 
 
 # TODO BELOW IS NOT DONE
 @app.route("/Pantry")
+@login_required
 def Pantry():
     return render_template("Pantry.html")
 
@@ -71,6 +75,12 @@ def Settings():
 def FrontPage():
     return redirect("/Login", code=302)  # Redirects the user from one site to another
 
+
+@app.route("/logout")
+@login_required
+def Logout():
+    logout_user()
+    return redirect("/Login")
 
 # This command actually runs the server on port 80
 if __name__ == "__main__":

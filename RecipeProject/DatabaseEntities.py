@@ -5,12 +5,13 @@ Author: Group 7 CSCI 320 01-02
 from flask_login import UserMixin
 from sqlalchemy.sql import func
 
-from RecipeProject import db
+from RecipeProject import db, login_manager
 from RecipeProject.Globals import *
 
-# @login_manager.user_loader # Uncomment this function when database is connected
-# def load_user(user_email):
-#    return User.query.get(user_email)
+@login_manager.user_loader # Uncomment this function when database is connected
+def load_user(email):
+    print(f"Logging in: {email}")
+    return User.query.get(email)
 
 """
 This is the user, it represents a table. This is not the same as the postgresql table in our remote server
@@ -22,9 +23,10 @@ in SQL, you will have have one of these to define it.
 class User(db.Model, UserMixin):  # UserMixin tracks user sessions
 
     __tablename__ = "User"
-    email = db.Column(db.String(120), primary_key=True)  # Primary Key
+    id = db.Column(db.Integer, primary_key=True)
 
     # Other attributes
+    email = db.Column(db.String(120))  # Primary Key
     create_datetime = db.Column(db.DateTime(timezone=True), server_default=func.now())
     last_access_datetime = db.Column(db.DateTime(timezone=True), server_default=func.now())
     username = db.Column(db.String(USERNAME_MAX), unique=True, nullable=False)
