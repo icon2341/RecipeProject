@@ -3,10 +3,9 @@ THIS FILE IS NOT BEING USED
 this file is an SQL alchemy based
 """
 from flask_login import UserMixin
-from sqlalchemy.sql import func
-
 from RecipeProject import login_manager
 from RecipeProject.Globals import *
+from RecipeProject.SQLInterface import sql_query, get_one
 
 
 @login_manager.user_loader  # Uncomment this function when database is connected
@@ -24,6 +23,29 @@ in SQL, you will have have one of these to define it.
 
 
 class User(UserMixin):  # UserMixin tracks user sessions
+
+    def __init__(self, sql_data=None, **kwargs):
+
+        if sql_data is not None:
+            self.data = {}
+            self.data["uuid"] = sql_data[0]
+            self.data["username"] = sql_data[1]
+            self.data["email"] = sql_data[2]
+            self.data["password"] = sql_data[3]
+            self.data["create_datetime"] = sql_data[4]
+            self.data["last_access"] = sql_data[5]
+        else:
+            self.data = kwargs
+
+    def create_user(self):
+        query = f"INSERT INTO \"User\" (uid, username, email, password, create_datetime, last_access ) \
+            VALUES('{self.data['uuid']}','{self.data['username']}', '{self.data['email']}', '{self.data['password']}', '{self.data['create_datetime']}', '{self.data['last_access']}');"
+        print(query)
+        sql_query(query)
+
+    def get_id(self):
+        return self.data['uuid']
+
     """
     __tablename__ = "User"
     id = db.Column(db.Integer, primary_key=True)

@@ -2,6 +2,9 @@
 Flask Backend to the recipe project web interface
 Author: Group 7 CSCI 320 01-02
 """
+import datetime
+import random
+import uuid
 
 from flask import render_template, request, redirect
 from flask_login import login_user, login_required, logout_user
@@ -33,17 +36,24 @@ def SignUp():
     if request.method == "POST":  # We would like to use this but it might not work so oh well
         if form.validate_on_submit():
             # Hashing the password
-            hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+            #hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
 
             # Creating the user object
             user = User(
+                uuid=str(uuid.uuid4()),
                 username=form.username.data,
                 email=form.email.data,
-                password=hashed_password,
+                password=form.password.data,
+                create_datetime = str(datetime.datetime.now()),
+                last_access = str(datetime.datetime.now())
             )
+            user.create_user()
             #flash(f"Welcome to Ryan Gosling {form.username.data}", "success")
-            db.session.add(user)
-            db.session.commit()
+
+
+
+
+
             return redirect("/Login")
 
     return render_template("SignUp.html", form=form)
