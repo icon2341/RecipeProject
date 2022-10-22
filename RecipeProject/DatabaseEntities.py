@@ -1,11 +1,11 @@
 """
-Database entities for use with the backend
-Author: Group 7 CSCI 320 01-02
+THIS FILE IS NOT BEING USED
+this file is an SQL alchemy based
 """
 from flask_login import UserMixin
 from sqlalchemy.sql import func
 
-from RecipeProject import db, login_manager
+from RecipeProject import login_manager
 from RecipeProject.Globals import *
 
 
@@ -21,7 +21,7 @@ this essentially is a client-side representation of what the server looks like f
 in SQL, you will have have one of these to define it.
 """
 
-
+"""
 class User(db.Model, UserMixin):  # UserMixin tracks user sessions
 
     __tablename__ = "User"
@@ -58,48 +58,4 @@ class Ingredient(db.Model):
 
 # Todo Uncomment this block and implement each database entity
 
-"""
-class Recipe(db.Model):
-    # Todo Implement (Entity)
-    pass
-
-
-class Pantry(db.model):
-    # Todo Implement (Entity)
-    pass
-
-
-class Comprises(db.model):
-    # Todo Implement (Relationship)
-    pass
-
-
-class Purchases(db.model):
-    # Todo Implement (Relationship)
-    pass
-
-
-class Uses(db.model):
-    # Todo Implement (Relationship)
-    pass
-
-
-class Reads(db.model):
-    # Todo Implement (Relationship)
-    pass
-
-
-class Creates(db.model):
-    # Todo Implement (Relationship)
-    pass
-
-
-class Cooks(db.model):
-    # Todo Implement (Relationship)
-    pass
-
-
-class ComprisedOf(db.model):
-    # Todo Implement (Relationship)
-    pass
 """

@@ -1,9 +1,9 @@
 import json
 
+import psycopg2
 from flask import Flask
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
-from flask_sqlalchemy import SQLAlchemy
 from sshtunnel import SSHTunnelForwarder
 
 app = Flask(__name__)
@@ -34,11 +34,19 @@ try:
             'port': server.local_bind_port
         }
 
-        string = f"postgresql://{params['user']}:{params['password']}@127.0.0.1:{server.local_bind_port}/{params['database']}"
+        #string = f"postgresql://{params['user']}:{params['password']}@127.0.0.1:{server.local_bind_port}/{params['database']}"
+        params = {
+            'database': db_name,
+            'user': username,
+            'password': password,
+            'host': 'localhost',
+            'port': server.local_bind_port
+        }
 
-        app.config["SQLALCHEMY_DATABASE_URI"] = string
+        conn = psycopg2.connect(**params)
+        curs = conn.cursor()
+        print("Database connection established")
         bcrypt = Bcrypt(app)
-        db = SQLAlchemy(app)
         login_manager = LoginManager(app)
 
         print("Server is up and running")
