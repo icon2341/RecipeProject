@@ -33,21 +33,13 @@ try:
             'host': 'localhost',
             'port': server.local_bind_port
         }
-
-        #string = f"postgresql://{params['user']}:{params['password']}@127.0.0.1:{server.local_bind_port}/{params['database']}"
-        params = {
-            'database': db_name,
-            'user': username,
-            'password': password,
-            'host': 'localhost',
-            'port': server.local_bind_port
-        }
-
+        
         conn = psycopg2.connect(**params)
         curs = conn.cursor()
-        print("Database connection established")
         bcrypt = Bcrypt(app)
         login_manager = LoginManager(app)
+        
+        query
 
         print("Server is up and running")
         from RecipeProject import Routes

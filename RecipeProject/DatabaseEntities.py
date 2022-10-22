@@ -11,8 +11,9 @@ from RecipeProject.Globals import *
 
 @login_manager.user_loader  # Uncomment this function when database is connected
 def load_user(email):
-    print(f"Logging in: {email}")
-    return User.query.get(email)
+    return 1
+#    print(f"Logging in: {email}")
+#    return User.query.get(email)
 
 
 """
@@ -21,9 +22,9 @@ this essentially is a client-side representation of what the server looks like f
 in SQL, you will have have one of these to define it.
 """
 
-"""
-class User(db.Model, UserMixin):  # UserMixin tracks user sessions
 
+class User(UserMixin):  # UserMixin tracks user sessions
+    """
     __tablename__ = "User"
     id = db.Column(db.Integer, primary_key=True)
 
@@ -36,8 +37,8 @@ class User(db.Model, UserMixin):  # UserMixin tracks user sessions
 
     def __repr__(self):
         return f"User {self.username}, Email: {self.email}, Created: {self.create_datetime}"
-
-
+    """
+"""
 class Ingredient(db.Model):
     __tablename__ = "Ingredient"
     # Was not sure if this should be string or int

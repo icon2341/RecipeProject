@@ -6,7 +6,7 @@ Author: Group 7 CSCI 320 01-02
 from flask import render_template, request, redirect
 from flask_login import login_user, login_required, logout_user
 
-from RecipeProject import app, bcrypt, db
+from RecipeProject import app, bcrypt
 from RecipeProject.Forms import *
 
 
@@ -48,8 +48,7 @@ def SignUp():
 
     return render_template("SignUp.html", form=form)
 
-
-# TODO BELOW IS NOT DONE
+# TODO Implement stuff below
 @app.route("/Pantry")
 @login_required
 def Pantry():
