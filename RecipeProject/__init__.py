@@ -39,9 +39,10 @@ try:
         app.config["SQLALCHEMY_DATABASE_URI"] = string
         bcrypt = Bcrypt(app)
         db = SQLAlchemy(app)
-        login_manager = LoginManager(app) # Uncomment when database is connected
+        login_manager = LoginManager(app)
 
-        from RecipeProject import Routes
         print("Server is up and running")
-except:
-    print("Connection Failed")
+        from RecipeProject import Routes
+
+except Exception as ex:
+    print(ex)

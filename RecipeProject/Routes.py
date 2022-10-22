@@ -57,16 +57,19 @@ def Pantry():
 
 
 @app.route("/Recipes")
+@login_required
 def Recipes():
     return render_template("Recipes.html")
 
 
 @app.route("/Home")
+@login_required
 def Home():
     return render_template("Home.html")
 
 
 @app.route("/Settings")
+@login_required
 def Settings():
     return render_template("Settings.html")
 

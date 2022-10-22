@@ -8,10 +8,12 @@ from sqlalchemy.sql import func
 from RecipeProject import db, login_manager
 from RecipeProject.Globals import *
 
-@login_manager.user_loader # Uncomment this function when database is connected
+
+@login_manager.user_loader  # Uncomment this function when database is connected
 def load_user(email):
     print(f"Logging in: {email}")
     return User.query.get(email)
+
 
 """
 This is the user, it represents a table. This is not the same as the postgresql table in our remote server
