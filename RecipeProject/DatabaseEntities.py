@@ -1,6 +1,5 @@
 """
 THIS FILE IS NOT BEING USED
-this file is an SQL alchemy based
 """
 from flask_login import UserMixin
 from RecipeProject import login_manager
