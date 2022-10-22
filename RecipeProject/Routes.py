@@ -7,9 +7,10 @@ import random
 import uuid
 
 from flask import render_template, request, redirect
-from flask_login import login_user, login_required, logout_user
+from flask_login import login_user, login_required, logout_user, current_user
 
 from RecipeProject import app, bcrypt
+from RecipeProject.DatabaseEntities import get_user_by_username
 from RecipeProject.Forms import *
 
 
@@ -21,9 +22,9 @@ def Login():
     # if button is pressed, post is sent, this listens and its all gooooooood manananna
     if request.method == "POST":
         if form.validate_on_submit():
-            user = User.query.filter_by(username=form.username.data).first()
-            if user and bcrypt.check_password_hash(user.password, form.password.data):
-            #print(f"Welcome back: {form.username.data}, your password is {form.password.data}")
+            user = get_user_by_username(form.username.data)
+            if user and (user.data['password'] == form.password.data):
+                print(f"Welcome back: {form.username.data}, your password is {form.password.data}")
                 login_user(user)
                 return redirect('/Home')
     return render_template("Login.html", form=form)
@@ -74,7 +75,8 @@ def Recipes():
 @app.route("/Home")
 @login_required
 def Home():
-    return render_template("Home.html")
+    print(current_user.data["username"])
+    return render_template("Home.html", user=current_user.data["username"])
 
 
 @app.route("/Settings")

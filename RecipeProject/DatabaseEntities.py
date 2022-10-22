@@ -9,8 +9,10 @@ from RecipeProject.SQLInterface import sql_query, get_one
 
 
 @login_manager.user_loader  # Uncomment this function when database is connected
-def load_user(email):
-    return 1
+def load_user(uuid):
+    return get_user_by_uuid(uuid)
+
+
 #    print(f"Logging in: {email}")
 #    return User.query.get(email)
 
@@ -20,6 +22,14 @@ This is the user, it represents a table. This is not the same as the postgresql 
 this essentially is a client-side representation of what the server looks like for querying purposes. For each new table
 in SQL, you will have have one of these to define it.
 """
+
+
+def get_user_by_uuid(uuid):
+    return User(sql_data=get_one(f"SELECT * FROM \"User\" where uid=\'{uuid}\'"))
+
+
+def get_user_by_username(username):
+    return User(sql_data=get_one(f"SELECT * FROM \"User\" where username=\'{username}\'"))
 
 
 class User(UserMixin):  # UserMixin tracks user sessions
@@ -60,6 +70,8 @@ class User(UserMixin):  # UserMixin tracks user sessions
     def __repr__(self):
         return f"User {self.username}, Email: {self.email}, Created: {self.create_datetime}"
     """
+
+
 """
 class Ingredient(db.Model):
     __tablename__ = "Ingredient"
