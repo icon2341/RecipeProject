@@ -1,26 +1,26 @@
-{% extends "Base.html"%}
+{% extends "Base.html" %}
 
 
 {% block header %}
-<link href="{{ url_for('static', filename='css/Header.css') }}" rel="stylesheet">
-<div class="heading">
-    <div class="leftText">Ryan Gosling</div>
-</div>
+    <link href="{{ url_for('static', filename='css/Header.css') }}" rel="stylesheet">
+    <div class="heading">
+        <div class="leftText">Ryan Gosling</div>
+    </div>
 {% endblock header %}
 
-{%block sidebar %}
-<link href="{{ url_for('static', filename='css/Sidebar.css') }}" rel="stylesheet">
-<div class="sidebar">
+{% block sidebar %}
+    <link href="{{ url_for('static', filename='css/Sidebar.css') }}" rel="stylesheet">
+    <div class="sidebar">
 
-    <div class="top">Menu</div>
-    <a class="item" href="/Home">Home</a>
-    <a class="item" href="/Pantry">Pantry</a>
-    <a class="item" href="/Recipes">My Recipes</a>
+        <div class="top">Menu</div>
+        <a class="item" href="/Home">Home</a>
+        <a class="item" href="/Pantry">Pantry</a>
+        <a class="item" href="/Recipes">My Recipes</a>
 
-    <div class="bottom">
-        <div class="accountLabel">Hi {{ user }}</div>
-        <div class="settings"><a href="Settings">Settings</a></div>
-        <div class="logout"><a href="/Logout">Log Out</a></div>
+        <div class="bottom">
+            <div class="accountLabel">{{ user }}</div>
+            <div class="settings"><a href="Settings">Settings</a></div>
+            <div class="logout"><a href="/Logout">Log Out</a></div>
+        </div>
     </div>
-</div>
-{% endblock sidebar%}
+{% endblock sidebar %}

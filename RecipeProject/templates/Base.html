@@ -6,15 +6,15 @@
 <head>
     <meta charset="UTF-8">
     <title>
-        {%block title%}{% endblock %}
+        {% block title %}{% endblock %}
     </title>
 </head>
 <body>
 
-{%block header %} {% endblock %}
+{% block header %} {% endblock %}
 <div class="horizontalAlign">
-    {%block sidebar %} {% endblock %}
-    {%block content %} {% endblock %}
+    {% block sidebar %} {% endblock %}
+    {% block content %} {% endblock %}
 </div>
 </body>
 </html>

@@ -2,9 +2,9 @@
 THIS FILE IS NOT BEING USED
 """
 from flask_login import UserMixin
+
 from RecipeProject import login_manager
-from RecipeProject.Globals import *
-from RecipeProject.SQLInterface import sql_query, get_one
+from RecipeProject import sql
 
 
 @login_manager.user_loader  # Uncomment this function when database is connected
@@ -24,11 +24,32 @@ in SQL, you will have have one of these to define it.
 
 
 def get_user_by_uuid(uuid):
-    return User(sql_data=get_one(f"SELECT * FROM \"User\" where uid=\'{uuid}\'"))
+    return User(sql_data=sql.get_one_by("User", "uid", uuid))
 
 
 def get_user_by_username(username):
-    return User(sql_data=get_one(f"SELECT * FROM \"User\" where username=\'{username}\'"))
+    return User(sql_data=sql.get_one_by("User", "username", username))
+
+
+class DatabaseObject:
+
+    def __init__(self, sql_data=None, columns=None, **kwargs):
+
+        if sql_data is not None:
+            if columns is not None:
+                self.columns = columns
+            else:
+                self.columns = sql.query()
+            if len(columns) == len(sql_data):
+                for i in range(len(sql_data)):
+                    self.data[columns[i]] = sql_data[i]
+            else:
+                raise ValueError("sql_data and columns must be equal length")
+        elif kwargs is not None:
+            self.data = kwargs
+            self.columns = [x for x in self.data.keys()]
+        else:
+            raise ValueError("Either pass with kwargs or sql_data and columns")
 
 
 class User(UserMixin):  # UserMixin tracks user sessions
@@ -47,13 +68,22 @@ class User(UserMixin):  # UserMixin tracks user sessions
             self.data = kwargs
 
     def create_user(self):
-        query = f"INSERT INTO \"User\" (uid, username, email, password, create_datetime, last_access ) \
-            VALUES('{self.data['uuid']}','{self.data['username']}', '{self.data['email']}', '{self.data['password']}', '{self.data['create_datetime']}', '{self.data['last_access']}');"
-        print(query)
-        sql_query(query)
+        query = f"INSERT INTO \"User\" (username, email, password, create_datetime, last_access )" \
+                "VALUES(%s, %s, %s, %s, %s)"
+        args = (self['username'], self['email'], self['password'], self['create_datetime'], self['last_access'])
+        # query = f"INSERT INTO \"User\" (username, email, password, create_datetime, last_access ) \ VALUES('{
+        # self.data['uuid']}','{self.data['username']}', '{self.data['email']}', '{self.data['password']}',
+        # '{self.data['create_datetime']}', '{self.data['last_access']}');"
+        sql.query(query, args)
 
     def get_id(self):
         return self.data['uuid']
+
+    def valid(self):
+        return len(self.data) > 0
+
+    def __getitem__(self, item):
+        return self.data[item]
 
     """
     __tablename__ = "User"

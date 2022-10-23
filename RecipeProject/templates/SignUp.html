@@ -1,40 +1,40 @@
-{% extends "Access.html"%}
+{% extends "Access.html" %}
 
 {% block title %}
-Sign Up
+    Sign Up
 {% endblock title %}
 
 
-{%block content %}
-<div class="accessPage">
-    <div class="bigText">Welcome to Ryan Gosling!</div>
-    <div class="welcomeSubtext">Your recipe and grocery tracker</div>
+{% block content %}
+    <div class="accessPage">
+        <div class="bigText">Welcome to Ryan Gosling!</div>
+        <div class="welcomeSubtext">Your recipe and grocery tracker</div>
 
-    <div class="formSection">
-        <div class="bigText">New Member</div>
+        <div class="formSection">
+            <div class="bigText">New Member</div>
 
-        <form action="" class="formSection" method="POST">
-            {{ form.hidden_tag() }}
-            {{form.username.label(class="labelText")}}
-            {{form.username()}}<br>
-            {{form.email.label(class="labelText")}}
-            {{form.email()}}<br>
-            {{form.password.label(class="labelText")}}
-            {{form.password()}}<br>
-            {{form.confirm_password.label(class="labelText")}}
-            {{form.confirm_password()}}<br>
-            {{form.submit(class="loginSignUpButton")}}
-            <!--label for="username" class="labelText">Username:</label>
-            <input type="text" id="username"><br>
-            <label for="email" class="labelText">Email:</label>
-            <input type="text" id="email"><br>
-            <label for="password" class="labelText">Password:</label>
-            <input type="password" id="password"><br>
-            <label for="re-enter-password" class="labelText">Re-enter Password:</label>
-            <input type="password" id="re-enter-password"><br>
-            <input type="submit" value="SIGN UP" class="loginSignUpButton">
-             -->
-        </form>
+            <form action="" class="formSection" method="POST">
+                {{ form.hidden_tag() }}
+                {{ form.username.label(class="labelText") }}
+                {{ form.username() }}<br>
+                {{ form.email.label(class="labelText") }}
+                {{ form.email() }}<br>
+                {{ form.password.label(class="labelText") }}
+                {{ form.password() }}<br>
+                {{ form.confirm_password.label(class="labelText") }}
+                {{ form.confirm_password() }}<br>
+                {{ form.submit(class="loginSignUpButton") }}
+                <!--label for="username" class="labelText">Username:</label>
+                <input type="text" id="username"><br>
+                <label for="email" class="labelText">Email:</label>
+                <input type="text" id="email"><br>
+                <label for="password" class="labelText">Password:</label>
+                <input type="password" id="password"><br>
+                <label for="re-enter-password" class="labelText">Re-enter Password:</label>
+                <input type="password" id="re-enter-password"><br>
+                <input type="submit" value="SIGN UP" class="loginSignUpButton">
+                 -->
+            </form>
+        </div>
     </div>
-</div>
 {% endblock content %}

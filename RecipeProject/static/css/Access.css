@@ -3,13 +3,13 @@
     height: 80%;
     text-align: center;
     display: flex;
-    justify-content:center;
+    justify-content: center;
     flex-direction: column;
     margin: auto;
     margin-top: 10%;
 }
 
-.welcomeBanner{
+.welcomeBanner {
     width: 100%;
     margin-bottom: 10%;
 }
@@ -36,10 +36,10 @@
 
 .formSection {
     display: flex;
-    justify-content:center;
+    justify-content: center;
     flex-direction: column;
     margin: auto;
-    margin-top: 10%;   
+    margin-top: 10%;
     width: 80%;
 }
 

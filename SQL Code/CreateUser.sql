@@ -1,5 +1,5 @@
-INSERT INTO "User" (uid, username, email, password, create_datetime, last_access )
-VALUES(123, 'user', 'mail', 'pass', '2022-10-22', '2022-10-22');
+INSERT INTO "User" (uid, username, email, password, create_datetime, last_access)
+VALUES (123, 'user', 'mail', 'pass', '2022-10-22', '2022-10-22');
 
 /*
 insert INTO pantry(pantry_id)

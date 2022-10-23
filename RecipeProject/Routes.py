@@ -3,7 +3,6 @@ Flask Backend to the recipe project web interface
 Author: Group 7 CSCI 320 01-02
 """
 import datetime
-import random
 import uuid
 
 from flask import render_template, request, redirect
@@ -22,11 +21,14 @@ def Login():
     # if button is pressed, post is sent, this listens and its all gooooooood manananna
     if request.method == "POST":
         if form.validate_on_submit():
+            print(form.username.data, form.password.data)
             user = get_user_by_username(form.username.data)
-            if user and (user.data['password'] == form.password.data):
-                print(f"Welcome back: {form.username.data}, your password is {form.password.data}")
-                login_user(user)
-                return redirect('/Home')
+            if user.valid():
+                print(form.password.data, user['password'])
+                if bcrypt.check_password_hash(user['password'], form.password.data):
+                    print(f"Welcome back: {form.username.data}, your password is {form.password.data}")
+                    login_user(user)
+                    return redirect('/Home')
     return render_template("Login.html", form=form)
 
 
@@ -37,27 +39,24 @@ def SignUp():
     if request.method == "POST":  # We would like to use this but it might not work so oh well
         if form.validate_on_submit():
             # Hashing the password
-            #hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+            hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
 
             # Creating the user object
             user = User(
                 uuid=str(uuid.uuid4()),
                 username=form.username.data,
                 email=form.email.data,
-                password=form.password.data,
-                create_datetime = str(datetime.datetime.now()),
-                last_access = str(datetime.datetime.now())
+                password=hashed_password,
+                create_datetime=str(datetime.datetime.now()),
+                last_access=str(datetime.datetime.now())
             )
             user.create_user()
-            #flash(f"Welcome to Ryan Gosling {form.username.data}", "success")
-
-
-
-
+            # flash(f"Welcome to Ryan Gosling {form.username.data}", "success")
 
             return redirect("/Login")
 
     return render_template("SignUp.html", form=form)
+
 
 # TODO Implement stuff below
 @app.route("/Pantry")
@@ -82,7 +81,7 @@ def Home():
 @app.route("/Settings")
 @login_required
 def Settings():
-    return render_template("Settings.html")
+    return render_template("Settings.html", user=current_user.data["username"])
 
 
 @app.route("/")
@@ -90,11 +89,12 @@ def FrontPage():
     return redirect("/Login", code=302)  # Redirects the user from one site to another
 
 
-@app.route("/logout")
+@app.route("/Logout")
 @login_required
 def Logout():
     logout_user()
     return redirect("/Login")
+
 
 # This command actually runs the server on port 80
 if __name__ == "__main__":
