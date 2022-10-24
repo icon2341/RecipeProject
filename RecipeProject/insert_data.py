@@ -56,7 +56,7 @@ def insert_into_table(curr, servings,  description,
                                    recipe_name, category, steps):
     cook_time = (isodate.parse_duration(cook_time))
     query = ("""INSERT INTO test (servings,  description,
-                          rating, cook_time, ruid,
+                          rating, cook_time, ruid, 
                                    recipe_name, category, steps, difficulty)
                         VALUES(%s, %s, %s, %s, %s, %s, %s, %s, 0);""")
     row = servings, description,rating, cook_time, ruid, recipe_name, category, steps
