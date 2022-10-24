@@ -6,7 +6,7 @@ import datetime
 
 from flask import render_template, request, redirect
 from flask_login import login_user, login_required, logout_user, current_user
-
+from RecipeProject import sql
 from RecipeProject import app, bcrypt, login_manager
 from RecipeProject.DatabaseEntities import get_user_by_username, User
 from RecipeProject.Forms import *
@@ -88,7 +88,8 @@ def Settings():
     form = ResetPassword()
     if request.method == "POST":
         if form.validate_on_submit():
-            sql.query("UPDATE \"User\" password=%s WHERE uid=%s", (bcrypt.generate_password_hash(form.new_password.data), current_user['uuid']))
+            sql.query("UPDATE \"User\" SET password=%s WHERE uid=%s;",
+                      (bcrypt.generate_password_hash(form.new_password.data).decode('utf-8'), current_user['uuid']))
     return render_template("Settings.html", user=current_user, form=form)
 
 

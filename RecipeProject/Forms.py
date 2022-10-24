@@ -28,14 +28,14 @@ class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=USERNAME_MAX)])
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField("Password", validators=[DataRequired(), Length(min=2, max=PASSWORD_MAX)])
-    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('Password')])
+    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField("Sign Up")
 
 class ResetPassword(FlaskForm):
 
     password = StringField("Current Password", validators=[DataRequired()])
     new_password = StringField("New Password", validators=[DataRequired()])
-    confirm_password = StringField("Confirm New Password", validators=[DataRequired(), EqualTo("New Password")])
+    confirm_password = StringField("Confirm New Password", validators=[DataRequired(), EqualTo("new_password")])
     submit = SubmitField("Submit")
 
     def validate_password(self, password):

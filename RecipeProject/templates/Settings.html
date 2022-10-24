@@ -8,6 +8,7 @@ Settings
 <div class="content">
     User: {{user.username}}Email: {{user.email}}Created: {{user.create_datetime}} Last Accessed {{user.last_access}}
     <form action="" class="formSection" method="POST">
+         {{ form.csrf_token }}
             {{ form.hidden_tag() }}
             {{ form.password.label(class="labelText") }}
             {{ form.password() }}<br>
