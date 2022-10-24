@@ -58,7 +58,7 @@ the user can edit#}
         <a class="textEditorTitle"> Recipe Body: </a>
         {%  if recipe_description  == "" %}
             <label>
-                <input class="recipeBody" placeholder="recipe steps go here!" name="recipeBodyField">
+                <input class="recipeBody" placeholder={{recipe_body}} name="recipeBodyField">
             </label>
         {% else %}
             <label>
