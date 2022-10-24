@@ -1,0 +1,11 @@
+#cardBox {
+    margin-left: 20%;
+    text-align: center;
+    background: #f8f8f8;
+}
+
+#recipeTitle {
+    align-content: center;
+    text-align: center;
+    margin: auto auto;
+}
