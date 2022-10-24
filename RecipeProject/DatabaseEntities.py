@@ -35,8 +35,6 @@ def get_user_by_username(username):
     return User(sql_data=sql.get_one_by("User", "username", username))
 
 
-
-
 class DatabaseObject:
 
     def __init__(self, name, sql_data=None, columns=None, **kwargs):
@@ -47,6 +45,7 @@ class DatabaseObject:
             else:
                 self.columns = sql.get_columns(self.name)
             if len(columns) == len(sql_data):
+                self.data = {}
                 for i in range(len(sql_data)):
                     self.data[columns[i]] = sql_data[i]
             else:

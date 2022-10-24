@@ -58,13 +58,13 @@ def SignUp():
 @app.route("/Pantry")
 @login_required
 def Pantry():
-    return render_template("Pantry.html", user=current_user.data["username"])
+    return render_template("Pantry.html", user=current_user)
 
 
 @app.route("/Recipes")
 @login_required
 def Recipes():
-    return render_template("Recipes.html", user=current_user.data["username"])
+    return render_template("Recipes.html", user=current_user)
 
 
 @app.route("/MyRecipes")
@@ -73,20 +73,23 @@ def myRecipes():
     # For testing only, will connect to database as soon as it is populated
     recipes = [{"recipe_name": "Lamb Beef", "servings": 4}, {"recipe_name": "Chopped Liver"}, {"recipe_name": "Dahmer Special"}]
 
-    return render_template("MyRecipes.html", user=current_user.data["username"], recipes=recipes)
+    return render_template("MyRecipes.html", user=current_user, recipes=recipes)
 
 
 @app.route("/Home")
 @login_required
 def Home():
-    print(current_user.data["username"])
-    return render_template("Home.html", user=current_user.data["username"])
+    return render_template("Home.html", user=current_user)
 
 
-@app.route("/Settings")
+@app.route("/Settings", methods=["GET", "POST"])
 @login_required
 def Settings():
-    return render_template("Settings.html", user=current_user.data["username"])
+    form = ResetPassword()
+    if request.method == "POST":
+        if form.validate_on_submit():
+            sql.query("UPDATE \"User\" password=%s WHERE uid=%s", (bcrypt.generate_password_hash(form.new_password.data), current_user['uuid']))
+    return render_template("Settings.html", user=current_user, form=form)
 
 
 @app.route("/")

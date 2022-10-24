@@ -5,5 +5,17 @@ Settings
 {% endblock title %}
 
 {% block content %}
-
+<div class="content">
+    User: {{user.username}}Email: {{user.email}}Created: {{user.create_datetime}} Last Accessed {{user.last_access}}
+    <form action="" class="formSection" method="POST">
+            {{ form.hidden_tag() }}
+            {{ form.password.label(class="labelText") }}
+            {{ form.password() }}<br>
+            {{ form.new_password.label(class="labelText") }}
+            {{ form.new_password() }}<br>
+            {{ form.confirm_password.label(class="labelText") }}
+            {{ form.confirm_password() }}<br>
+            {{ form.submit(class="loginSignUpButton") }}
+        </form>
+</div>
 {% endblock content %}

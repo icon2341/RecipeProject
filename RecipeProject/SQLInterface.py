@@ -87,6 +87,10 @@ class SQLInterface:
         self.connection.commit()
         cursor.close()
 
+
+
+
+
     def get_columns(self, table_name: str):
         cursor = self.connection.cursor()
         sql_statement = f'SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE %s = N\'Customers\''

@@ -2,10 +2,12 @@
 Form backend for the Recipe project backend
 Author: Group 7 CSCI 320 01-02
 """
+from flask_login import current_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
-from wtforms.validators import DataRequired, Length, Email, EqualTo
+from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 
+from RecipeProject import bcrypt
 from RecipeProject.Globals import USERNAME_MAX, PASSWORD_MAX
 
 
@@ -26,9 +28,20 @@ class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=USERNAME_MAX)])
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField("Password", validators=[DataRequired(), Length(min=2, max=PASSWORD_MAX)])
-    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
+    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('Password')])
     submit = SubmitField("Sign Up")
 
+class ResetPassword(FlaskForm):
+
+    password = StringField("Current Password", validators=[DataRequired()])
+    new_password = StringField("New Password", validators=[DataRequired()])
+    confirm_password = StringField("Confirm New Password", validators=[DataRequired(), EqualTo("New Password")])
+    submit = SubmitField("Submit")
+
+    def validate_password(self, password):
+        if bcrypt.check_password_hash(current_user['password'], password.data):
+            return True
+        raise ValidationError("Incorrect Password")
 
 """
     def validate_username(self, username):
