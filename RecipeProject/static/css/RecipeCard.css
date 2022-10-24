@@ -1,0 +1,86 @@
+.recipeCard{
+    max-width: 1000px;
+    max-height: 650px;
+    flex-wrap: nowrap;
+    display: flex;
+    background: #f8f8f8;
+    border-radius: 25px;
+    flex-direction: row;
+    justify-content: left;
+    box-shadow: 0 0 88px 0 rgba(0, 0, 0, 0.1607843137254902);
+    overflow: hidden;
+    flex-grow: 1;
+    color: white;
+}
+.recipeElementsContainer {
+    max-width: 400px;
+    background: #41d8fc;
+
+}
+
+.material-symbols-outlined {
+    font-size: 48px;
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 48
+}
+
+.recipeMetrics {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.recipeAttribute {
+    font-size: 48px;
+    font-weight: bold;
+    font-family: 'Roboto', sans-serif;
+    position: relative;
+    bottom: 8px;
+}
+.recipeTitle {
+    font-family: 'Roboto', sans-serif;
+    font-size: 46px;
+    font-weight: bold;
+}
+
+.recipeAttributeContainer {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.recipeDifficulty {
+    font-family: 'Roboto', sans-serif;
+    font-size: 30px;
+    margin-top: 30px;
+    font-weight: bold;
+}
+
+.recipeAttributeIdentifier {
+    font-family: 'Roboto', sans-serif;
+
+    font-size: small;
+}
+
+.recipeAttributeNumberBox {
+    display: block;
+    align-items: center;
+    vertical-align: middle;
+}
+
+.textEditor {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+}
+
+.textEditorTitle {
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+    font-size: 36px;
+    color: black;
+}

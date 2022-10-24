@@ -9,7 +9,7 @@ from flask import render_template, request, redirect
 from flask_login import login_user, login_required, logout_user, current_user
 
 from RecipeProject import app, bcrypt
-from RecipeProject.DatabaseEntities import get_user_by_username
+from RecipeProject.DatabaseEntities import get_user_by_username, User
 from RecipeProject.Forms import *
 
 
@@ -53,7 +53,7 @@ def SignUp():
             user.create_user()
             # flash(f"Welcome to Ryan Gosling {form.username.data}", "success")
 
-            return redirect("/Login")
+            return redirect("/Home")
 
     return render_template("SignUp.html", form=form)
 
@@ -64,12 +64,13 @@ def SignUp():
 def Pantry():
     return render_template("Pantry.html")
 
-
 @app.route("/Recipes")
 @login_required
 def Recipes():
     return render_template("Recipes.html")
-
+@app.route("/MyRecipes")
+def myRecpies():
+    return render_template("MyRecipes.html", user=current_user.data["username"])
 
 @app.route("/Home")
 @login_required

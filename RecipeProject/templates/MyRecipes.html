@@ -1,0 +1,17 @@
+{% extends "Sidebar.html"%}
+
+{% block title %}
+Recipes
+{% endblock title %}
+
+
+{%block content %}
+
+<div class="content">
+    <link href="{{ url_for('static', filename='css/MyRecipes.css') }}" rel="stylesheet">
+
+    <div id="cardBox">
+        {% include "RecipeCard.html" %}
+    </div>
+</div>
+{% endblock content %}
