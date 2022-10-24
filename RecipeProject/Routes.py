@@ -3,15 +3,16 @@ Flask Backend to the recipe project web interface
 Author: Group 7 CSCI 320 01-02
 """
 import datetime
-import uuid
 
 from flask import render_template, request, redirect
 from flask_login import login_user, login_required, logout_user, current_user
 
-from RecipeProject import app, bcrypt
+from RecipeProject import app, bcrypt, login_manager
 from RecipeProject.DatabaseEntities import get_user_by_username, User
 from RecipeProject.Forms import *
 
+# Redirects logged out users to front page
+login_manager.login_view = "Login"
 
 # Login Route
 @app.route("/Login", methods=["GET", 'POST'])  # GET method is for going to the page, POST is for getting data
@@ -21,12 +22,9 @@ def Login():
     # if button is pressed, post is sent, this listens and its all gooooooood manananna
     if request.method == "POST":
         if form.validate_on_submit():
-            print(form.username.data, form.password.data)
             user = get_user_by_username(form.username.data)
             if user.valid():
-                print(form.password.data, user['password'])
                 if bcrypt.check_password_hash(user['password'], form.password.data):
-                    print(f"Welcome back: {form.username.data}, your password is {form.password.data}")
                     login_user(user)
                     return redirect('/Home')
     return render_template("Login.html", form=form)
@@ -43,7 +41,6 @@ def SignUp():
 
             # Creating the user object
             user = User(
-                uuid=str(uuid.uuid4()),
                 username=form.username.data,
                 email=form.email.data,
                 password=hashed_password,
@@ -58,19 +55,22 @@ def SignUp():
     return render_template("SignUp.html", form=form)
 
 
-# TODO Implement stuff below
 @app.route("/Pantry")
 @login_required
 def Pantry():
-    return render_template("Pantry.html")
+    return render_template("Pantry.html", user=current_user.data["username"])
+
 
 @app.route("/Recipes")
 @login_required
 def Recipes():
-    return render_template("Recipes.html")
+    return render_template("Recipes.html", user=current_user.data["username"])
+
+
 @app.route("/MyRecipes")
-def myRecpies():
+def myRecipes():
     return render_template("MyRecipes.html", user=current_user.data["username"])
+
 
 @app.route("/Home")
 @login_required

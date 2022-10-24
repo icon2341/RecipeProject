@@ -1,28 +1,28 @@
 {% extends "Access.html" %}
 
 {% block title %}
-    Login
+Login
 {% endblock title %}
 
 {% block content %}
-    <div class="accessPage">
-        <div class="welcomeBanner">
-            <div class="bigText"> Welcome to Ryan Gosling!</div>
-            <div class="welcomeSubtext">Your recipe and grocery tracker</div>
-        </div>
-        <div class="formSection">
-            <div class="bigText">Member Login</div>
-
-            <form action="" class="formSection" method="POST">
-                {{ form.hidden_tag() }}
-                {{ form.username.label(class="labelText") }}
-                {{ form.username() }}<br>
-                {{ form.password.label(class="labelText") }}
-                {{ form.password() }}<br>
-                {{ form.submit(class="loginSignUpButton") }}
-            </form>
-
-            <div class="notMember">Not a member? <a href="/SignUp">Sign up here</a></div>
-        </div>
+<div class="accessPage">
+    <div class="welcomeBanner">
+        <div class="bigText"> Welcome to Ryan Gosling!</div>
+        <div class="welcomeSubtext">Your recipe and grocery tracker</div>
     </div>
+    <div class="formSection">
+        <div class="bigText">Member Login</div>
+
+        <form action="" class="formSection" method="POST">
+            {{ form.hidden_tag() }}
+            {{ form.username.label(class="labelText") }}
+            {{ form.username() }}<br>
+            {{ form.password.label(class="labelText") }}
+            {{ form.password() }}<br>
+            {{ form.submit(class="loginSignUpButton") }}
+        </form>
+
+        <div class="notMember">Not a member? <a href="/SignUp">Sign up here</a></div>
+    </div>
+</div>
 {% endblock content %}

@@ -1,20 +1,23 @@
 {% block content %}
 
-    {# THIS CARD NEEDS TO BE A blurred PICTURE #}
+{# THIS CARD NEEDS TO BE A blurred PICTURE #}
 <div class="recipeCard">
 
     {# These are fonts #}
     <div class="recipeElementsContainer">
-            <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com" rel="preconnect">
+        <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500;900&display=swap" rel="stylesheet">
-    {#    These stylesheets are the iconography#}
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+        {# These stylesheets are the iconography#}
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+              rel="stylesheet"/>
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+              rel="stylesheet"/>
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+              rel="stylesheet"/>
         <link href="{{ url_for('static', filename='css/RecipeCard.css') }}" rel="stylesheet">
 
-        <h1 class="recipeTitle"> Lamb Beef </h1> {# PUT RECIPE TITLE VARIABLE HERE  #}
+        <h1 class="recipeTitle"> Lamb Beef </h1> {# PUT RECIPE TITLE VARIABLE HERE #}
         <div class="recipeMetrics">
             <div class="recipeAttributeContainer">
                 <div class="recipeAttributeNumberBox">
@@ -51,35 +54,38 @@
             Date Created: {{ date_created }}
         </div>
     </div>
-        {# This is likely not flask compatible code below but I have still written the logic for you,
+    {# This is likely not flask compatible code below but I have still written the logic for you,
     the input place holder should either be the current recipe OR nothing if there is no recipe currently, that way
-the user can edit#}
+    the user can edit#}
     <div class="textEditor">
         <a class="textEditorTitle"> Recipe Body: </a>
-        {%  if recipe_description  == "" %}
-            <label>
-                <input class="recipeBody" placeholder={{recipe_body}} name="recipeBodyField">
-            </label>
+        {% if recipe_description == "" %}
+        <label>
+            <input class="recipeBody" name="recipeBodyField" placeholder={{recipe_body}}>
+        </label>
         {% else %}
-            <label>
-                <input class="recipeBody" placeholder="recipe steps go here!" name="recipeBodyField">
-            </label>
+        <label>
+            <input class="recipeBody" name="recipeBodyField" placeholder="recipe steps go here!">
+        </label>
         {% endif %}
-{#    <form action="" class="recipeBody" method="POST">#}
-                {# I HAVE NO IDEA HOW FORM WORKS I AM JSUT GONNA LEAVE THIS HERER #}
-{#                {{ form.hidden_tag() }}#}
-{#                {{ form.username.label(class="labelText") }}#}
-{#                {{ form.username() }}<br>#}
-{#                {{ form.email.label(class="labelText") }}#}
-{#                {{ form.email() }}<br>#}
-{#                {{ form.password.label(class="labelText") }}#}
-{#                {{ form.password() }}<br>#}
-{#                {{ form.confirm_password.label(class="labelText") }}#}
-{#                {{ form.confirm_password() }}<br>#}
-{#                {{ form.submit(class="loginSignUpButton") }}#}
-{#                {{ form }}#}
-{#    </form>#}
-{##}
+        {#
+        <form action="" class="recipeBody" method="POST">#}
+            {# I HAVE NO IDEA HOW FORM WORKS I AM JSUT GONNA LEAVE THIS HERER #}
+            {# {{ form.hidden_tag() }}#}
+            {# {{ form.username.label(class="labelText") }}#}
+            {# {{ form.username() }}<br>#}
+            {# {{ form.email.label(class="labelText") }}#}
+            {# {{ form.email() }}<br>#}
+            {# {{ form.password.label(class="labelText") }}#}
+            {# {{ form.password() }}<br>#}
+            {# {{ form.confirm_password.label(class="labelText") }}#}
+            {# {{ form.confirm_password() }}<br>#}
+            {# {{ form.submit(class="loginSignUpButton") }}#}
+            {# {{ form }}#}
+            {#
+        </form>
+        #}
+        {##}
     </div>
 
 </div>

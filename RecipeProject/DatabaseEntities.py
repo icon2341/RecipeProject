@@ -1,6 +1,8 @@
 """
 THIS FILE IS NOT BEING USED
 """
+import datetime
+
 from flask_login import UserMixin
 
 from RecipeProject import login_manager
@@ -9,7 +11,9 @@ from RecipeProject import sql
 
 @login_manager.user_loader  # Uncomment this function when database is connected
 def load_user(uuid):
-    return get_user_by_uuid(uuid)
+    user = get_user_by_uuid(uuid)
+    user.update_access_time()
+    return user
 
 
 #    print(f"Logging in: {email}")
@@ -84,6 +88,12 @@ class User(UserMixin):  # UserMixin tracks user sessions
 
     def __getitem__(self, item):
         return self.data[item]
+
+    def update_access_time(self):
+        data = (datetime.datetime.now(), self["uuid"])
+
+        sql.query("""UPDATE \"User\" SET last_access=%s WHERE uid=%s""", data)
+
 
     """
     __tablename__ = "User"
