@@ -40,13 +40,27 @@ def exists(curr, ruid):
     curr.execute(query, [ruid])
     return curr.fetchone() is not None
 
+def update_row(curr, servings,  description,
+                          rating, cook_time, ruid,
+                                   recipe_name, category, steps):
+    cook_time = (isodate.parse_duration(cook_time))
+    query = ("""UPDATE test SET servings = %s,
+    description = %s, rating = %s , cook_time = %s , 
+    recipe_name = %s , category = %s, steps = %s, difficulty = 0""")
+    vars = (servings,  description,rating, cook_time,
+            recipe_name, category, steps)
+    curr.execute(query, vars)
+
 def update_db(curr, df):
     tmp_df = pd.DataFrame(columns=['servings',  'description',
                           'rating', 'cook_time', 'ruid',
                                    'recipe_name', 'category', 'steps'])
     for i, row in df.iterrows():
         if exists(curr, row['ruid']):
-            '''maybe add update'''
+            update_row(curr, row['servings'], row['description'],
+                          row['rating'], row['cook_time'], row['ruid'],
+                                   row['recipe_name'], row['category'], row['steps'])
+
         else:
             tmp_df = tmp_df.append(row)
     return tmp_df
@@ -71,7 +85,7 @@ con = __init__()
 curr = con.cursor()
 df = pd.read_csv('recipes.csv', usecols=['servings', 'description',
                           'rating', 'cook_time', 'ruid',
-                                   'recipe_name', 'category', 'steps'], nrows=2) #remove nrows to parse all data
+                                   'recipe_name', 'category', 'steps'], nrows=3) #remove nrows to parse all data
 tmp_df = update_db(curr, df)
 insert(curr, tmp_df)
 con.commit()
