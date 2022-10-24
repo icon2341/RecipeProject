@@ -11,10 +11,18 @@
     overflow: hidden;
     flex-grow: 1;
     color: white;
+    margin-bottom: 30px;
+}
+
+.recipeCard:hover {
+    max-width: 1010px;
+    max-height: 660px;
+    box-shadow: 0 0 100px 0 rgba(0, 0, 0, 0.1607843137254902);
 }
 .recipeElementsContainer {
     max-width: 400px;
     background: #41d8fc;
+    min-width: 330px;
 
 }
 
