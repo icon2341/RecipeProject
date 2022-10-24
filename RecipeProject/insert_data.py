@@ -2,6 +2,7 @@
 This program parses through data from a file and puts in into the database
 '''
 import pandas as pd
+import isodate
 import psycopg2
 import json
 from sshtunnel import SSHTunnelForwarder
@@ -35,7 +36,7 @@ def __init__():
         return connection
 
 def exists(curr, ruid):
-    query = ("""Select ruid FROM recipe2 WHERE ruid = %s""")
+    query = ("""Select ruid FROM test WHERE ruid = %s""")
     curr.execute(query, [ruid])
     return curr.fetchone() is not None
 
@@ -53,7 +54,8 @@ def update_db(curr, df):
 def insert_into_table(curr, servings,  description,
                           rating, cook_time, ruid,
                                    recipe_name, category, steps):
-    query = ("""INSERT INTO recipe2 (servings,  description,
+    cook_time = (isodate.parse_duration(cook_time))
+    query = ("""INSERT INTO test (servings,  description,
                           rating, cook_time, ruid,
                                    recipe_name, category, steps, difficulty)
                         VALUES(%s, %s, %s, %s, %s, %s, %s, %s, 0);""")
@@ -69,7 +71,7 @@ con = __init__()
 curr = con.cursor()
 df = pd.read_csv('recipes.csv', usecols=['servings', 'description',
                           'rating', 'cook_time', 'ruid',
-                                   'recipe_name', 'category', 'steps'], nrows=8) #remove nrows to parse all data
+                                   'recipe_name', 'category', 'steps'], nrows=2) #remove nrows to parse all data
 tmp_df = update_db(curr, df)
 insert(curr, tmp_df)
 con.commit()
