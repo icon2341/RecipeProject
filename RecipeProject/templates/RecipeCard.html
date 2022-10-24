@@ -1,6 +1,8 @@
 {% block content %}
 
 {# THIS CARD NEEDS TO BE A blurred PICTURE #}
+{% for recipe in recipes %}
+
 <div class="recipeCard">
 
     {# These are fonts #}
@@ -17,41 +19,41 @@
               rel="stylesheet"/>
         <link href="{{ url_for('static', filename='css/RecipeCard.css') }}" rel="stylesheet">
 
-        <h1 class="recipeTitle"> Lamb Beef </h1> {# PUT RECIPE TITLE VARIABLE HERE #}
+        <h1 class="recipeTitle"> {{recipe.recipe_name}} </h1> {# PUT RECIPE TITLE VARIABLE HERE #}
         <div class="recipeMetrics">
             <div class="recipeAttributeContainer">
                 <div class="recipeAttributeNumberBox">
                     <span class="material-symbols-outlined">category</span>
-                    <a class="recipeAttribute"> 20 {{ numberIngredients }} </a> {# PUT REAL TIME HERE#}
+                    <a class="recipeAttribute"> {{ recipe.numberIngredients }} </a> {# PUT REAL TIME HERE#}
                 </div>
                 <a class="recipeAttributeIdentifier"> Ingredients </a>
             </div>
             <div class="recipeAttributeContainer">
                 <div class="recipeAttributeNumberBox">
                     <span class="material-symbols-outlined">group</span>
-                    <a class="recipeAttribute"> 20 </a>
+                    <a class="recipeAttribute"> {{recipe.servings}} </a>
                 </div>
                 <a class="recipeAttributeIdentifier"> Servings </a>
             </div>
             <div class="recipeAttributeContainer">
                 <div class="recipeAttributeNumberBox">
                     <span class="material-symbols-outlined">schedule</span>
-                    <a class="recipeAttribute"> 20 </a> {# PUT REAL atrr HERE#}
+                    <a class="recipeAttribute"> {{recipe.cook_time}} </a> {# PUT REAL atrr HERE#}
                 </div>
                 <a class="recipeAttributeIdentifier"> Minutes </a>
             </div>
         </div>
 
         <div class="recipeDifficulty">
-            Difficulty: {{ difficulty }}
+            Difficulty: {{ recipe.difficulty }}
         </div>
 
         <div class="recipeDifficulty">
-            Category: {{ category }}
+            Category: {{ recipe.category }}
         </div>
 
         <div class="recipeDifficulty" style="margin-bottom: 30px">
-            Date Created: {{ date_created }}
+            Date Created: {{ recipe.date_created }}
         </div>
     </div>
     {# This is likely not flask compatible code below but I have still written the logic for you,
@@ -89,4 +91,5 @@
     </div>
 
 </div>
+{%endfor%}
 {% endblock content %}

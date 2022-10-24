@@ -35,15 +35,17 @@ def get_user_by_username(username):
     return User(sql_data=sql.get_one_by("User", "username", username))
 
 
+
+
 class DatabaseObject:
 
-    def __init__(self, sql_data=None, columns=None, **kwargs):
-
+    def __init__(self, name, sql_data=None, columns=None, **kwargs):
+        self.name = name
         if sql_data is not None:
             if columns is not None:
                 self.columns = columns
             else:
-                self.columns = sql.query()
+                self.columns = sql.get_columns(self.name)
             if len(columns) == len(sql_data):
                 for i in range(len(sql_data)):
                     self.data[columns[i]] = sql_data[i]
@@ -54,6 +56,12 @@ class DatabaseObject:
             self.columns = [x for x in self.data.keys()]
         else:
             raise ValueError("Either pass with kwargs or sql_data and columns")
+
+
+class Recipe(DatabaseObject):
+
+    def __init__(self, sql_data=None, columns=None, **kwargs):
+        super().__init__("Recipe", sql_data=sql_data, columns=columns, **kwargs)
 
 
 class User(UserMixin):  # UserMixin tracks user sessions
@@ -93,7 +101,6 @@ class User(UserMixin):  # UserMixin tracks user sessions
         data = (datetime.datetime.now(), self["uuid"])
 
         sql.query("""UPDATE \"User\" SET last_access=%s WHERE uid=%s""", data)
-
 
     """
     __tablename__ = "User"

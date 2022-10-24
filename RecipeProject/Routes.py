@@ -69,7 +69,11 @@ def Recipes():
 
 @app.route("/MyRecipes")
 def myRecipes():
-    return render_template("MyRecipes.html", user=current_user.data["username"])
+
+    # For testing only, will connect to database as soon as it is populated
+    recipes = [{"recipe_name": "Lamb Beef", "servings": 4}, {"recipe_name": "Chopped Liver"}, {"recipe_name": "Dahmer Special"}]
+
+    return render_template("MyRecipes.html", user=current_user.data["username"], recipes=recipes)
 
 
 @app.route("/Home")
