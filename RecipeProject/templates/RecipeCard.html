@@ -61,33 +61,18 @@
     the user can edit#}
     <div class="textEditor">
         <a class="textEditorTitle"> Recipe Body: </a>
-        {% if recipe_description == "" %}
-        <label>
-            <input class="recipeBody" name="recipeBodyField" placeholder={{recipe_body}}>
-        </label>
-        {% else %}
-        <label>
-            <input class="recipeBody" name="recipeBodyField" placeholder="recipe steps go here!">
-        </label>
-        {% endif %}
-        {#
-        <form action="" class="recipeBody" method="POST">#}
-            {# I HAVE NO IDEA HOW FORM WORKS I AM JSUT GONNA LEAVE THIS HERER #}
-            {# {{ form.hidden_tag() }}#}
-            {# {{ form.username.label(class="labelText") }}#}
-            {# {{ form.username() }}<br>#}
-            {# {{ form.email.label(class="labelText") }}#}
-            {# {{ form.email() }}<br>#}
-            {# {{ form.password.label(class="labelText") }}#}
-            {# {{ form.password() }}<br>#}
-            {# {{ form.confirm_password.label(class="labelText") }}#}
-            {# {{ form.confirm_password() }}<br>#}
-            {# {{ form.submit(class="loginSignUpButton") }}#}
-            {# {{ form }}#}
-            {#
-        </form>
-        #}
-        {##}
+        <a class="recipeBody"> {{ recipe.description }} </a>
+    </div>
+
+    <div class="buttonSections">
+        <button class= "editButton" href="/editRecipe"> Edit Recipe </button>
+    </div>
+
+    <div class="ingredientsSection">
+        <a class="textEditorTitle"> Ingredients: </a>
+        {% for i in recipe.ingredient %}
+            <a>{{ i }}</a>
+        {% endfor %}
     </div>
 
 </div>

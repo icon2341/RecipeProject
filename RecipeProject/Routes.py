@@ -83,9 +83,10 @@ def Recipes():
 
 @app.route("/MyRecipes")
 def myRecipes():
-
+    exampleText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    exampleIngredients = ["Ketchup", "lemons", "pizzadogs", "sluttChup"]
     # For testing only, will connect to database as soon as it is populated
-    recipes = [{"recipe_name": "Lamb Beef", "servings": 4}, {"recipe_name": "Chopped Liver"}, {"recipe_name": "Dahmer Special"}]
+    recipes = [{"recipe_name": "Lamb Beef", "servings": 4, "description":exampleText, "ingredient":exampleIngredients }, {"recipe_name": "Chopped Liver"}, {"recipe_name": "Dahmer Special"}]
 
     return render_template("MyRecipes.html", user=current_user, recipes=recipes)
 

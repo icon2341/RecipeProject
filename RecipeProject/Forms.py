@@ -44,7 +44,11 @@ class ResetPassword(FlaskForm):
         raise ValidationError("Incorrect Password")
 
 class IngredientSearch(FlaskForm):
-    penis = "pen"
+    order = RadioField("AscDesc", choices=["Ascending", "Descending"])
+    searchField = StringField("SearchField")
+    sortBy = SelectField("Sort By", choices=[("Item Name", "item_name")])
+    submit = SubmitField("SearchButton")
+
 
 
 class RecipeEditing(FlaskForm):
