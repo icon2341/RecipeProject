@@ -1,12 +1,13 @@
 .IngredientHead{
     max-width: 1550px;
+    min-width: 750px;
     max-height: 1550px;
     background: white;
     flex-direction: row;
     justify-content: center;
     overflow: hidden;
     color: white;
-    margin-left: auto;
+    margin-left: 175px;
     margin-right: auto;
     border-style: solid;
     border-width: 2px;
@@ -18,11 +19,23 @@
     color: #0243e7;
     margin-left: 30px;
     margin-top: 25px;
+    margin-bottom: 30px;
 }
 
 .TextBox{
     margin-left: 50px;
     display:block;
+    font-size: 20pt;
+    margin-right: 50px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.Label{
+    font-size: 20pt;
+    font-family: 'Roboto', sans-serif;
+    color:black;
+    margin-left: 70px;
 }
 
 .Row{

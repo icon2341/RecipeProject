@@ -96,6 +96,11 @@ def myRecipes():
 def Home():
     return render_template("Home.html", user=current_user)
 
+@app.route("/NewIngredient")
+@login_required
+def NewIngredient():
+    return render_template("NewIngredient.html", user=current_user)
+
 
 @app.route("/Settings", methods=["GET", "POST"])
 @login_required
