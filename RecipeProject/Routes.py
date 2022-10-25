@@ -58,7 +58,7 @@ def SignUp():
 @app.route("/Pantry")
 @login_required
 def Pantry():
-    # DELETE LATER
+
     pantry = [{"item_name": "Yo mama",
                "quantity_bought": 1,
                "current_quantity": 1,
