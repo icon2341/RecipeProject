@@ -8,7 +8,7 @@ from flask import render_template, request, redirect
 from flask_login import login_user, login_required, logout_user, current_user
 from RecipeProject import sql
 from RecipeProject import app, bcrypt, login_manager
-from RecipeProject.DatabaseEntities import get_user_by_username, User, get_recipe_by_id, Recipe
+from RecipeProject.DatabaseEntities import get_user_by_username, User, get_recipe_by_id, Recipe, get_recipe_if_owned
 from RecipeProject.Forms import *
 
 # Redirects logged out users to front page
@@ -79,8 +79,9 @@ def Pantry():
 @app.route("/MyRecipes")
 @login_required
 def myRecipes():
-
-    recipes = [Recipe(sql_data=data) for data in sql.get_all_query(f"SELECT * FROM recipe WHERE uid={current_user['uuid']}")]
+    limit = 10  # Limit of the number of recipes returned
+    recipes = [Recipe(sql_data=data) for data in
+               sql.get_all_query(f"SELECT * FROM recipe WHERE uid={current_user['uuid']} LIMIT {limit}")]
 
     return render_template("MyRecipes.html", user=current_user, recipes=recipes)
 
@@ -124,7 +125,8 @@ def Logout():
 @login_required
 def EditRecipe():
     recipe_id = request.args.get("rId")
-    recipe = get_recipe_by_id(recipe_id)
+    # recipe = get_recipe_by_id(recipe_id)
+    recipe = get_recipe_if_owned(recipe_id, current_user["uuid"])
     if recipe is not None:
         form = RecipeEditing()
 
@@ -136,13 +138,8 @@ def EditRecipe():
         form.steps.data = recipe['steps']
         form.description.data = recipe['description']
 
-
         return render_template("EditRecipe.html", user=current_user, form=form)
     # Non valid recipe id
     else:
         return redirect("/MyRecipes")
-    # todo check if recipe belongs to user
-    # todo get recipe from id
 
-
-    # todo add recipe editing form

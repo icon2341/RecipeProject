@@ -27,6 +27,13 @@ in SQL, you will have have one of these to define it.
 """
 
 
+def get_recipe_if_owned(recipe_id: str, user_id: int):
+    if recipe_id.isdigit():
+        recipe = Recipe(sql_data=sql.get_one_query(f"SELECT * FROM recipe WHERE ruid={recipe_id} AND uid={user_id}"))
+        if recipe.valid():
+            return recipe
+
+
 def get_recipe_by_id(id):
     try:
         id = str(int(id))
