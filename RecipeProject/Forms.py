@@ -9,6 +9,7 @@ from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationE
 from wtforms.widgets import TextArea
 
 from RecipeProject import bcrypt, sql
+from RecipeProject.DatabaseEntities import get_nice_columns
 from RecipeProject.Globals import USERNAME_MAX, PASSWORD_MAX
 
 
@@ -48,7 +49,7 @@ class ResetPassword(FlaskForm):
 class IngredientSearch(FlaskForm):
     order = RadioField("AscDesc", choices=["Ascending", "Descending"])
     searchField = StringField("SearchField")
-    sortBy = SelectField("Sort By", choices=[("Item Name", "item_name")])
+    sortBy = SelectField("Sort By", choices=get_nice_columns("ingredient"))
     submit = SubmitField("SearchButton")
 
 
@@ -63,16 +64,12 @@ class RecipeEditing(FlaskForm):
     steps = StringField("Steps", widget=TextArea())
     submit = SubmitField("Submit")
 
-"""
-    def validate_username(self, username):
-        user = User.query.filter_by(username=username.data).first()
-        if user:
-            print("USERNAME IS TAKEN")
-            raise ValidationError("USERNAME IS TAKEN")
 
-    def validate_email(self, email):
-        user = User.query.filter_by(email=email.data).first()
-        if user:
-            print("EMAIL IS TAKEN")
-            raise ValidationError("EMAIL IS TAKEN")
-"""
+class IngredientEditing(FlaskForm):
+    expiration = DateTimeField()
+    purchase = DateTimeField()
+    quantity = DecimalField()
+    units = StringField()
+    name = StringField()
+    bought = DecimalField()
+    submit = SubmitField("Submit")

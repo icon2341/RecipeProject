@@ -6,7 +6,29 @@ Pantry
 
 {% block content %}
 <!--TODO: I'll finish this up-->
+<div class="content">
 <div class="IngredientHead">
+
+    <form action="" method="POST">
+        {{ form.csrf_token }}
+        {{ form.hidden_tag() }}
+        {{ form.expiration.label }}
+        {{ form.expiration }}
+        {{ form.quantity.label }}
+        {{ form.quantity }}
+        {{ form.units.label }}
+        {{ form.units }}
+        {{ form.name.label }}
+        {{ form.name }}
+        {{ form.bought.label }}
+        {{ form.bought }}
+        {{ form.submit.label }}
+        {{ form.submit }}
+
+
+    </form>
+
+    <!--
     <link href="{{ url_for('static', filename='css/NewIngredient.css') }}" rel="stylesheet">
     <div class="Title">
         <b>My&nbsp;Ingredient</b>
@@ -32,10 +54,11 @@ Pantry
       <label class="Label">Name5
       <input class="TextBox"/>
           </label>
-    </div>
+    </div>-->
 
 
 
+</div>
 </div>
 
 {% endblock content %}

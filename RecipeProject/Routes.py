@@ -8,7 +8,7 @@ from flask import render_template, request, redirect
 from flask_login import login_user, login_required, logout_user, current_user
 from RecipeProject import sql
 from RecipeProject import app, bcrypt, login_manager
-from RecipeProject.DatabaseEntities import get_user_by_username, User, get_recipe_by_id, Recipe, get_recipe_if_owned
+from RecipeProject.DatabaseEntities import get_user_by_username, User, Recipe, get_recipe_if_owned
 from RecipeProject.Forms import *
 
 # Redirects logged out users to front page
@@ -93,10 +93,16 @@ def Home():
     return render_template("Home.html", user=current_user)
 
 
-@app.route("/NewIngredient")
+@app.route("/NewIngredient", methods=["GET", "POST"])
 @login_required
 def NewIngredient():
-    return render_template("NewIngredient.html", user=current_user)
+    form = IngredientEditing()
+    if request.method == "POST":
+        print(form.data)
+        return redirect("/Pantry")
+
+
+    return render_template("NewIngredient.html", user=current_user, form=form)
 
 
 @app.route("/Settings", methods=["GET", "POST"])
