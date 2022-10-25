@@ -60,6 +60,7 @@ def SignUp():
 @login_required
 def Pantry():
     form = IngredientSearch()
+    # Todo implement functions for the search system
     pantry = [{"item_name": "Yo mama",
                "quantity_bought": 1,
                "current_quantity": 1,
@@ -124,22 +125,26 @@ def Logout():
 @app.route("/editRecipe", methods=["GET", "POST"])
 @login_required
 def EditRecipe():
+    form = RecipeEditing()
     recipe_id = request.args.get("rId")
-    # recipe = get_recipe_by_id(recipe_id)
-    recipe = get_recipe_if_owned(recipe_id, current_user["uuid"])
-    if recipe is not None:
-        form = RecipeEditing()
+    if request.method == "GET":
+        recipe = get_recipe_if_owned(recipe_id, current_user["uuid"])
+        if recipe is not None:
 
-        form.servings.data = float(recipe["servings"])
-        form.title.data = recipe["recipe_name"]
-        form.difficulty.data = float(recipe["difficulty"])
-        form.prep_time.data = recipe["cook_time"]
-        form.category.data = recipe['category']
-        form.steps.data = recipe['steps']
-        form.description.data = recipe['description']
+            form.servings.data = float(recipe["servings"])
+            form.title.data = recipe["recipe_name"]
+            form.difficulty.data = float(recipe["difficulty"])
+            form.prep_time.data = recipe["cook_time"]
+            form.category.data = recipe['category']
+            form.steps.data = recipe['steps']
+            form.description.data = recipe['description']
 
+            return render_template("EditRecipe.html", user=current_user, form=form)
+        # Non valid recipe id
+        else:
+            return redirect("/MyRecipes")
+    elif request.method == "POST":
+        # TODO update database with form values
+        sql_query = "UPDATE recipe SET "
+        sql.query()
         return render_template("EditRecipe.html", user=current_user, form=form)
-    # Non valid recipe id
-    else:
-        return redirect("/MyRecipes")
-
