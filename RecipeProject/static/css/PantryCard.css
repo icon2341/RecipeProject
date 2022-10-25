@@ -71,8 +71,20 @@
     margin-left: 20px;
 }
 
-.Field {
+.Field{
     font-size: 15pt;
     font-family: 'Roboto', sans-serif;
     color: black;
+}
+
+.Search{
+    /* TODO: Implement this*/
+}
+
+.Button{
+    font-size: 15pt;
+    font-family: 'Roboto', sans-serif;
+    background-color: #0243e7;
+    color: white;
+    border-radius: 5pt;
 }
