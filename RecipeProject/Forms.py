@@ -4,8 +4,9 @@ Author: Group 7 CSCI 320 01-02
 """
 from flask_login import current_user
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, DecimalField, SelectField, RadioField
+from wtforms import StringField, PasswordField, SubmitField, DecimalField, SelectField, RadioField, DateTimeField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+from wtforms.widgets import TextArea
 
 from RecipeProject import bcrypt, sql
 from RecipeProject.Globals import USERNAME_MAX, PASSWORD_MAX
@@ -54,10 +55,13 @@ class IngredientSearch(FlaskForm):
 class RecipeEditing(FlaskForm):
     title = StringField("Title")
     servings = DecimalField("Servings")
-    difficulty = DecimalField
-    category = SelectField()
-    prep_time = DecimalField()
-
+    difficulty = DecimalField("Difficulty")
+    possible_categories = [x[0] for x in sql.get_all_query(f"SELECT DISTINCT category FROM recipe")]
+    category = SelectField("Category", choices=possible_categories)
+    prep_time = DateTimeField("Preparation Time", format="%H:%M")
+    description = StringField("Description", widget=TextArea())
+    steps = StringField("Steps", widget=TextArea())
+    submit = SubmitField("Submit")
 
 """
     def validate_username(self, username):

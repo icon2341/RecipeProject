@@ -80,17 +80,32 @@ class SQLInterface:
         """
         cursor = self.connection.cursor()
         cursor.execute(query, args)
-        self.connection.commit()
+        result = cursor.fetchall()
         cursor.close()
+        return result
 
-
-
+    def get_one_query(self, query: str, args=()):
+        """
+        Executes an sql query and returns all the resulting rows
+        :param query: sql query
+        :param args: args to the query
+        :return: all resulting rows
+        """
+        cursor = self.connection.cursor()
+        cursor.execute(query, args)
+        result = cursor.fetchone()
+        cursor.close()
+        return result
 
 
     def get_columns(self, table_name: str):
         cursor = self.connection.cursor()
-        sql_statement = f'SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE %s = N\'Customers\''
-        cursor.execute(sql_statement, (table_name))
+        sql_statement = f'SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = \'{table_name}\'' \
+                        f' ORDER BY ordinal_position ASC'
+        cursor.execute(sql_statement)
         result = cursor.fetchall()
         cursor.close()
+        result = [x[0] for x in result]
         return result
+
+
