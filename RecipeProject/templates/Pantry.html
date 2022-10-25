@@ -11,7 +11,17 @@ Pantry
     <div class="Title">
         <b>My&nbsp;Pantry</b>
     </div>
-    <div class="Dropdown">
+        <form action="" method="POST">
+
+        {{ form.csrf_token }}
+            {{ form.hidden_tag() }}
+            {{ form. }}
+            {{ form.sortBy }}
+            {{ form.order }}
+            {{ form.searchField }}
+            {{ form.submit }}
+        </form>
+        <!--
         <label> Sort by
             <select class="Select">
                 <option value="Item Name">Item Name</option>
@@ -22,6 +32,7 @@ Pantry
                 <option value="Unit of Measure" selected>Unit of Measure</option>
             </select>
         </label>
+
         <label> Order
             <select class="Select">
                 <option value="Ascending">Ascending</option>
@@ -29,6 +40,7 @@ Pantry
             </select>
         </label>
     </div>
+    -->
     <! TODO: Implement Search bar and button-->
     <table class="Header">
   <tr>

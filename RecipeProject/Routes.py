@@ -58,7 +58,7 @@ def SignUp():
 @app.route("/Pantry")
 @login_required
 def Pantry():
-
+    form = IngredientSearch()
     pantry = [{"item_name": "Yo mama",
                "quantity_bought": 1,
                "current_quantity": 1,
@@ -72,7 +72,7 @@ def Pantry():
                "expiration_date": "never",
                "unit_of_measure": "tons"}
               ]
-    return render_template("Pantry.html", user=current_user,pantry=pantry)
+    return render_template("Pantry.html", user=current_user,pantry=pantry, form=form)
 
 
 @app.route("/Recipes")

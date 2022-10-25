@@ -4,10 +4,10 @@ Author: Group 7 CSCI 320 01-02
 """
 from flask_login import current_user
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, DecimalField, SelectField
+from wtforms import StringField, PasswordField, SubmitField, DecimalField, SelectField, RadioField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 
-from RecipeProject import bcrypt
+from RecipeProject import bcrypt, sql
 from RecipeProject.Globals import USERNAME_MAX, PASSWORD_MAX
 
 
@@ -43,12 +43,12 @@ class ResetPassword(FlaskForm):
             return True
         raise ValidationError("Incorrect Password")
 
+
 class IngredientSearch(FlaskForm):
     order = RadioField("AscDesc", choices=["Ascending", "Descending"])
     searchField = StringField("SearchField")
     sortBy = SelectField("Sort By", choices=[("Item Name", "item_name")])
     submit = SubmitField("SearchButton")
-
 
 
 class RecipeEditing(FlaskForm):
