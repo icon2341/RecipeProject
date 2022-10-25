@@ -8,25 +8,25 @@ Edit Recipe
 {%block content %}
 
 <div class="content">
-    <form action="" method="POST">
+    <form class="editForms" action="" method="POST">
 
-        {{ form.csrf_token }}
+        {{ form.csrf_token() }}
             {{ form.hidden_tag() }}
-            {{ form.title.label }}
-            {{ form.title }}
-            {{ form.servings.label }}
-            {{ form.servings }}
-            {{ form.difficulty.label }}
-            {{ form.difficulty }}
-            {{ form.prep_time.label }}
-            {{ form.prep_time }}
-            {{ form.category.label }}
-            {{ form.category }}
-            {{ form.description.label }}
-            {{ form.description(cols="35", rows="20") }}
-            {{ form.steps.label }}
+            {{ form.title.label(class="formLabel")}}
+            {{ form.title(class="formInput") }}
+            {{ form.servings.label(class="formLabel") }}
+            {{ form.servings(class="formInput") }}
+            {{ form.difficulty.label(class="formLabel") }}
+            {{ form.difficulty(class="formInput") }}
+            {{ form.prep_time.label(class="formLabel") }}
+            {{ form.prep_time(class="formInput") }}
+            {{ form.category.label(class="formLabel") }}
+            {{ form.category(class="formInput") }}
+            {{ form.description.label(class="formLabel") }}
+            {{ form.description(cols="35", rows="20", class="formInput", id="formDescription") }}
+            {{ form.steps.label(class="formLabel") }}
             {{ form.steps(cols="35", rows="20") }}
-            {{ form.submit.label }}
+            {{ form.submit.label(class="formLabel") }}
             {{ form.submit }}
         </form>
 

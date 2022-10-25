@@ -82,6 +82,11 @@ class Recipe(DatabaseObject):
 
     def __init__(self, sql_data=None, columns=None, **kwargs):
         super().__init__("recipe", sql_data=sql_data, columns=columns, **kwargs)
+    #TODO create recipe function
+    # def create_recipe(self):
+        # query = f"INSERT INTO"
+        # args =
+        # sql.query(query, args)
 
 
 class User(UserMixin):  # UserMixin tracks user sessions
@@ -108,6 +113,8 @@ class User(UserMixin):  # UserMixin tracks user sessions
         # self.data['uuid']}','{self.data['username']}', '{self.data['email']}', '{self.data['password']}',
         # '{self.data['create_datetime']}', '{self.data['last_access']}');"
         sql.query(query, args)
+
+
 
     def get_id(self):
         return self.data['uuid']
