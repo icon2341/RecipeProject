@@ -69,9 +69,9 @@
     </div>
 
     <div class="ingredientsSection">
-        <a class="textEditorTitle"> Ingredients: </a>
+        <a class="textEditorTitle" id="ingredientsTitle"> Ingredients: </a>
         {% for i in recipe.ingredient %}
-            <a>{{ i }}</a>
+            <a class="ingredientItem">{{ i }}</a>
         {% endfor %}
     </div>
 

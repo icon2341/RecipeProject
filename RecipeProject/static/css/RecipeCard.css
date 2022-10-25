@@ -12,6 +12,9 @@
     flex-grow: 1;
     color: white;
     margin-bottom: 30px;
+
+    transition-property: max-width;
+    transition-duration: 500ms;
 }
 
 /*TODO test this*/
@@ -20,13 +23,8 @@
     display: block;
 }
 
-.ingredientsSection {
-    visibility: hidden;
-    display: none;
-}
-
 .recipeCard:hover {
-    max-width: 1010px;
+    max-width: 1200px;
     max-height: 660px;
     box-shadow: 0 0 100px 0 rgba(0, 0, 0, 0.1607843137254902);
 }
@@ -39,6 +37,26 @@
 
 .recipeBody {
     color: black;
+    width: 400px;
+}
+
+.ingredientsSection {
+    visibility: hidden;
+    display: none;
+    padding-top: 20px;
+}
+
+.ingredientItem {
+    font-family: 'Roboto', sans-serif;
+    font-weight: lighter;
+    font-size: 20px;
+    color: black;
+    display: block;
+    padding-top: 20px;
+
+}
+
+#ingredientsTitle {
 }
 
 .material-symbols-outlined {
@@ -117,6 +135,7 @@
     border: none;
     padding: 15px;
     margin-top: 30px;
+    white-space: nowrap;
 }
 
 .editButton:hover {
@@ -131,3 +150,4 @@
     color: black;
     padding: 10px;
 }
+
