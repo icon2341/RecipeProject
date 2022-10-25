@@ -61,6 +61,7 @@ class RecipeEditing(FlaskForm):
     prep_time = DateTimeField("Preparation Time", format="%H:%M")
     description = StringField("Description", widget=TextArea())
     steps = StringField("Steps", widget=TextArea())
+    submit = SubmitField("Submit")
 
 """
     def validate_username(self, username):
