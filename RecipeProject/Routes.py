@@ -64,7 +64,14 @@ def Pantry():
                "current_quantity": 1,
                "purchase_date": "rn",
                "expiration_date": "never",
-               "unit_of_measure": "tons"}]
+               "unit_of_measure": "tons"},
+              {"item_name": "Yo mama",
+               "quantity_bought": 1,
+               "current_quantity": 1,
+               "purchase_date": "rn",
+               "expiration_date": "never",
+               "unit_of_measure": "tons"}
+              ]
     return render_template("Pantry.html", user=current_user,pantry=pantry)
 
 
