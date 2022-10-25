@@ -4,9 +4,56 @@
 Pantry
 {% endblock title %}
 
-
 {% block content %}
-<div class="content">
+
+<div class="pantryCard">
+    <link href="{{ url_for('static', filename='css/PantryCard.css') }}" rel="stylesheet">
+    <div class="Title">
+        <b>My&nbsp;Pantry</b>
+    </div>
+    <div class="Dropdown">
+        <label> Sort by
+            <select class="Select">
+                <option value="Item Name">Item Name</option>
+                <option value="Quantity Bought">Quantity Bought</option>
+                <option value="Current Quantity">Current Quantity</option>
+                <option value="Date Purchased" selected>Date Purchased</option>
+                <option value="Expiration Date" selected>Expiration Date</option>
+                <option value="Unit of Measure" selected>Unit of Measure</option>
+            </select>
+        </label>
+        <label> Order
+            <select class="Select">
+                <option value="Ascending">Ascending</option>
+                <option value="Descending">Descending</option>
+            </select>
+        </label>
+    </div>
+    <table class="Header">
+  <tr>
+    <td>Item Name</td>
+    <td>Quantity Bought</td>
+    <td>Current Quantity</td>
+    <td>Date Purchased</td>
+    <td>Expiration Date</td>
+    <td>Unit of Measure</td>
+    <td></td>
+  </tr>
+</table>
+{% for ingredient in pantry %}
+<table class="Row">
+  <tr>
+      <td class="Field"> {{ingredient.item_name}} </td>
+      <td class="Field"> {{ingredient.quantity_bought}} </td>
+      <td class="Field"> {{ingredient.current_quantity}} </td>
+      <td class="Field"> {{ingredient.purchase_date}} </td>
+      <td class="Field"> {{ingredient.expiration_date}} </td>
+      <td class="Field"> {{ingredient.unit_of_measure}} </td>
+    <td></td>
+  </tr>
+</table>
+{%endfor%}
 
 </div>
+
 {% endblock content %}

@@ -58,7 +58,14 @@ def SignUp():
 @app.route("/Pantry")
 @login_required
 def Pantry():
-    return render_template("Pantry.html", user=current_user)
+    # DELETE LATER
+    pantry = [{"item_name": "Yo mama",
+               "quantity_bought": 1,
+               "current_quantity": 1,
+               "purchase_date": "rn",
+               "expiration_date": "never",
+               "unit_of_measure": "tons"}]
+    return render_template("Pantry.html", user=current_user,pantry=pantry)
 
 
 @app.route("/Recipes")
