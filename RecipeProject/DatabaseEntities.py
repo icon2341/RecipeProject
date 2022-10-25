@@ -27,6 +27,15 @@ in SQL, you will have have one of these to define it.
 """
 
 
+def get_recipe_by_id(id):
+    try:
+        id = str(int(id))
+
+    except ValueError:
+        return None
+    return Recipe(sql_data=sql.get_one_by("recipe", "ruid", id))
+
+
 def get_user_by_uuid(uuid):
     return User(sql_data=sql.get_one_by("User", "uid", uuid))
 
@@ -44,10 +53,10 @@ class DatabaseObject:
                 self.columns = columns
             else:
                 self.columns = sql.get_columns(self.name)
-            if len(columns) == len(sql_data):
+            if len(self.columns) == len(sql_data):
                 self.data = {}
                 for i in range(len(sql_data)):
-                    self.data[columns[i]] = sql_data[i]
+                    self.data[self.columns[i]] = sql_data[i]
             else:
                 raise ValueError("sql_data and columns must be equal length")
         elif kwargs is not None:
@@ -56,11 +65,17 @@ class DatabaseObject:
         else:
             raise ValueError("Either pass with kwargs or sql_data and columns")
 
+    def valid(self):
+        return len(self.data) > 0
+
+    def __getitem__(self, item):
+        return self.data[item]
+
 
 class Recipe(DatabaseObject):
 
     def __init__(self, sql_data=None, columns=None, **kwargs):
-        super().__init__("Recipe", sql_data=sql_data, columns=columns, **kwargs)
+        super().__init__("recipe", sql_data=sql_data, columns=columns, **kwargs)
 
 
 class User(UserMixin):  # UserMixin tracks user sessions
@@ -68,13 +83,14 @@ class User(UserMixin):  # UserMixin tracks user sessions
     def __init__(self, sql_data=None, **kwargs):
 
         if sql_data is not None:
-            self.data = {}
-            self.data["uuid"] = sql_data[0]
-            self.data["username"] = sql_data[1]
-            self.data["email"] = sql_data[2]
-            self.data["password"] = sql_data[3]
-            self.data["create_datetime"] = sql_data[4]
-            self.data["last_access"] = sql_data[5]
+            self.data = {
+                "uuid": sql_data[0],
+                "username": sql_data[1],
+                "email": sql_data[2],
+                "password": sql_data[3],
+                "create_datetime": sql_data[4],
+                "last_access": sql_data[5]
+            }
         else:
             self.data = kwargs
 

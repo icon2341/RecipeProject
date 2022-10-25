@@ -8,11 +8,12 @@ from flask import render_template, request, redirect
 from flask_login import login_user, login_required, logout_user, current_user
 from RecipeProject import sql
 from RecipeProject import app, bcrypt, login_manager
-from RecipeProject.DatabaseEntities import get_user_by_username, User
+from RecipeProject.DatabaseEntities import get_user_by_username, User, get_recipe_by_id
 from RecipeProject.Forms import *
 
 # Redirects logged out users to front page
 login_manager.login_view = "Login"
+
 
 # Login Route
 @app.route("/Login", methods=["GET", 'POST'])  # GET method is for going to the page, POST is for getting data
@@ -72,7 +73,7 @@ def Pantry():
                "expiration_date": "never",
                "unit_of_measure": "tons"}
               ]
-    return render_template("Pantry.html", user=current_user,pantry=pantry, form=form)
+    return render_template("Pantry.html", user=current_user, pantry=pantry, form=form)
 
 
 @app.route("/Recipes")
@@ -86,7 +87,9 @@ def myRecipes():
     exampleText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
     exampleIngredients = ["Ketchup", "lemons", "pizzadogs", "sluttChup"]
     # For testing only, will connect to database as soon as it is populated
-    recipes = [{"recipe_name": "Lamb Beef", "servings": 4, "description":exampleText, "ingredient":exampleIngredients }, {"recipe_name": "Chopped Liver"}, {"recipe_name": "Dahmer Special"}]
+    recipes = [
+        {"recipe_name": "Lamb Beef", "servings": 4, "description": exampleText, "ingredient": exampleIngredients, "ruid": 40},
+        {"recipe_name": "Chopped Liver"}, {"recipe_name": "Dahmer Special"}]
 
     return render_template("MyRecipes.html", user=current_user, recipes=recipes)
 
@@ -95,6 +98,7 @@ def myRecipes():
 @login_required
 def Home():
     return render_template("Home.html", user=current_user)
+
 
 @app.route("/NewIngredient")
 @login_required
@@ -125,6 +129,29 @@ def Logout():
     return redirect("/Login")
 
 
-# This command actually runs the server on port 80
-if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=80)
+@app.route("/editRecipe", methods=["GET", "POST"])
+@login_required
+def EditRecipe():
+    recipe_id = request.args.get("rId")
+    recipe = get_recipe_by_id(recipe_id)
+    if recipe is not None:
+        form = RecipeEditing()
+
+        form.servings.data = float(recipe["servings"])
+        form.title.data = recipe["recipe_name"]
+        form.difficulty.data = float(recipe["difficulty"])
+        form.prep_time.data = recipe["cook_time"]
+        form.category.data = recipe['category']
+        form.steps.data = recipe['steps']
+        form.description.data = recipe['description']
+
+
+        return render_template("EditRecipe.html", user=current_user, form=form)
+    # Non valid recipe id
+    else:
+        return redirect("/MyRecipes")
+    # todo check if recipe belongs to user
+    # todo get recipe from id
+
+
+    # todo add recipe editing form
