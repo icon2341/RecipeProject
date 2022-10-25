@@ -120,6 +120,14 @@ def Logout():
     logout_user()
     return redirect("/Login")
 
+@app.route("/newRecipe", methods=["GET", "POST"])
+@login_required
+def NewRecipe():
+
+    #TODO need to add form piping for new recipe
+    # Query constructor
+
+    return render_template("NewRecipe.html", user=current_user)
 
 @app.route("/editRecipe", methods=["GET", "POST"])
 @login_required
