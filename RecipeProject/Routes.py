@@ -76,22 +76,11 @@ def Pantry():
     return render_template("Pantry.html", user=current_user, pantry=pantry, form=form)
 
 
-@app.route("/Recipes")
-@login_required
-def Recipes():
-    return render_template("Recipes.html", user=current_user)
-
-
 @app.route("/MyRecipes")
+@login_required
 def myRecipes():
-    exampleText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-    exampleIngredients = ["Ketchup", "lemons", "pizzadogs", "sluttChup"]
-    # For testing only, will connect to database as soon as it is populated
-    test_recipes = [
-        {"recipe_name": "Lamb Beef", "servings": 4, "description": exampleText, "ingredient": exampleIngredients, "ruid": 40},
-        {"recipe_name": "Chopped Liver"}, {"recipe_name": "Dahmer Special"}]
 
-    recipes = [Recipe(sql_data=data) for data in sql.get_all_query("SELECT * FROM recipe")]
+    recipes = [Recipe(sql_data=data) for data in sql.get_all_query(f"SELECT * FROM recipe WHERE uid={current_user['uuid']}")]
 
     return render_template("MyRecipes.html", user=current_user, recipes=recipes)
 

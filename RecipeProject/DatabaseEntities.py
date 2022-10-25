@@ -73,8 +73,6 @@ class DatabaseObject:
 
 
 class Recipe(DatabaseObject):
-    name = 'recipe'
-    columns = sql.get_columns(name)
 
     def __init__(self, sql_data=None, columns=None, **kwargs):
         super().__init__("recipe", sql_data=sql_data, columns=columns, **kwargs)
