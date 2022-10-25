@@ -4,7 +4,7 @@ Author: Group 7 CSCI 320 01-02
 """
 from flask_login import current_user
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
+from wtforms import StringField, PasswordField, SubmitField, DecimalField, SelectField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 
 from RecipeProject import bcrypt
@@ -31,8 +31,8 @@ class RegistrationForm(FlaskForm):
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField("Sign Up")
 
-class ResetPassword(FlaskForm):
 
+class ResetPassword(FlaskForm):
     password = StringField("Current Password", validators=[DataRequired()])
     new_password = StringField("New Password", validators=[DataRequired()])
     confirm_password = StringField("Confirm New Password", validators=[DataRequired(), EqualTo("new_password")])
@@ -42,6 +42,18 @@ class ResetPassword(FlaskForm):
         if bcrypt.check_password_hash(current_user['password'], password.data):
             return True
         raise ValidationError("Incorrect Password")
+
+class IngredientSearch(FlaskForm):
+    penis = "pen"
+
+
+class RecipeEditing(FlaskForm):
+    title = StringField("Title")
+    servings = DecimalField("Servings")
+    difficulty = DecimalField
+    category = SelectField()
+    prep_time = DecimalField()
+
 
 """
     def validate_username(self, username):

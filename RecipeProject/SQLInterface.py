@@ -23,10 +23,6 @@ class SQLInterface:
             'password': UserData["PASSWORD"],
             'host': 'localhost',
             'port': server.local_bind_port,
-            "keepalives": 2,
-            "keepalives_idle": 30,
-            "keepalives_interval": 5,
-            "keepalives_count": 5
         }
 
         print("Server is up and running")

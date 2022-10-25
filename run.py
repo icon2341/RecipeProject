@@ -13,7 +13,11 @@ COPY PASTE THIS INTO YOUR TERMINAL (ALT-F12):
 pip install flask-wtf flask wtforms flask_sqlalchemy SQLAlchemy
 
 """
-from RecipeProject import app
-
+from RecipeProject import app, sql
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', debug=True)
+    try:
+        app.run(host='0.0.0.0', debug=True)
+    finally:
+
+        sql.connection.close()
+        print("SQL Connection closed")
