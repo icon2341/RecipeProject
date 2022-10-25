@@ -14,6 +14,17 @@
     margin-bottom: 30px;
 }
 
+/*TODO test this*/
+.recipeCard:hover > .ingredientsSection {
+    visibility: visible;
+    display: block;
+}
+
+.ingredientsSection {
+    visibility: hidden;
+    display: none;
+}
+
 .recipeCard:hover {
     max-width: 1010px;
     max-height: 660px;
@@ -24,6 +35,10 @@
     background: #41d8fc;
     min-width: 330px;
 
+}
+
+.recipeBody {
+    color: black;
 }
 
 .material-symbols-outlined {
@@ -80,15 +95,39 @@
 
 .textEditor {
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     display: flex;
     flex-direction: column;
     width: 400px;
+    text-align: left;
+    margin-left: 10px;
+    overflow: hidden;
 }
+
+.buttonSections {
+    margin-left: 20px;
+}
+
+.editButton {
+    background: #41d8fc;
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    font-size: 30px;
+    border-radius: 10px;
+    border: none;
+    padding: 15px;
+    margin-top: 30px;
+}
+
+.editButton:hover {
+    background: #31a6c1;
+}
+
 
 .textEditorTitle {
     font-family: 'Roboto', sans-serif;
     font-weight: bold;
     font-size: 36px;
     color: black;
+    padding: 10px;
 }
