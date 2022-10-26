@@ -52,27 +52,37 @@ class DataInserter:
         query2 = "SELECT (ingredient_id) FROM ingredient ORDER BY ingredient_id DESC limit 1"
         query3 = "INSERT INTO comprises "\
                  "(quantity, unit, ruid, ingredient_id)" \
-                "VALUES (%s, 'cups', %s, %s)"
+                "VALUES (%s, %s, %s, %s)"
         query4 = "SELECT (ruid) FROM recipe WHERE recipe_name = %s"
         try:
-            for x in range(len(args)-1):
+            for x in range(len(args)):
                 temp = args[x]
+                print(temp)
                 temp = temp[1:len(temp)-1]
                 cursor.execute(sql_query, [temp])
                 cursor.execute(query2)
                 y = cursor.fetchone()
                 #print(y)
-                temp2 = args2[x]
-                temp2 = temp2[1:len(temp2)-1]
+                if (len(args2) -1 < x):
+                    temp2 = 0
+                    unit = "unspecified amount"
+                else:
+                    temp2 = args2[x]
+                    temp2 = temp2[1:len(temp2)-1]
+                print(temp2)
                 #print(temp2)
                 if (temp2 == ''):
                     temp2 = 0
+                    unit = "unspecified amount"
+                elif (temp2 == 0):
+                    temp2 = temp2
                 else:
+                    unit = "cups"
                     temp2 = float(sum(Fraction(term) for term in temp2.split()))
                 #need to get ruid
                 cursor.execute(query4, [recipe_tuple[1]])
                 insert_here = cursor.fetchone()
-                temp3 = temp2, insert_here, y
+                temp3 = temp2, unit, insert_here, y
                 cursor.execute(query3, temp3)
 
             self.connection.commit()
