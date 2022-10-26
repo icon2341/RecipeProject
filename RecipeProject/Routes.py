@@ -80,7 +80,7 @@ def Pantry():
 @app.route("/MyRecipes")
 @login_required
 def myRecipes():
-    limit = 9999  # Limit of the number of recipes returned
+    limit = 50  # Limit of the number of recipes returned
     # TODO JOIN table with ingredients
     recipes = [Recipe(sql_data=data) for data in
                sql.get_all_query(f"SELECT * FROM recipe WHERE uid={current_user['uuid']} LIMIT {limit}")]
@@ -167,15 +167,16 @@ def EditRecipe():
     if request.method == "GET":
         recipe = get_recipe_if_owned(recipe_id, current_user["uuid"])
         if recipe is not None:
-
             form.servings.data = float(recipe["servings"])
             form.title.data = recipe["recipe_name"]
-            form.difficulty.data = float(recipe["difficulty"])
+            # TODO when this value is casted to an int it breaks
+            form.difficulty.data = recipe["difficulty"]
             form.prep_time.data = recipe["cook_time"]
             form.category.data = recipe['category']
             form.steps.data = recipe['steps']
             form.description.data = recipe['description']
             form.rating.data = recipe['rating']
+
 
             return render_template("EditRecipe.html", user=current_user, form=form)
         # Non valid recipe id

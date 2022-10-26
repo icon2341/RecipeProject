@@ -1,11 +1,13 @@
+
+
 .recipeCard{
+    max-height: 500px;
     max-width: 1020px;
-    max-height: 650px;
     flex-wrap: nowrap;
     display: flex;
+    flex-direction: column;
     background: #f8f8f8;
     border-radius: 25px;
-    flex-direction: row;
     justify-content: left;
     box-shadow: 0 0 88px 0 rgba(0, 0, 0, 0.1607843137254902);
     overflow: hidden;
@@ -17,15 +19,18 @@
     transition-duration: 500ms;
 }
 
-/*TODO test this*/
-.recipeCard:hover > .ingredientsSection {
-    visibility: visible;
-    display: block;
+.topRowComponent {
+
+    display: flex;
+    flex-direction: row;
 }
+
+
+
 
 .recipeCard:hover {
     max-width: 1230px;
-    max-height: 660px;
+    max-height: max-content;
     box-shadow: 0 0 100px 0 rgba(0, 0, 0, 0.1607843137254902);
 }
 .recipeElementsContainer {
@@ -43,9 +48,14 @@
 }
 
 .ingredientsSection {
-    visibility: hidden;
     display: none;
     padding-top: 20px;
+}
+
+/*TODO test this*/
+.topRowComponent:hover > .ingredientsSection {
+    visibility: visible;
+    display: block;
 }
 
 .ingredientItem {
@@ -59,6 +69,9 @@
 }
 
 #ingredientsTitle {
+    color: black;
+    font-family: 'Roboto', sans-serif;
+    font-size: 30px;
 }
 
 .material-symbols-outlined {
@@ -153,3 +166,24 @@
     padding: 10px;
 }
 
+.stepsTitle {
+    padding-top: 20px;
+    padding-left: 10px;
+    font-size: 30px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+    color: black;
+}
+
+.stepsRowComponent {
+    align-items: start;
+    text-align: left;
+}
+
+.steps {
+    padding: 10px;
+    display: block;
+    font-family: 'Roboto', sans-serif;
+    color: black;
+    max-width: 700px;
+}
