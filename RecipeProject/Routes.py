@@ -101,7 +101,6 @@ def NewIngredient():
         print(form.data)
         return redirect("/Pantry")
 
-
     return render_template("NewIngredient.html", user=current_user, form=form)
 
 
@@ -127,14 +126,32 @@ def Logout():
     logout_user()
     return redirect("/Login")
 
+
 @app.route("/newRecipe", methods=["GET", "POST"])
 @login_required
 def NewRecipe():
+    form = RecipeEditing()
+    if request.method == "GET":
 
-    #TODO need to add form piping for new recipe
-    # Query constructor
+        return render_template("NewRecipe.html", user=current_user, form=form)
+    elif request.method == "POST":
+        sql_query = f"INSERT INTO recipe (servings, recipe_name, difficulty, cook_time," \
+                    f" category, steps, description, rating) " \
+                    f"VALUES (%s, %s, %s, %s, %s, %s, %s, %s)" \
 
-    return render_template("NewRecipe.html", user=current_user)
+
+        args = (
+            form.servings.data,
+            form.title.data,
+            form.difficulty.data,
+            form.prep_time.data,
+            form.category.data,
+            form.steps.data,
+            form.description.data,
+            form.rating.data,
+        )
+        sql.query(sql_query, args)
+
 
 @app.route("/editRecipe", methods=["GET", "POST"])
 @login_required
@@ -152,13 +169,33 @@ def EditRecipe():
             form.category.data = recipe['category']
             form.steps.data = recipe['steps']
             form.description.data = recipe['description']
+            form.rating.data = recipe['rating']
 
             return render_template("EditRecipe.html", user=current_user, form=form)
         # Non valid recipe id
         else:
             return redirect("/MyRecipes")
     elif request.method == "POST":
-        # TODO update database with form values
-        sql_query = "UPDATE recipe SET "
-        sql.query()
+        sql_query = f"UPDATE recipe " \
+                    f"SET servings=%s, " \
+                    f"recipe_name=%s, " \
+                    f"difficulty=%s, " \
+                    f"cook_time=%s, " \
+                    f"category=%s, " \
+                    f"steps=%s, " \
+                    f"description=%s, " \
+                    f"rating=%s" \
+                    f"WHERE ruid=%s"
+        args = (
+            form.servings.data,
+            form.title.data,
+            form.difficulty.data,
+            form.prep_time.data,
+            form.category.data,
+            form.steps.data,
+            form.description.data,
+            form.rating.data,
+            recipe_id
+        )
+        sql.query(sql_query, args)
         return render_template("EditRecipe.html", user=current_user, form=form)

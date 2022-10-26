@@ -4,7 +4,8 @@ Author: Group 7 CSCI 320 01-02
 """
 from flask_login import current_user
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, DecimalField, SelectField, RadioField, DateTimeField
+from wtforms import StringField, PasswordField, SubmitField, DecimalField, SelectField, RadioField, DateTimeField, \
+    IntegerField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from wtforms.widgets import TextArea
 
@@ -56,7 +57,8 @@ class IngredientSearch(FlaskForm):
 class RecipeEditing(FlaskForm):
     title = StringField("Title")
     servings = DecimalField("Servings")
-    difficulty = DecimalField("Difficulty")
+    difficulty = IntegerField("Difficulty")
+    rating = IntegerField("Rating")
     possible_categories = [x[0] for x in sql.get_all_query(f"SELECT DISTINCT category FROM recipe")]
     category = SelectField("Category", choices=possible_categories)
     prep_time = DateTimeField("Preparation Time", format="%H:%M")
@@ -66,10 +68,10 @@ class RecipeEditing(FlaskForm):
 
 
 class IngredientEditing(FlaskForm):
-    expiration = DateTimeField()
-    purchase = DateTimeField()
-    quantity = DecimalField()
-    units = StringField()
-    name = StringField()
-    bought = DecimalField()
+    expiration = DateTimeField("Expiration Date")
+    purchase = DateTimeField("Purchase Date", validators=[DataRequired()])
+    quantity = DecimalField("Quantity")
+    units = StringField("Units")
+    name = StringField("Name", validators=[DataRequired()])
+    bought = DecimalField("Quantity Bought", validators=[DataRequired()])
     submit = SubmitField("Submit")

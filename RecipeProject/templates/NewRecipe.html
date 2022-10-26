@@ -1,7 +1,7 @@
 {% extends "Sidebar.html"%}
 
 {% block title %}
-Edit Recipe
+New Recipe
 {% endblock title %}
 
 
@@ -10,24 +10,26 @@ Edit Recipe
 <div class="content">
     <form action="" method="POST">
 
-{#        {{ form.csrf_token }}#}
-{#            {{ form.hidden_tag() }}#}
-{#            {{ form.title.label }}#}
-{#            {{ form.title }}#}
-{#            {{ form.servings.label }}#}
-{#            {{ form.servings }}#}
-{#            {{ form.difficulty.label }}#}
-{#            {{ form.difficulty }}#}
-{#            {{ form.prep_time.label }}#}
-{#            {{ form.prep_time }}#}
-{#            {{ form.category.label }}#}
-{#            {{ form.category }}#}
-{#            {{ form.description.label }}#}
-{#            {{ form.description(cols="35", rows="20") }}#}
-{#            {{ form.steps.label }}#}
-{#            {{ form.steps(cols="35", rows="20") }}#}
-{#            {{ form.submit.label }}#}
-{#            {{ form.submit }}#}
+        {{ form.csrf_token }}
+        {{ form.hidden_tag() }}
+        {{ form.title.label }}
+        {{ form.title }}
+        {{ form.servings.label }}
+        {{ form.servings }}
+        {{ form.difficulty.label }}
+        {{ form.difficulty }}
+        {{ form.rating.label }}
+        {{ form.rating}}
+        {{ form.prep_time.label }}
+        {{ form.prep_time }}
+        {{ form.category.label }}
+        {{ form.category }}
+        {{ form.description.label }}
+        {{ form.description(cols="35", rows="20") }}
+        {{ form.steps.label }}
+        {{ form.steps(cols="35", rows="20") }}
+        {{ form.submit.label }}
+        {{ form.submit }}
         </form>
 
 </div>
