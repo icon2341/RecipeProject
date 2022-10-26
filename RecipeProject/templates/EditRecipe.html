@@ -34,6 +34,18 @@ Edit Recipe
             {{ form.description(cols="35", rows="20", class="formInput", id="formDescription") }}
             {{ form.steps.label(class="formLabel") }}
             {{ form.steps(cols="35", rows="20", class="formInput", id="formDescription") }}
+            <hr>
+            <a class="formLabel"> Ingredients: </a>
+{#            {{ form.ingredients.label(class="formLabel") }}#}
+            {% set recipePantryIngredients = [] %}
+            {% for ingredient in recipePantryIngredients %}
+{#                NOTE THIS CHECKBOX IS UNCHECKED BY DEFAULT, THIS FUNCTIONALITY CAN BE ADDED USING an if statment
+that would have to cross query current ingredients in the pantry#}
+                <label>
+                    <input type="checkbox" name="ingredients" value={{ ingredient }}>
+                </label>
+            {% endfor %}
+
 {#            {{ form.submit.label(class="formLabel", id="submitButtonEditorLabel") }}#}
             {{ form.submit(class="submitButtonEditor") }}
         </form>

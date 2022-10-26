@@ -166,6 +166,7 @@ def EditRecipe():
     recipe_id = request.args.get("rId")
     if request.method == "GET":
         recipe = get_recipe_if_owned(recipe_id, current_user["uuid"])
+        # re populate fields
         if recipe is not None:
             form.servings.data = float(recipe["servings"])
             form.title.data = recipe["recipe_name"]
@@ -182,6 +183,7 @@ def EditRecipe():
         # Non valid recipe id
         else:
             return redirect("/MyRecipes")
+        # submission
     elif request.method == "POST":
         sql_query = f"UPDATE recipe " \
                     f"SET servings=%s, " \

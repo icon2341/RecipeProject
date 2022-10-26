@@ -1,11 +1,16 @@
 {% extends "Base.html" %}
 
+{% block styles %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,700;6..96,900&family=Roboto:wght@500;900&display=swap" rel="stylesheet">
+{% endblock styles %}
 
 {% block header %}
-<link href="{{ url_for('static', filename='css/Header.css') }}" rel="stylesheet">
-<div class="heading">
-    <div class="leftText">Ryan Gosling</div>
-</div>
+    <link href="{{ url_for('static', filename='css/Header.css') }}" rel="stylesheet">
+    <div class="heading">
+        <div class="leftText">Ryan Gosling</div>
+    </div>
 {% endblock header %}
 
 {% block sidebar %}
