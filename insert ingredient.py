@@ -4,6 +4,11 @@ import pandas as pd
 import psycopg2
 from sshtunnel import SSHTunnelForwarder
 
+def mixed_to_float(x):
+    temp = x.find('-')
+    if (temp != -1):
+        x = x[:temp]
+    return float(sum(Fraction(term) for term in x.split()))
 
 class DataInserter:
 
@@ -78,7 +83,8 @@ class DataInserter:
                     temp2 = temp2
                 else:
                     unit = "cups"
-                    temp2 = float(sum(Fraction(term) for term in temp2.split()))
+                    temp2 = mixed_to_float(temp2)
+
                 #need to get ruid
                 cursor.execute(query4, [recipe_tuple[1]])
                 insert_here = cursor.fetchone()
