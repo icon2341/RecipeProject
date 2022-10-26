@@ -1,0 +1,15 @@
+.formLabel {
+    font-size: 32px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: bolder;
+    display: block;
+}
+
+.formInput {
+    background-color: white;
+    background-position: 10px 10px;
+    background-repeat: no-repeat;
+    padding-left: 40px;
+    font-family: 'Roboto', sans-serif;
+}
+

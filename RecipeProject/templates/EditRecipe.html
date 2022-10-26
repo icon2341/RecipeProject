@@ -8,8 +8,9 @@ Edit Recipe
 {%block content %}
 
 <div class="content">
-    <form class="editForms" action="" method="POST">
+    <link href="{{ url_for('static', filename='css/EditRecipe.css') }}" rel="stylesheet">
 
+    <form class="editForms" action="" method="POST">
         {{ form.csrf_token() }}
         {{ form.hidden_tag() }}
         {{ form.title.label(class="formLabel")}}
