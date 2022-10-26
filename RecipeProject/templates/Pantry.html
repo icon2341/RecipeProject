@@ -4,14 +4,11 @@
 Pantry
 {% endblock title %}
 
-{% block content %}
-
-<div class="pantryCard">
-    <link href="{{ url_for('static', filename='css/PantryCard.css') }}" rel="stylesheet">
-    <div class="Title">
-        <b>My&nbsp;Pantry</b>
-    </div>
-        <form action="" method="POST">
+{% block header %}
+<link href="{{ url_for('static', filename='css/Header.css') }}" rel="stylesheet">
+<div class="heading">
+    <div class="leftText">BLAHGAKJFKLJBDF</div>
+    <form action="" method="POST">
 
         {{ form.csrf_token }}
             {{ form.hidden_tag() }}
@@ -21,6 +18,17 @@ Pantry
             {{ form.searchField }}
             {{ form.submit }}
         </form>
+</div>
+{% endblock header %}
+
+{% block content %}
+
+<div class="pantryCard">
+    <link href="{{ url_for('static', filename='css/PantryCard.css') }}" rel="stylesheet">
+    <div class="Title">
+        <b>My&nbsp;Pantry</b>
+    </div>
+
         <!--
         <label> Sort by
             <select class="Select">

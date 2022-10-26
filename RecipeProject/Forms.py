@@ -4,11 +4,13 @@ Author: Group 7 CSCI 320 01-02
 """
 from flask_login import current_user
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, DecimalField, SelectField, RadioField, DateTimeField
+from wtforms import StringField, PasswordField, SubmitField, DecimalField, SelectField, RadioField, DateTimeField, \
+    IntegerField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from wtforms.widgets import TextArea
 
 from RecipeProject import bcrypt, sql
+from RecipeProject.DatabaseEntities import get_nice_columns
 from RecipeProject.Globals import USERNAME_MAX, PASSWORD_MAX
 
 
@@ -48,14 +50,15 @@ class ResetPassword(FlaskForm):
 class IngredientSearch(FlaskForm):
     order = RadioField("AscDesc", choices=["Ascending", "Descending"])
     searchField = StringField("SearchField")
-    sortBy = SelectField("Sort By", choices=[("Item Name", "item_name")])
+    sortBy = SelectField("Sort By", choices=get_nice_columns("ingredient"))
     submit = SubmitField("SearchButton")
 
 
 class RecipeEditing(FlaskForm):
     title = StringField("Title")
     servings = DecimalField("Servings")
-    difficulty = DecimalField("Difficulty")
+    difficulty = IntegerField("Difficulty")
+    rating = IntegerField("Rating")
     possible_categories = [x[0] for x in sql.get_all_query(f"SELECT DISTINCT category FROM recipe")]
     category = SelectField("Category", choices=possible_categories)
     prep_time = DateTimeField("Preparation Time", format="%H:%M")
@@ -63,16 +66,12 @@ class RecipeEditing(FlaskForm):
     steps = StringField("Steps", widget=TextArea())
     submit = SubmitField("Submit")
 
-"""
-    def validate_username(self, username):
-        user = User.query.filter_by(username=username.data).first()
-        if user:
-            print("USERNAME IS TAKEN")
-            raise ValidationError("USERNAME IS TAKEN")
 
-    def validate_email(self, email):
-        user = User.query.filter_by(email=email.data).first()
-        if user:
-            print("EMAIL IS TAKEN")
-            raise ValidationError("EMAIL IS TAKEN")
-"""
+class IngredientEditing(FlaskForm):
+    expiration = DateTimeField("Expiration Date")
+    purchase = DateTimeField("Purchase Date", validators=[DataRequired()])
+    quantity = DecimalField("Quantity")
+    units = StringField("Units")
+    name = StringField("Name", validators=[DataRequired()])
+    bought = DecimalField("Quantity Bought", validators=[DataRequired()])
+    submit = SubmitField("Submit")

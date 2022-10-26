@@ -9,16 +9,11 @@ from RecipeProject import login_manager
 from RecipeProject import sql
 
 
-@login_manager.user_loader  # Uncomment this function when database is connected
+@login_manager.user_loader
 def load_user(uuid):
     user = get_user_by_uuid(uuid)
     user.update_access_time()
     return user
-
-
-#    print(f"Logging in: {email}")
-#    return User.query.get(email)
-
 
 """
 This is the user, it represents a table. This is not the same as the postgresql table in our remote server
@@ -27,20 +22,24 @@ in SQL, you will have have one of these to define it.
 """
 
 
+def get_nice_columns(table: str):
+    """
+    Returns the nice printable versions of a table's columns,
+    aside from ids. So if a column you want has "id" somewhere in it
+    do not use this function
+    :param table: Table to get columns from
+    :return: Nice and neat column list in ordinal order
+    """
+    columns = sql.get_columns(table)
+    columns = [(x.replace("_", " ")).title() for x in columns if "id" not in x]
+    return columns
+
+
 def get_recipe_if_owned(recipe_id: str, user_id: int):
     if recipe_id.isdigit():
         recipe = Recipe(sql_data=sql.get_one_query(f"SELECT * FROM recipe WHERE ruid={recipe_id} AND uid={user_id}"))
         if recipe.valid():
             return recipe
-
-
-def get_recipe_by_id(id):
-    try:
-        id = str(int(id))
-
-    except ValueError:
-        return None
-    return Recipe(sql_data=sql.get_one_by("recipe", "ruid", id))
 
 
 def get_user_by_uuid(uuid):
