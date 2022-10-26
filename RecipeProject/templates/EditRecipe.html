@@ -8,8 +8,13 @@ Edit Recipe
 {%block content %}
 
 <div class="content">
-    <form class="editForms" action="" method="POST">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
 
+    <link href="{{ url_for('static', filename='css/EditRecipe.css') }}" rel="stylesheet">
+    <form class="editForms" action="" method="POST">
         {{ form.csrf_token() }}
             {{ form.hidden_tag() }}
             {{ form.title.label(class="formLabel")}}
@@ -25,7 +30,7 @@ Edit Recipe
             {{ form.description.label(class="formLabel") }}
             {{ form.description(cols="35", rows="20", class="formInput", id="formDescription") }}
             {{ form.steps.label(class="formLabel") }}
-            {{ form.steps(cols="35", rows="20") }}
+            {{ form.steps(cols="35", rows="20", class="formInput") }}
             {{ form.submit.label(class="formLabel") }}
             {{ form.submit }}
         </form>

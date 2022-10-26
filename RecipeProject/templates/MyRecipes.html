@@ -10,10 +10,9 @@ Recipes
 <div class="content">
     <link href="{{ url_for('static', filename='css/MyRecipes.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-
     <div id="cardBox">
         {% include "RecipeCard.html" %}
-        <span class="material-symbols-outlined-My" onclick="document.location.href='/newRecipe?rId={{ user['uuid'] }}';">add</span>
+        <span class="material-symbols-outlined" id ="addButton" onclick="document.location.href='/newRecipe?rId={{ user['uuid'] }}';">add</span>
         {# an add card button will have to be placed here inside the flexbox #}
     </div>
 

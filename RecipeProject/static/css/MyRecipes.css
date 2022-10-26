@@ -11,7 +11,7 @@
     margin: auto auto;
 }
 
-.material-symbols-outlined-My {
+#addButton {
     color: floralwhite;
     padding: 100px;
     width: 300px;
@@ -24,7 +24,7 @@
     'opsz' 48
 }
 
-.material-symbols-outlined-My:hover {
+#addButton:hover {
     padding: 90px;
     margin-left: 10px;
 }
