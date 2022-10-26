@@ -99,8 +99,23 @@ def Home():
 def NewIngredient():
     form = IngredientEditing()
     if request.method == "POST":
-        # TODO New ingredient
-        print(form.data)
+
+        sql_query = "INSERT INTO ingredient (expiration_date, purchase_date, quantity_bought," \
+                    " units_of_measure, item_name, quantity_bought, pantry_id)"
+
+        args = (
+            form.expiration.data,
+            form.purchase.data,
+            form.quantity.data,
+            form.units.data,
+            form.name.data,
+            form.bought.data
+
+            #current_user.pantry_id(uid)
+        )
+
+        #sql.query(sql_query, args)
+        print(current_user["pantry_id"])
         return redirect("/Pantry")
 
     return render_template("NewIngredient.html", user=current_user, form=form)
@@ -177,7 +192,6 @@ def EditRecipe():
             form.steps.data = recipe['steps']
             form.description.data = recipe['description']
             form.rating.data = recipe['rating']
-
 
             return render_template("EditRecipe.html", user=current_user, form=form)
         # Non valid recipe id

@@ -55,7 +55,7 @@ class IngredientSearch(FlaskForm):
 
 
 class RecipeEditing(FlaskForm):
-    title = StringField("Title")
+    title = StringField("Title", validators=[DataRequired()])
     servings = DecimalField("Servings")
     difficulty = IntegerField("Difficulty")
     rating = IntegerField("Rating")
@@ -70,8 +70,8 @@ class RecipeEditing(FlaskForm):
 class IngredientEditing(FlaskForm):
     expiration = DateTimeField("Expiration Date")
     purchase = DateTimeField("Purchase Date", validators=[DataRequired()])
-    quantity = DecimalField("Quantity")
+    quantity = DecimalField("Quantity", validators=[DataRequired()])
     units = StringField("Units")
     name = StringField("Name", validators=[DataRequired()])
-    bought = DecimalField("Quantity Bought", validators=[DataRequired()])
+    bought = DecimalField("Quantity Bought")
     submit = SubmitField("Submit")

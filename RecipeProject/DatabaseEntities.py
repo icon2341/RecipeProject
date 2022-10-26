@@ -108,6 +108,8 @@ class User(UserMixin):  # UserMixin tracks user sessions
         else:
             self.data = kwargs
 
+        self.data["pantry_id"] = sql.get_one_query("SELECT pantry_id FROM pantry where uid=%s", (self["uuid"]))
+
     def create_user(self):
         query = f"INSERT INTO \"User\" (username, email, password, create_datetime, last_access )" \
                 "VALUES(%s, %s, %s, %s, %s)"
