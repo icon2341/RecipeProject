@@ -80,7 +80,8 @@ def Pantry():
 @app.route("/MyRecipes")
 @login_required
 def myRecipes():
-    limit = 10  # Limit of the number of recipes returned
+    limit = 9999  # Limit of the number of recipes returned
+    # TODO JOIN table with ingredients
     recipes = [Recipe(sql_data=data) for data in
                sql.get_all_query(f"SELECT * FROM recipe WHERE uid={current_user['uuid']} LIMIT {limit}")]
 
@@ -98,6 +99,7 @@ def Home():
 def NewIngredient():
     form = IngredientEditing()
     if request.method == "POST":
+        # TODO New ingredient
         print(form.data)
         return redirect("/Pantry")
 
@@ -130,15 +132,15 @@ def Logout():
 @app.route("/newRecipe", methods=["GET", "POST"])
 @login_required
 def NewRecipe():
+    # TODO do stuff with
     form = RecipeEditing()
     if request.method == "GET":
 
         return render_template("NewRecipe.html", user=current_user, form=form)
     elif request.method == "POST":
         sql_query = f"INSERT INTO recipe (servings, recipe_name, difficulty, cook_time," \
-                    f" category, steps, description, rating) " \
-                    f"VALUES (%s, %s, %s, %s, %s, %s, %s, %s)" \
-
+                    f" category, steps, description, rating, uid, date_created) " \
+                    f"VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 
         args = (
             form.servings.data,
@@ -149,13 +151,17 @@ def NewRecipe():
             form.steps.data,
             form.description.data,
             form.rating.data,
+            current_user["uuid"],
+            datetime.datetime.now()
         )
         sql.query(sql_query, args)
+        return redirect("/MyRecipe")
 
 
 @app.route("/editRecipe", methods=["GET", "POST"])
 @login_required
 def EditRecipe():
+    # TODO Do stuff with ingredients
     form = RecipeEditing()
     recipe_id = request.args.get("rId")
     if request.method == "GET":

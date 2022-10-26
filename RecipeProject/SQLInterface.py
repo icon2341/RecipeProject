@@ -25,8 +25,9 @@ class SQLInterface:
             'port': server.local_bind_port,
         }
 
-        print("Server is up and running")
         self.connection = psycopg2.connect(**params)
+        print("Server is up and running")
+
 
     def get_by(self, table: str, column: str, where: str):
         """
