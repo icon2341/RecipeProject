@@ -195,6 +195,8 @@ def EditIngredientQuantities():
 def EditRecipe():
     # TODO Do stuff with ingredients
     form = RecipeEditing()
+    # requests recipe ID for passing onto system and later usage. 
+
     recipe_id = request.args.get("rId")
     if request.method == "GET":
         recipe = get_recipe_if_owned(recipe_id, current_user["uuid"])
@@ -228,6 +230,8 @@ def EditRecipe():
                     f"description=%s, " \
                     f"rating=%s" \
                     f"WHERE ruid=%s"
+
+        # query args, use %s and these OR use fstrings and manually pass in.
         args = (
             form.servings.data,
             form.title.data,
@@ -241,6 +245,7 @@ def EditRecipe():
         )
 
         ingredients = request.form.getlist('ingredients')
+        #query executer
         sql.query(sql_query, args)
 
         # return render_template("EditRecipe.html", user=current_user, form=form)

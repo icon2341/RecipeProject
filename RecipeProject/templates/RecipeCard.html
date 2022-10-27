@@ -62,12 +62,13 @@
 
         <div class="buttonSections">
             <button class= "editButton" onclick="document.location.href='/editRecipe?rId={{ recipe.ruid }}';"> Edit Recipe </button>
+            <button class= "editButton" onclick="document.location.href='/EditIngredientQuantities?rId={{ recipe.ruid }}'";> Edit <br> Ingredient <br> Quantities</button>
         </div>
         <div class="ingredientsSection">
             <a class="textEditorTitle" id="ingredientsTitle"> Ingredients and Quantity: </a>
-            {% for i in recipe.ingredients %}
+            {% for i in recipe.ingredients.keys() %}
 {#                HOW WILL QUANTITY BE STORED ON A RECIPE CARD#}
-                <a class="ingredientItem">{{ i }} {{ i }}</a>
+                <a class="ingredientItem">{{ i }} : {{ recipe.ingredients[i] }}</a>
             {% endfor %}
         </div>
     </div>
