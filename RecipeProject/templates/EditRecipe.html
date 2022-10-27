@@ -37,8 +37,8 @@ Edit Recipe
             <hr>
             <a class="formLabel"> Ingredients: </a>
 {#            {{ form.ingredients.label(class="formLabel") }}#}
-            {% set recipePantryIngredients = [] %}
-            {% for ingredient in recipePantryIngredients %}
+
+            {% for ingredient in ingredients %}
 {#                NOTE THIS CHECKBOX IS UNCHECKED BY DEFAULT, THIS FUNCTIONALITY CAN BE ADDED USING an if statment
 that would have to cross query current ingredients in the pantry#}
                 <label>

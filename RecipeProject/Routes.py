@@ -8,7 +8,8 @@ from flask import render_template, request, redirect
 from flask_login import login_user, login_required, logout_user, current_user
 from RecipeProject import sql
 from RecipeProject import app, bcrypt, login_manager
-from RecipeProject.DatabaseEntities import get_user_by_username, User, Recipe, get_recipe_if_owned
+from RecipeProject.DatabaseEntities import get_user_by_username, User, Recipe, get_recipe_if_owned, get_pantry, \
+    get_ingredients
 from RecipeProject.Forms import *
 
 # Redirects logged out users to front page
@@ -98,10 +99,13 @@ def Home():
 @login_required
 def NewIngredient():
     form = IngredientEditing()
-    if request.method == "POST":
 
+    #if request.method == "GET":
+
+
+    if request.method == "POST":
         sql_query = "INSERT INTO ingredient (expiration_date, purchase_date, quantity_bought," \
-                    " units_of_measure, item_name, quantity_bought, pantry_id)"
+                    " units_of_measure, item_name, quantity_bought, pantry_id) VALUES (%s, %s, %s, %s, %s, %s, %s)"
 
         args = (
             form.expiration.data,
@@ -109,12 +113,11 @@ def NewIngredient():
             form.quantity.data,
             form.units.data,
             form.name.data,
-            form.bought.data
-
-            #current_user.pantry_id(uid)
+            form.bought.data,
+            current_user["pantry_id"]
         )
 
-        #sql.query(sql_query, args)
+        sql.query(sql_query, args)
         print(current_user["pantry_id"])
         return redirect("/Pantry")
 
@@ -170,7 +173,7 @@ def NewRecipe():
             datetime.datetime.now()
         )
         sql.query(sql_query, args)
-        return redirect("/MyRecipe")
+        return redirect("/MyRecipes")
 
 
 @app.route("/editRecipe", methods=["GET", "POST"])
@@ -192,8 +195,10 @@ def EditRecipe():
             form.steps.data = recipe['steps']
             form.description.data = recipe['description']
             form.rating.data = recipe['rating']
+            ingredients_checked = get_ingredients(recipe['ruid'])
 
-            return render_template("EditRecipe.html", user=current_user, form=form)
+            return render_template("EditRecipe.html", user=current_user, form=form,
+                                   ingredients_checked=ingredients_checked, ingredients=get_pantry(current_user["uuid"]))
         # Non valid recipe id
         else:
             return redirect("/MyRecipes")
@@ -220,5 +225,8 @@ def EditRecipe():
             form.rating.data,
             recipe_id
         )
+
+        ingredients = request.form.getlist('ingredients')
         sql.query(sql_query, args)
+
         return render_template("EditRecipe.html", user=current_user, form=form)

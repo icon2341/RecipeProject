@@ -23,6 +23,19 @@ in SQL, you will have have one of these to define it.
 """
 
 
+def add_ingredient_to_recipe(ruid, ingredient_id, quantity_required, unit):
+    sql_query = f"INSERT INTO recipeContains (quantity, unit, ruid, ingredient_id) VALUES ({quantity_required}, {unit}, {ruid}, {ingredient_id})"
+    sql.query(sql_query)
+
+
+def get_pantry(uid):
+    pantry = sql.get_all_query(
+        f"SELECT i.item_name FROM \"User\" INNER JOIN ingredient i on \"User\".pantry_id = i.pantry_id WHERE \"User\".uid={uid}")
+    pantry = [x[0].title() for x in pantry]
+
+    return pantry
+
+
 def get_nice_columns(table: str):
     """
     Returns the nice printable versions of a table's columns,
@@ -49,6 +62,18 @@ def get_user_by_uuid(uuid):
 
 def get_user_by_username(username):
     return User(sql_data=sql.get_one_by("User", "username", username))
+
+
+def get_ingredients(ruid):
+    ingredients = sql.get_all_query(f"SELECT i.item_name "
+                                    f"FROM recipe "
+                                    f"INNER JOIN \"recipeContains\" rC on recipe.ruid = rC.ruid "
+                                    f"INNER JOIN ingredient i on rC.ingredient_id = i.ingredient_id "
+                                    f"WHERE recipe.ruid={ruid}")
+
+    ingredients = [x[0] for x in ingredients]
+
+    return ingredients
 
 
 class DatabaseObject:
@@ -85,7 +110,11 @@ class Recipe(DatabaseObject):
 
     def __init__(self, sql_data=None, columns=None, **kwargs):
         super().__init__("recipe", sql_data=sql_data, columns=columns, **kwargs)
-    # TODO create recipe function
+
+        # sql_query = "SELECT ingredient.item_name FROM Recipe INNER JOIN recipeContains ON "
+
+        self.data["ingredients"] = get_ingredients(self['ruid'])
+        self.data["numberIngredients"] = len(self["ingredients"])
     # def create_recipe(self):
     # query = f"INSERT INTO"
     # args =
@@ -93,31 +122,31 @@ class Recipe(DatabaseObject):
 
 
 class User(UserMixin):  # UserMixin tracks user sessions
-
+    # TODO make username unique in the database
     def __init__(self, sql_data=None, **kwargs):
 
         if sql_data is not None:
-            self.data = {
-                "uuid": sql_data[0],
-                "username": sql_data[1],
-                "email": sql_data[2],
-                "password": sql_data[3],
-                "create_datetime": sql_data[4],
-                "last_access": sql_data[5]
-            }
+            self.data = {"uuid": sql_data[0], "username": sql_data[1], "email": sql_data[2], "password": sql_data[3],
+                         "create_datetime": sql_data[4], "last_access": sql_data[5], "pantry_id": sql_data[6]}
+
         else:
             self.data = kwargs
-
-        self.data["pantry_id"] = sql.get_one_query("SELECT pantry_id FROM pantry where uid=%s", (self["uuid"]))
 
     def create_user(self):
         query = f"INSERT INTO \"User\" (username, email, password, create_datetime, last_access )" \
                 "VALUES(%s, %s, %s, %s, %s)"
         args = (self['username'], self['email'], self['password'], self['create_datetime'], self['last_access'])
-        # query = f"INSERT INTO \"User\" (username, email, password, create_datetime, last_access ) \ VALUES('{
-        # self.data['uuid']}','{self.data['username']}', '{self.data['email']}', '{self.data['password']}',
-        # '{self.data['create_datetime']}', '{self.data['last_access']}');"
+
         sql.query(query, args)
+
+        tmp_user = get_user_by_username(self['username'])
+
+        add_pantry_query = f"INSERT INTO pantry (uid) VALUES({tmp_user['uuid']})"
+        sql.query(add_pantry_query)
+
+        pantry_id = sql.get_one_by("pantry", "uid", tmp_user['uuid'])[0]
+
+        sql.query(f"UPDATE \"User\" SET pantry_id={pantry_id} WHERE uid={tmp_user['uuid']}")
 
     def get_id(self):
         return self.data['uuid']

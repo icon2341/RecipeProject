@@ -2,6 +2,8 @@
 Form backend for the Recipe project backend
 Author: Group 7 CSCI 320 01-02
 """
+import datetime
+
 from flask_login import current_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, DecimalField, SelectField, RadioField, DateTimeField, \
@@ -10,7 +12,7 @@ from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationE
 from wtforms.widgets import TextArea
 
 from RecipeProject import bcrypt, sql
-from RecipeProject.DatabaseEntities import get_nice_columns
+from RecipeProject.DatabaseEntities import get_nice_columns, get_user_by_username
 from RecipeProject.Globals import USERNAME_MAX, PASSWORD_MAX
 
 
@@ -33,6 +35,10 @@ class RegistrationForm(FlaskForm):
     password = PasswordField("Password", validators=[DataRequired(), Length(min=2, max=PASSWORD_MAX)])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField("Sign Up")
+
+    def validate_username(self, username):
+        return bool(get_user_by_username(username.data))
+
 
 
 class ResetPassword(FlaskForm):
@@ -69,7 +75,7 @@ class RecipeEditing(FlaskForm):
 
 class IngredientEditing(FlaskForm):
     expiration = DateTimeField("Expiration Date")
-    purchase = DateTimeField("Purchase Date", validators=[DataRequired()])
+    purchase = DateTimeField("Purchase Date", validators=[DataRequired()], default=datetime.datetime.today())
     quantity = DecimalField("Quantity", validators=[DataRequired()])
     units = StringField("Units")
     name = StringField("Name", validators=[DataRequired()])
