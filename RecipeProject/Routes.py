@@ -60,7 +60,6 @@ def SignUp():
 @app.route("/Pantry", methods=["GET", "POST"])
 @login_required
 def Pantry():
-
     form = IngredientSearch()
 
     if request.method == "GET":
@@ -108,6 +107,7 @@ def Pantry():
               ]
     return render_template("Pantry.html", user=current_user, pantry=pantry, form=form)
 '''
+
 
 @app.route("/MyRecipes")
 @login_required
@@ -280,11 +280,13 @@ def EditRecipe():
         )
 
         ingredients = request.form.getlist('ingredients')
-        #query executer
+        # query executer
         sql.query(sql_query, args)
 
         # return render_template("EditRecipe.html", user=current_user, form=form)
         return redirect("/EditIngredientQuantities")
+
+
 '''
 @app.route('/IngredientSearch', methods=["POST"])
 @login_required
@@ -292,4 +294,3 @@ def ingredientSearch():
     form = ingredientSearch()
     if form.validate_on_submit():
         args = form.searchField.data'''
-
