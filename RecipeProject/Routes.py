@@ -100,8 +100,7 @@ def Home():
 def NewIngredient():
     form = IngredientEditing()
 
-    #if request.method == "GET":
-
+    # if request.method == "GET":
 
     if request.method == "POST":
         sql_query = "INSERT INTO ingredient (expiration_date, purchase_date, quantity_bought," \
@@ -176,6 +175,21 @@ def NewRecipe():
         return redirect("/MyRecipes")
 
 
+@app.route("/EditIngredientQuantities", methods=["GET", "POST"])
+@login_required
+def EditIngredientQuantities():
+    ingredients = {"Tomato": "4", "Baby": "3", "Crow": "6"}
+
+    if request.method == "POST":
+        for i in ingredients.keys():
+            print(i)
+            print(request.form.get(i))
+
+        return render_template("editIngredientQuantity.html", user=current_user, ingredients=ingredients)
+    elif request.method == "GET":
+        return render_template("editIngredientQuantity.html", user=current_user, ingredients=ingredients)
+
+
 @app.route("/editRecipe", methods=["GET", "POST"])
 @login_required
 def EditRecipe():
@@ -188,7 +202,6 @@ def EditRecipe():
         if recipe is not None:
             form.servings.data = float(recipe["servings"])
             form.title.data = recipe["recipe_name"]
-            # TODO when this value is casted to an int it breaks
             form.difficulty.data = recipe["difficulty"]
             form.prep_time.data = recipe["cook_time"]
             form.category.data = recipe['category']
@@ -198,7 +211,8 @@ def EditRecipe():
             ingredients_checked = get_ingredients(recipe['ruid'])
 
             return render_template("EditRecipe.html", user=current_user, form=form,
-                                   ingredients_checked=ingredients_checked, ingredients=get_pantry(current_user["uuid"]))
+                                   ingredients_checked=ingredients_checked,
+                                   ingredients=get_pantry(current_user["uuid"]))
         # Non valid recipe id
         else:
             return redirect("/MyRecipes")
@@ -229,4 +243,5 @@ def EditRecipe():
         ingredients = request.form.getlist('ingredients')
         sql.query(sql_query, args)
 
-        return render_template("EditRecipe.html", user=current_user, form=form)
+        # return render_template("EditRecipe.html", user=current_user, form=form)
+        return redirect("/EditIngredientQuantities")

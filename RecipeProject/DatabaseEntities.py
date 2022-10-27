@@ -65,14 +65,13 @@ def get_user_by_username(username):
 
 
 def get_ingredients(ruid):
-    ingredients = sql.get_all_query(f"SELECT i.item_name "
+    ingredients = sql.get_all_query(f"SELECT i.item_name, rC.quantity "
                                     f"FROM recipe "
                                     f"INNER JOIN \"recipeContains\" rC on recipe.ruid = rC.ruid "
                                     f"INNER JOIN ingredient i on rC.ingredient_id = i.ingredient_id "
                                     f"WHERE recipe.ruid={ruid}")
 
-    ingredients = [x[0] for x in ingredients]
-
+    ingredients = {x[0]:x[1] for x in ingredients}
     return ingredients
 
 
@@ -111,14 +110,8 @@ class Recipe(DatabaseObject):
     def __init__(self, sql_data=None, columns=None, **kwargs):
         super().__init__("recipe", sql_data=sql_data, columns=columns, **kwargs)
 
-        # sql_query = "SELECT ingredient.item_name FROM Recipe INNER JOIN recipeContains ON "
-
         self.data["ingredients"] = get_ingredients(self['ruid'])
         self.data["numberIngredients"] = len(self["ingredients"])
-    # def create_recipe(self):
-    # query = f"INSERT INTO"
-    # args =
-    # sql.query(query, args)
 
 
 class User(UserMixin):  # UserMixin tracks user sessions
@@ -161,42 +154,3 @@ class User(UserMixin):  # UserMixin tracks user sessions
         data = (datetime.datetime.now(), self["uuid"])
 
         sql.query("""UPDATE \"User\" SET last_access=%s WHERE uid=%s""", data)
-
-    """
-    __tablename__ = "User"
-    id = db.Column(db.Integer, primary_key=True)
-
-    # Other attributes
-    email = db.Column(db.String(120))  # Primary Key
-    create_datetime = db.Column(db.DateTime(timezone=True), server_default=func.now())
-    last_access_datetime = db.Column(db.DateTime(timezone=True), server_default=func.now())
-    username = db.Column(db.String(USERNAME_MAX), unique=True, nullable=False)
-    password = db.Column(db.String(PASSWORD_SIZE), nullable=False)
-
-    def __repr__(self):
-        return f"User {self.username}, Email: {self.email}, Created: {self.create_datetime}"
-    """
-
-
-"""
-class Ingredient(db.Model):
-    __tablename__ = "Ingredient"
-    # Was not sure if this should be string or int
-    iuid = db.Column(db.Integer, primary_key=True)  # Primary key
-
-    # Other Attributes
-    item_name = db.Column(db.String(ITEM_MAX), nullable=False)
-    quantity_bought = db.Column(db.Integer, nullable=False)
-    current_quantity = db.Column(db.Integer)
-    unit = db.Column(db.String(UNIT_MAX))
-    purchase_date = db.Column(db.Integer, nullable=False)
-    expiration_date = db.Column(db.Integer)
-
-    def __repr__(self):
-        return f"Ingredient: {self.item_name}, Quantity: {self.current_bought}, Expiration Date: " \
-               f"{self.expiration_date}, Unit: {self.unit}"
-
-
-# Todo Uncomment this block and implement each database entity
-
-"""

@@ -1,0 +1,34 @@
+{% extends "Sidebar.html"%}
+
+{% block title %}
+Edit Recipe
+{% endblock title %}
+
+
+{% block content %}
+
+
+<div class="content">
+    <div class="inputForm">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500;900&display=swap" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/EditRecipe.css') }}" rel="stylesheet">
+        <h1 id="recipeTitle"> Edit Ingredient Quantities </h1>
+
+        <form action="" method="POST" >
+
+        {% for ingredient, value in ingredients.items() %}
+            <label for={{ ingredient }} class="formLabel">
+                {{ ingredient }}: <input type="text" id={{ ingredient }} class="formInput" name={{ ingredient }} value={{ value }}>
+            </label>
+        {% endfor %}
+
+        <button type="submit" class="submitButtonEditor"> Submit </button>
+
+        </form>
+    </div>
+
+
+</div>
+{% endblock content %}

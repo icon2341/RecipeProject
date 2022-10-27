@@ -7,7 +7,7 @@ import datetime
 from flask_login import current_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, DecimalField, SelectField, RadioField, DateTimeField, \
-    IntegerField
+    IntegerField, FormField, FieldList, Form
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from wtforms.widgets import TextArea
 
@@ -38,7 +38,6 @@ class RegistrationForm(FlaskForm):
 
     def validate_username(self, username):
         return bool(get_user_by_username(username.data))
-
 
 
 class ResetPassword(FlaskForm):
@@ -80,4 +79,13 @@ class IngredientEditing(FlaskForm):
     units = StringField("Units")
     name = StringField("Name", validators=[DataRequired()])
     bought = DecimalField("Quantity Bought")
+    submit = SubmitField("Submit")
+
+
+class IngredientQuantity(FlaskForm):
+    quantity = IntegerField("Quantity")
+
+
+class IngredientQuantityList(FlaskForm):
+    quantities = FieldList(FormField(IngredientQuantity), min_entries=1)
     submit = SubmitField("Submit")
