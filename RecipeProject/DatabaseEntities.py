@@ -22,6 +22,14 @@ this essentially is a client-side representation of what the server looks like f
 in SQL, you will have have one of these to define it.
 """
 
+def get_filtered_pantry(uid):
+    pantry = sql.get_all_query(
+        f"SELECT i FROM \"User\" "
+        f"INNER JOIN ingredient i on \"User\".pantry_id = i.pantry_id "
+        f"WHERE \"User\".uid={uid} "
+        f"ORDER BY i.item_name ASC")
+    return pantry
+
 
 def add_ingredient_to_recipe(ruid, ingredient_id, quantity_required, unit):
     sql_query = f"INSERT INTO recipeContains (quantity, unit, ruid, ingredient_id) VALUES ({quantity_required}, {unit}, {ruid}, {ingredient_id})"
@@ -31,7 +39,6 @@ def add_ingredient_to_recipe(ruid, ingredient_id, quantity_required, unit):
 def get_pantry(uid):
     pantry = sql.get_all_query(
         f"SELECT i FROM \"User\" INNER JOIN ingredient i on \"User\".pantry_id = i.pantry_id WHERE \"User\".uid={uid}")
-    #pantry = [x[0] for x in pantry]
     return pantry
 
 

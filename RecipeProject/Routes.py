@@ -9,7 +9,7 @@ from flask_login import login_user, login_required, logout_user, current_user
 from RecipeProject import sql
 from RecipeProject import app, bcrypt, login_manager
 from RecipeProject.DatabaseEntities import get_user_by_username, User, Recipe, get_recipe_if_owned, get_pantry, \
-    get_ingredients
+    get_ingredients, get_filtered_pantry
 from RecipeProject.Forms import *
 
 # Redirects logged out users to front page
@@ -57,27 +57,37 @@ def SignUp():
     return render_template("SignUp.html", form=form)
 
 
-@app.route("/Pantry")
+@app.route("/Pantry", methods=["GET", "POST"])
 @login_required
 def Pantry():
 
     form = IngredientSearch()
-    pantry = get_pantry(current_user['uuid'])
-    print(pantry)
-    for y in range(len(pantry)):
-        x = pantry[y]
-        x = x[0]
-        x = x[1:len(x)-1]
-        x = x.split(',')
-        pantry[y] = {"item_name" : x[7],
-                     "quantity_bought": x[0],
-                     "current_quantity": x[1],
-                     "purchase_date": x[3],
-                     "expiration_date": x[4],
-                     "unit_of_measure": x[2]
-                     }
 
-    return render_template("Pantry.html", user=current_user, pantry=pantry, form=form)
+    if request.method == "GET":
+        pantry = get_pantry(current_user['uuid'])
+        for y in range(len(pantry)):
+            x = pantry[y]
+            x = x[0]
+            x = x[1:len(x) - 1]
+            x = x.split(',')
+            pantry[y] = {"item_name": x[7],
+                         "quantity_bought": x[0],
+                         "current_quantity": x[1],
+                         "purchase_date": x[3],
+                         "expiration_date": x[4],
+                         "unit_of_measure": x[2]
+                         }
+        return render_template("Pantry.html", user=current_user, pantry=pantry, form=form)
+
+    elif request.method == "POST":
+        sort_by = form.sortBy.data
+
+        print(form.order.data)
+        pantry = get_filtered_pantry(current_user['uuid'])
+        print(pantry)
+        # sql.get_all_query(f"SELECT i FROM \"User\" INNER JOIN ingredient i on \"User\".pantry_id = i.pantry_id
+        # WHERE \"User\".uid={current_user['uuid']} ORDER BY i.item_name ASC")
+        return render_template("Pantry.html", user=current_user, pantry=pantry, form=form)
 
     '''
     form = IngredientSearch()
@@ -205,6 +215,10 @@ def EditIngredientQuantities():
         for i in ingredients.keys():
             print(i)
             print(request.form.get(i))
+            sub_query = f"UPDATE recipeContains " \
+                        f"SET ingredient_id = %s " \
+                        f"quantity=%s"
+        # will need to update based on inner join with ingredients and recipeContain
 
         return render_template("editIngredientQuantity.html", user=current_user, ingredients=ingredients)
     elif request.method == "GET":
