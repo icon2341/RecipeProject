@@ -74,7 +74,7 @@ def Pantry():
                      "current_quantity": x[1],
                      "purchase_date": x[3],
                      "expiration_date": x[4],
-                     "unit_of_measure": x[5]
+                     "unit_of_measure": x[2]
                      }
 
     return render_template("Pantry.html", user=current_user, pantry=pantry, form=form)
