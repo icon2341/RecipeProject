@@ -60,7 +60,28 @@ def SignUp():
 @app.route("/Pantry")
 @login_required
 def Pantry():
+
     form = IngredientSearch()
+    pantry = get_pantry(current_user['uuid'])
+    print(pantry)
+    for y in range(len(pantry)):
+        x = pantry[y]
+        x = x[0]
+        x = x[1:len(x)-1]
+        x = x.split(',')
+        pantry[y] = {"item_name" : x[7],
+                     "quantity_bought": x[0],
+                     "current_quantity": x[1],
+                     "purchase_date": x[3],
+                     "expiration_date": x[4],
+                     "unit_of_measure": x[5]
+                     }
+
+    return render_template("Pantry.html", user=current_user, pantry=pantry, form=form)
+
+    '''
+    form = IngredientSearch()
+
     # Todo implement functions for the search system
     pantry = [{"item_name": "Yo mama",
                "quantity_bought": 1,
@@ -76,7 +97,7 @@ def Pantry():
                "unit_of_measure": "tons"}
               ]
     return render_template("Pantry.html", user=current_user, pantry=pantry, form=form)
-
+'''
 
 @app.route("/MyRecipes")
 @login_required
@@ -250,3 +271,11 @@ def EditRecipe():
 
         # return render_template("EditRecipe.html", user=current_user, form=form)
         return redirect("/EditIngredientQuantities")
+'''
+@app.route('/IngredientSearch', methods=["POST"])
+@login_required
+def ingredientSearch():
+    form = ingredientSearch()
+    if form.validate_on_submit():
+        args = form.searchField.data'''
+

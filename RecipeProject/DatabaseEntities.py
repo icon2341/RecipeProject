@@ -30,9 +30,8 @@ def add_ingredient_to_recipe(ruid, ingredient_id, quantity_required, unit):
 
 def get_pantry(uid):
     pantry = sql.get_all_query(
-        f"SELECT i.item_name FROM \"User\" INNER JOIN ingredient i on \"User\".pantry_id = i.pantry_id WHERE \"User\".uid={uid}")
-    pantry = [x[0].title() for x in pantry]
-
+        f"SELECT i FROM \"User\" INNER JOIN ingredient i on \"User\".pantry_id = i.pantry_id WHERE \"User\".uid={uid}")
+    #pantry = [x[0] for x in pantry]
     return pantry
 
 
