@@ -20,7 +20,7 @@ Edit Recipe
 
         {% for ingredient, value in ingredients.items() %}
             <label for={{ ingredient }} class="formLabel">
-                {{ ingredient }}: <input type="text" id={{ ingredient }} class="formInput" name={{ ingredient }} value={{ value }}>
+                {{ ingredient }}: <input type="text" id={{ ingredient }} class="formInput" name="{{ ingredient }}" value={{ value }}>
             </label>
         {% endfor %}
 

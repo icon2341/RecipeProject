@@ -22,13 +22,6 @@ this essentially is a client-side representation of what the server looks like f
 in SQL, you will have have one of these to define it.
 """
 
-def get_filtered_pantry(uid):
-    pantry = sql.get_all_query(
-        f"SELECT i FROM \"User\" "
-        f"INNER JOIN ingredient i on \"User\".pantry_id = i.pantry_id "
-        f"WHERE \"User\".uid={uid} "
-        f"ORDER BY i.item_name ASC")
-    return pantry
 
 
 def add_ingredient_to_recipe(ruid, ingredient_id, quantity_required, unit):
@@ -77,7 +70,7 @@ def get_ingredients(ruid):
                                     f"INNER JOIN ingredient i on rC.ingredient_id = i.ingredient_id "
                                     f"WHERE recipe.ruid={ruid}")
 
-    ingredients = {x[0]:x[1] for x in ingredients}
+    ingredients = {x[0]: x[1] for x in ingredients}
     return ingredients
 
 
@@ -108,6 +101,16 @@ class DatabaseObject:
 
     def __getitem__(self, item):
         return self.data[item]
+class RecipeContains(DatabaseObject):
+    def __init__(self, sql_data=None, columns=None, **kwargs):
+        super().__init__("recipeContains", sql_data=sql_data, columns=columns, **kwargs)
+class Ingredient(DatabaseObject):
+
+    def __init__(self, sql_data=None, columns=None, **kwargs):
+        super().__init__("ingredient", sql_data=sql_data, columns=columns, **kwargs)
+
+    def __str__(self):
+        return self["name"]
 
 
 class Recipe(DatabaseObject):
@@ -118,6 +121,14 @@ class Recipe(DatabaseObject):
 
         self.data["ingredients"] = get_ingredients(self['ruid'])
         self.data["numberIngredients"] = len(self["ingredients"])
+
+    def make_recipe(self):
+        """
+        Makes the recipe and changes ingredient quantities in accordance
+        :return:
+        """
+        enough_query = "s"
+        enough = sql.get_all_query(enough_query)
 
 
 class User(UserMixin):  # UserMixin tracks user sessions

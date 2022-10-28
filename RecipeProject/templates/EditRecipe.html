@@ -43,11 +43,11 @@ Edit Recipe
 that would have to cross query current ingredients in the pantry#}
                 {% if ingredient in ingredients_checked %}
                     <label>
-                        <input type="checkbox" name="ingredients" value={{ ingredient }} checked>{{ ingredient }}
+                        <input type="checkbox"  value={{ ingredient.ingredient_id }} checked>{{ ingredient.item_name }}
                     </label>
                 {% else %}
                     <label>
-                        <input type="checkbox" name="ingredients" value={{ ingredient }} >{{ ingredient }}
+                        <input type="checkbox" value={{ ingredient.ingredient_id }} >{{ ingredient.item_name }}
                     </label>
                 {% endif %}
             {% endfor %}

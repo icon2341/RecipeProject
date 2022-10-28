@@ -3,13 +3,14 @@ Flask Backend to the recipe project web interface
 Author: Group 7 CSCI 320 01-02
 """
 import datetime
+import json
 
 from flask import render_template, request, redirect
 from flask_login import login_user, login_required, logout_user, current_user
 from RecipeProject import sql
 from RecipeProject import app, bcrypt, login_manager
 from RecipeProject.DatabaseEntities import get_user_by_username, User, Recipe, get_recipe_if_owned, get_pantry, \
-    get_ingredients, get_filtered_pantry
+    get_ingredients, Ingredient, RecipeContains
 from RecipeProject.Forms import *
 
 # Redirects logged out users to front page
@@ -79,13 +80,20 @@ def Pantry():
         return render_template("Pantry.html", user=current_user, pantry=pantry, form=form)
 
     elif request.method == "POST":
-        sort_by = form.sortBy.data
 
-        print(form.order.data)
-        pantry = get_filtered_pantry(current_user['uuid'])
-        print(pantry)
-        # sql.get_all_query(f"SELECT i FROM \"User\" INNER JOIN ingredient i on \"User\".pantry_id = i.pantry_id
-        # WHERE \"User\".uid={current_user['uuid']} ORDER BY i.item_name ASC")
+        pantry = sql.get_filtered_pantry(current_user['uuid'], form.sortBy.data, form.order.data, form.searchField.data)
+        for y in range(len(pantry)):
+            x = pantry[y]
+            x = x[0]
+            x = x[1:len(x) - 1]
+            x = x.split(',')
+            pantry[y] = {"item_name": x[7],
+                         "quantity_bought": x[0],
+                         "current_quantity": x[1],
+                         "purchase_date": x[3],
+                         "expiration_date": x[4],
+                         "unit_of_measure": x[2]
+                         }
         return render_template("Pantry.html", user=current_user, pantry=pantry, form=form)
 
     '''
@@ -134,8 +142,8 @@ def NewIngredient():
     # if request.method == "GET":
 
     if request.method == "POST":
-        sql_query = "INSERT INTO ingredient (expiration_date, purchase_date, quantity_bought," \
-                    " units_of_measure, item_name, quantity_bought, pantry_id) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+        sql_query = "INSERT INTO ingredient (expiration_date, purchase_date, current_quantity," \
+                    " unit_of_measure, item_name, quantity_bought, pantry_id) VALUES (%s, %s, %s, %s, %s, %s, %s)"
 
         args = (
             form.expiration.data,
@@ -148,7 +156,6 @@ def NewIngredient():
         )
 
         sql.query(sql_query, args)
-        print(current_user["pantry_id"])
         return redirect("/Pantry")
 
     return render_template("NewIngredient.html", user=current_user, form=form)
@@ -230,7 +237,7 @@ def EditIngredientQuantities():
 def EditRecipe():
     # TODO Do stuff with ingredients
     form = RecipeEditing()
-    # requests recipe ID for passing onto system and later usage. 
+    # requests recipe ID for passing onto system and later usage.
 
     recipe_id = request.args.get("rId")
     if request.method == "GET":
@@ -247,9 +254,14 @@ def EditRecipe():
             form.rating.data = recipe['rating']
             ingredients_checked = get_ingredients(recipe['ruid'])
 
+            ingredients = []
+            for ingredient in get_pantry(current_user['uuid']):
+                ingredient = ingredient[0][1:-1]
+                ingredients.append(Ingredient(sql_data=ingredient.split(",")))
+
             return render_template("EditRecipe.html", user=current_user, form=form,
                                    ingredients_checked=ingredients_checked,
-                                   ingredients=get_pantry(current_user["uuid"]))
+                                   ingredients=ingredients)
         # Non valid recipe id
         else:
             return redirect("/MyRecipes")
@@ -278,10 +290,28 @@ def EditRecipe():
             form.rating.data,
             recipe_id
         )
+        delete_query = f"DELETE FROM \"recipeContains\" WHERE \"recipeContains\".ruid = {recipe_id} "
+
+        sql.query(delete_query)
 
         ingredients = request.form.getlist('ingredients')
-        # query executer
-        sql.query(sql_query, args)
+        for ingredient in ingredients:
+
+            recipe_contains_data = sql.get_one_by("recipeContains", "ingredient_id", ingredient)
+            if not recipe_contains_data:
+                ingredientEntity = Ingredient(sql_data=sql.get_one_by("ingredient", "ingredient_id", ingredient))
+                measure = ingredientEntity["unit_of_measure"]
+                quantity = 0
+            else:
+                recipe_contains = RecipeContains(sql_data=recipe_contains_data)
+                measure = recipe_contains['unit']
+                quantity = recipe_contains['quantity']
+            # Check if the item is already in the recipe
+
+            add_query = f"INSERT INTO \"recipeContains\" (quantity, unit, ruid, ingredient_id) VALUES (%s, %s, %s, %s)"
+            add_args = (quantity, measure, recipe_id, ingredient)
+
+            sql.query(add_query, add_args)
 
         # return render_template("EditRecipe.html", user=current_user, form=form)
         return redirect("/EditIngredientQuantities")

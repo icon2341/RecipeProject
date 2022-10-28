@@ -55,7 +55,10 @@ class ResetPassword(FlaskForm):
 class IngredientSearch(FlaskForm):
     order = RadioField("AscDesc", choices=["Ascending", "Descending"])
     searchField = StringField("SearchField")
-    sortBy = SelectField("Sort By", choices=get_nice_columns("ingredient"))
+
+    columns = list(zip(sql.get_columns("ingredient"), get_nice_columns("ingredient")))
+
+    sortBy = SelectField("Sort By", choices=columns)
     submit = SubmitField("SearchButton")
 
 

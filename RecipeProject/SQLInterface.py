@@ -68,7 +68,10 @@ class SQLInterface:
         :return: Nothing
         """
         cursor = self.connection.cursor()
-        cursor.execute(query, args)
+        if not args:
+            cursor.execute(query)
+        else:
+            cursor.execute(query, args)
         self.connection.commit()
         cursor.close()
 
@@ -108,5 +111,26 @@ class SQLInterface:
         cursor.close()
         result = [x[0] for x in result]
         return result
+
+    def get_filtered_pantry(self, uid, order_by, order, search_value):
+        if order == "Ascending":
+            order = "ASC"
+        elif order == "Descending":
+            order = "DESC"
+
+        contains_clause = ""
+        if search_value is not None:
+            contains_clause = f" AND i.item_name LIKE '%{search_value}%' "
+
+
+        query = f"SELECT i FROM \"User\" " \
+                f"INNER JOIN ingredient i on \"User\".pantry_id = i.pantry_id " \
+                f"WHERE \"User\".uid={uid} {contains_clause}" \
+                f"ORDER BY i.{order_by} {order}"
+        cursor = self.connection.cursor()
+        cursor.execute(query)
+        pantry = cursor.fetchall()
+        cursor.close()
+        return pantry
 
 
