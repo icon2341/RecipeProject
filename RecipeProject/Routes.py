@@ -10,7 +10,7 @@ from flask_login import login_user, login_required, logout_user, current_user
 from RecipeProject import sql
 from RecipeProject import app, bcrypt, login_manager
 from RecipeProject.DatabaseEntities import get_user_by_username, User, Recipe, get_recipe_if_owned, get_pantry, \
-    get_ingredients, Ingredient, RecipeContains
+    get_ingredients, Ingredient, RecipeContains, remove_quotations
 from RecipeProject.Forms import *
 
 # Redirects logged out users to front page
@@ -225,19 +225,17 @@ def EditIngredientQuantities():
 
     if request.method == "POST":
         for i in ingredients.keys():
-            print(request.form.get(i))
             sql_query = f"UPDATE \"recipeContains\" as r " \
                         f"SET quantity = {request.form.get(i)} " \
                         f"FROM ingredient as i " \
-                        f"WHERE i.ingredient_id = r.ingredient_id and i.item_name LIKE \'%{i}%\' and r.ruid = {recipe_id};"
+                        f"WHERE i.ingredient_id = r.ingredient_id and i.item_name LIKE \'%{i.lower()}%\' and r.ruid = {recipe_id};"
 
             # will need to update based on inner join with ingredients and recipeContain
             sql.query(sql_query)
-        return render_template("editIngredientQuantity.html", user=current_user, ingredients=ingredients)
+        #return render_template("editIngredientQuantity.html", user=current_user, ingredients=ingredients)
+        return redirect("/MyRecipes")
     elif request.method == "GET":
-        # ingredients = sql.get_all_query(f"SELECT i.item_name, rC.quantity FROM \"recipeContains\" rC INNER JOIN ingredient i on i.ingredient_id = rC.ingredient_id where rC.ruid={recipe_id}")
-        # ingredients = {x[0].title():x[1] for x in ingredients}
-        print(ingredients)
+
 
         return render_template("editIngredientQuantity.html", user=current_user, ingredients=ingredients)
 
@@ -263,7 +261,7 @@ def EditRecipe():
             form.description.data = recipe['description']
             form.rating.data = recipe['rating']
             ingredients_checked = get_ingredients(recipe['ruid'])
-
+            print(ingredients_checked)
             ingredients = []
             for ingredient in get_pantry(current_user['uuid']):
                 ingredient = ingredient[0][1:-1]
@@ -300,11 +298,14 @@ def EditRecipe():
             form.rating.data,
             recipe_id
         )
+        sql.query(sql_query, args)
+
         delete_query = f"DELETE FROM \"recipeContains\" WHERE \"recipeContains\".ruid = {recipe_id} "
 
         sql.query(delete_query)
 
         ingredients = request.form.getlist('ingredients')
+        print(ingredients)
         for ingredient in ingredients:
 
             recipe_contains_data = sql.get_one_by("recipeContains", "ingredient_id", ingredient)
@@ -330,7 +331,9 @@ def EditRecipe():
 @login_required
 def cookRecipe():
     if request.method == "GET":
-        pass
+        if recipeId is None:
+            return redirect("/Home")
+
         # we will need to get the id for the recipe that we are trying to cook
         # we will use this ID to determine recipe requirments/quantites
 
@@ -338,9 +341,39 @@ def cookRecipe():
         # if the lists are not equal OR the quantities are not greater or equal then we will FAIL and redirect the user
         # back to home and tell them to add the ingredients to their pantry.
         get_recipe_req_query = \
-                            f"SELECT i.item_name, rC.quantity FROM recipe" \
-                            f"INNER JOIN \"recipeContains\" rC on recipe.ruid = rC.ruid" \
-                            f""
+                            f"SELECT i.item_name, rC.quantity FROM recipe " \
+                            f"INNER JOIN \"recipeContains\" rC on recipe.ruid = rC.ruid " \
+                            f"INNER JOIN ingredient i on i.ingredient_id = rC.ingredient_id " \
+                            f"WHERE recipe.ruid={recipeId};"
+
+        recipe_quantities = sql.get_all_query(get_recipe_req_query)
+
+        get_user_recipe_ingredients_intersection = f"SELECT i.item_name, i.current_quantity FROM pantry " \
+                                                    f"INNER JOIN ingredient i on pantry.pantry_id = i.pantry_id " \
+                                                    f"INNER JOIN \"recipeContains\" rC on i.ingredient_id = rC.ingredient_id " \
+                                                    f"WHERE pantry.uid = {current_user['uuid']} and rC.ruid = {recipeId} "
+
+        user_quantities = sql.get_all_query(get_user_recipe_ingredients_intersection)
+        print(recipe_quantities)
+        print(user_quantities)
+        if len(recipe_quantities) == len(user_quantities):
+
+            recipe_quantities = {x[0]:x[1] for x in recipe_quantities}
+            user_quantities = {remove_quotations(x[0]):x[1] for x in user_quantities}
+
+            # Sends the user to the home page if they dont have enough ingredients for the thing0
+            for key in recipe_quantities.keys():
+                if recipe_quantities[key] > user_quantities[key]:
+                    return redirect("/Home")
+
+        else:
+            print("User does not have the ingredients to cook this recipe")
+            return redirect("/Home")
+
+       # User can do stuff
+        flash('You were successfully logged in')
+        return redirect("/Home")
+
 
 
 

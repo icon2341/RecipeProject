@@ -7,9 +7,10 @@ Pantry
 {% block header %}
 <link href="{{ url_for('static', filename='css/Header.css') }}" rel="stylesheet">
 <div class="heading">
-    <div class="leftText">BLAHGAKJFKLJBDF</div>
-    <form action="" method="POST">
 
+    <div class="leftText"></div>
+
+    <form action="" method="POST">
         {{ form.csrf_token }}
             {{ form.hidden_tag() }}
             {{ form.sortBy.label }}

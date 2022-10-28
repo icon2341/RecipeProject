@@ -16,7 +16,7 @@ Edit Recipe
         <link href="{{ url_for('static', filename='css/EditRecipe.css') }}" rel="stylesheet">
         <h1 id="recipeTitle"> Edit Ingredient Quantities </h1>
 
-        <form action="" method="POST" >
+        <form action="" name="quantityform" method="POST" >
 
         {% for ingredient, value in ingredients.items() %}
             <label for={{ ingredient }} class="formLabel">

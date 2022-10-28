@@ -41,13 +41,13 @@ Edit Recipe
             {% for ingredient in ingredients %}
 {#                NOTE THIS CHECKBOX IS UNCHECKED BY DEFAULT, THIS FUNCTIONALITY CAN BE ADDED USING an if statment
 that would have to cross query current ingredients in the pantry#}
-                {% if ingredient in ingredients_checked %}
+                {% if ingredient.item_name in ingredients_checked %}
                     <label>
-                        <input type="checkbox"  value={{ ingredient.ingredient_id }} checked>{{ ingredient.item_name }}
+                        <input type="checkbox" name="ingredients" value={{ ingredient.ingredient_id }} checked>{{ ingredient.item_name }}
                     </label>
                 {% else %}
                     <label>
-                        <input type="checkbox" value={{ ingredient.ingredient_id }} >{{ ingredient.item_name }}
+                        <input type="checkbox" name="ingredients" value={{ ingredient.ingredient_id }} >{{ ingredient.item_name }}
                     </label>
                 {% endif %}
             {% endfor %}

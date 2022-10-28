@@ -65,7 +65,7 @@ class IngredientSearch(FlaskForm):
 class RecipeEditing(FlaskForm):
     title = StringField("Title", validators=[DataRequired()])
     servings = DecimalField("Servings")
-    difficulty = IntegerField("Difficulty")
+    difficulty = StringField("Difficulty")
     rating = IntegerField("Rating")
     possible_categories = [x[0] for x in sql.get_all_query(f"SELECT DISTINCT category FROM recipe")]
     category = SelectField("Category", choices=possible_categories)
