@@ -96,25 +96,6 @@ def Pantry():
                          }
         return render_template("Pantry.html", user=current_user, pantry=pantry, form=form)
 
-    '''
-    form = IngredientSearch()
-
-    # Todo implement functions for the search system
-    pantry = [{"item_name": "Yo mama",
-               "quantity_bought": 1,
-               "current_quantity": 1,
-               "purchase_date": "rn",
-               "expiration_date": "never",
-               "unit_of_measure": "tons"},
-              {"item_name": "Yo mama",
-               "quantity_bought": 1,
-               "current_quantity": 1,
-               "purchase_date": "rn",
-               "expiration_date": "never",
-               "unit_of_measure": "tons"}
-              ]
-    return render_template("Pantry.html", user=current_user, pantry=pantry, form=form)
-'''
 
 
 @app.route("/MyRecipes")
@@ -128,10 +109,25 @@ def myRecipes():
     return render_template("MyRecipes.html", user=current_user, recipes=recipes)
 
 
-@app.route("/Home")
+@app.route("/Home",  methods=["GET", "POST"])
 @login_required
 def Home():
-    return render_template("Home.html", user=current_user)
+    form = RecipeSearch()
+    if request.method == "GET":
+        recipes = [Recipe(sql_data=data) for data in
+                   sql.get_all_query(f"SELECT * FROM recipe LIMIT {50}")]
+        return render_template("Home.html", user=current_user, recipes=recipes, form=form)
+    elif request.method == "POST":
+
+        recipes_data = sql.get_filtered_recipe(form.sortBy.data, form.order.data, form.searchField.data)
+        print(recipes_data)
+        recipes = []
+        for recipe in recipes_data:
+            recipes.append(Recipe(sql_data=recipe))
+
+        print(recipes)
+
+        return render_template("Home.html", user=current_user, recipes=recipes, form=form)
 
 
 @app.route("/NewIngredient", methods=["GET", "POST"])

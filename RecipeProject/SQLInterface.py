@@ -133,4 +133,23 @@ class SQLInterface:
         cursor.close()
         return pantry
 
+    def get_filtered_recipe(self, order_by, order, search_value):
+        if order == "Ascending":
+            order = "ASC"
+        elif order == "Descending":
+            order = "DESC"
+        else:
+            order = "ASC"
+        print(order)
+        contains_clause = ""
+        if search_value is not None:
+            contains_clause = f" WHERE recipe_name LIKE '%{search_value}%' "
 
+        query = f"SELECT * FROM recipe " \
+                f"{contains_clause} " \
+                f"ORDER BY {order_by} {order} LIMIT 50"
+        cursor = self.connection.cursor()
+        cursor.execute(query)
+        recipe = cursor.fetchall()
+        cursor.close()
+        return recipe

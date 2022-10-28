@@ -92,3 +92,14 @@ class IngredientQuantity(FlaskForm):
 class IngredientQuantityList(FlaskForm):
     quantities = FieldList(FormField(IngredientQuantity), min_entries=1)
     submit = SubmitField("Submit")
+
+class RecipeSearch(FlaskForm):
+    order = RadioField("AscDesc", choices=["Ascending", "Descending"])
+    nameSearch = StringField("NameSearch")
+    categorySearch = StringField("Category Search")
+    ingredientSearch = StringField("Ingredient Search")
+
+    columns = list(zip(sql.get_columns("recipe"), get_nice_columns("recipe")))
+
+    sortBy = SelectField("Sort By", choices=columns)
+    submit = SubmitField("SearchButton")
