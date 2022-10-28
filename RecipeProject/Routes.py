@@ -216,19 +216,29 @@ def NewRecipe():
 @app.route("/EditIngredientQuantities", methods=["GET", "POST"])
 @login_required
 def EditIngredientQuantities():
-    ingredients = {"Tomato": "4", "Baby": "3", "Crow": "6"}
+    recipe_id = request.args.get("rId")
+    if not recipe_id:
+        return redirect("/MyRecipes")
+    ingredients = sql.get_all_query(
+        f"SELECT i.item_name, rC.quantity FROM \"recipeContains\" rC INNER JOIN ingredient i on i.ingredient_id = rC.ingredient_id where rC.ruid={recipe_id};")
+    ingredients = {x[0].title(): x[1] for x in ingredients}
 
     if request.method == "POST":
         for i in ingredients.keys():
-            print(i)
             print(request.form.get(i))
-            sub_query = f"UPDATE recipeContains " \
-                        f"SET ingredient_id = %s " \
-                        f"quantity=%s"
-        # will need to update based on inner join with ingredients and recipeContain
+            sql_query = f"UPDATE \"recipeContains\" as r " \
+                        f"SET quantity = {request.form.get(i)} " \
+                        f"FROM ingredient as i " \
+                        f"WHERE i.ingredient_id = r.ingredient_id and i.item_name LIKE \'%{i}%\' and r.ruid = {recipe_id};"
 
+            # will need to update based on inner join with ingredients and recipeContain
+            sql.query(sql_query)
         return render_template("editIngredientQuantity.html", user=current_user, ingredients=ingredients)
     elif request.method == "GET":
+        # ingredients = sql.get_all_query(f"SELECT i.item_name, rC.quantity FROM \"recipeContains\" rC INNER JOIN ingredient i on i.ingredient_id = rC.ingredient_id where rC.ruid={recipe_id}")
+        # ingredients = {x[0].title():x[1] for x in ingredients}
+        print(ingredients)
+
         return render_template("editIngredientQuantity.html", user=current_user, ingredients=ingredients)
 
 
@@ -315,6 +325,23 @@ def EditRecipe():
 
         # return render_template("EditRecipe.html", user=current_user, form=form)
         return redirect("/EditIngredientQuantities")
+
+@app.route("/cookRecipe", methods=["GET", "POST"])
+@login_required
+def cookRecipe():
+    if request.method == "GET":
+        pass
+        # we will need to get the id for the recipe that we are trying to cook
+        # we will use this ID to determine recipe requirments/quantites
+
+        # then need to get the ingredients/quantites that the user OWNS that are ALSO in the recipe
+        # if the lists are not equal OR the quantities are not greater or equal then we will FAIL and redirect the user
+        # back to home and tell them to add the ingredients to their pantry.
+        get_recipe_req_query = \
+                            f"SELECT i.item_name, rC.quantity FROM recipe" \
+                            f"INNER JOIN \"recipeContains\" rC on recipe.ruid = rC.ruid" \
+                            f""
+
 
 
 '''
