@@ -380,14 +380,17 @@ def deleteRecipe():
     if request.method == "GET":
         # if a user has cooked this recipe, then deletion fail, do nothing
         # if green, then delete the recipe, and the recipeContains entry
-        check_cooked_query = f'SELECT * FROM cooks where uid = 18 and ruid={recipeId}'
-        recipeCooks = sql.query()
+        check_cooked_query = f'SELECT * FROM cooks where ruid={recipeId}'
+        recipeCooks = sql.query(check_cooked_query)
 
-        delete_rc_query = f'DELETE FROM "recipeContains" WHERE "recipeContains".ruid ={recipeId} '
+        if not recipeCooks:
+            # query returned nothing, run query
+            delete_rc_query = f'DELETE FROM "recipeContains" WHERE "recipeContains".ruid ={recipeId} '
+            delete_recipe_query = f'DELETE FROM recipe WHERE recipe.ruid={recipeId}'
+            sql.query(delete_rc_query)
+            sql.query(delete_recipe_query)
 
-        delete_recipe_query = f'DELETE FROM recipe WHERE recipe.ruid={recipeId}'
-        pass
-
+    return redirect("/MyRecipes")
     '''
 @app.route('/IngredientSearch', methods=["POST"])
 @login_required
