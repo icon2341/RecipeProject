@@ -7,9 +7,7 @@ Pantry
 {% block header %}
 <link href="{{ url_for('static', filename='css/Header.css') }}" rel="stylesheet">
 <div class="heading">
-
     <div class="leftText"></div>
-
     <form action="" method="POST">
         {{ form.csrf_token }}
             {{ form.hidden_tag() }}
@@ -49,7 +47,7 @@ Pantry
             </select>
         </label>
     </div>
-    -->
+
     <! TODO: Implement Search bar and button-->
     <button class ="Button">
         <a href="/NewIngredient">Add New</a>

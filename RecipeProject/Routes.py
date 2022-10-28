@@ -32,7 +32,6 @@ def Login():
                     return redirect('/Home')
     return render_template("Login.html", form=form)
 
-
 @app.route("/SignUp", methods=["GET", "POST"])
 def SignUp():
     # the object we created above
@@ -328,6 +327,7 @@ def EditRecipe():
 def cookRecipe():
 
     recipeId = request.args.get("rId")
+    scalar = float(request.args.get("multiplier"))
 
     if request.method == "GET":
         if recipeId is None:
@@ -366,6 +366,15 @@ def cookRecipe():
                 if recipe_quantities[key] > user_quantities[key]:
                     return redirect("/Home")
 
+            recipe = Recipe(sql_data=sql.get_one_by("recipe", "ruid", recipeId))
+
+            insert_cook = f"INSERT INTO cooks SET uid={current_user['uuid']}, " \
+                          f" ruid={recipeId}, date_made={datetime.datetime.now()}, " \
+                          f" quantity_made={scalar * float(recipe['servings'])}, " \
+                          f"portions_made={scalar} "
+
+            sql.query(insert_cook)
+
         else:
             print("User does not have the ingredients to cook this recipe")
             return redirect("/Home")
@@ -374,10 +383,25 @@ def cookRecipe():
         flash('You were successfully logged in')
         return redirect("/Home")
 
+@app.route("/deleteRecipe")
+@login_required
+def deleteRecipe():
+    recipeId = request.args.get("rId")
+    if request.method == "GET":
+        # if a user has cooked this recipe, then deletion fail, do nothing
+        # if green, then delete the recipe, and the recipeContains entry
+        check_cooked_query = f'SELECT * FROM cooks where ruid={recipeId}'
+        recipeCooks = sql.query(check_cooked_query)
 
+        if not recipeCooks:
+            # query returned nothing, run query
+            delete_rc_query = f'DELETE FROM "recipeContains" WHERE "recipeContains".ruid ={recipeId} '
+            delete_recipe_query = f'DELETE FROM recipe WHERE recipe.ruid={recipeId}'
+            sql.query(delete_rc_query)
+            sql.query(delete_recipe_query)
 
-
-'''
+    return redirect("/MyRecipes")
+    '''
 @app.route('/IngredientSearch', methods=["POST"])
 @login_required
 def ingredientSearch():

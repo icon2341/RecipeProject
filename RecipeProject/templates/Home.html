@@ -8,10 +8,24 @@ Recipes
 {%block content %}
 
 <div class="content">
+        <form action="" method="POST">
+        {{ form.csrf_token }}
+            {{ form.hidden_tag() }}
+            {{ form.sortBy.label }}
+            {{ form.sortBy }}
+            {{ form.nameSearch.label }}
+            {{ form.nameSearch }}
+            {{ form.categorySearch.label }}
+            {{ form.categorySearch }}
+            {{ form.ingredientSearch.label }}
+            {{ form.ingredientSearch }}
+            {{ form.searchField }}
+            {{ form.submit }}
+        </form>
     <link href="{{ url_for('static', filename='css/MyRecipes.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <div id="cardBox">
-        {% include "HomeCard.html" %}
+        {% include "RecipeCard.html" %}
     </div>
 
 

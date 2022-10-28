@@ -84,6 +84,8 @@ class DataInserter:
                 else:
                     unit = "cups"
                     temp2 = mixed_to_float(temp2)
+                    if temp2 > 20:
+                        unit = "grams"
 
                 #need to get ruid
                 cursor.execute(query4, [recipe_tuple[1]])
