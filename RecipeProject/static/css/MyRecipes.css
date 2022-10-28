@@ -28,3 +28,22 @@
     padding: 90px;
     margin-left: 10px;
 }
+
+
+.Select{
+    font-family: 'Roboto', sans-serif;
+    font-size: 15pt;
+    min-width: 150pt;
+    margin-right: 75px;
+    margin-left: 20px;
+}
+
+.Field{
+    font-size: 15pt;
+    font-family: 'Roboto', sans-serif;
+    color: black;
+}
+
+.Search{
+    /* TODO: Implement this*/
+}
