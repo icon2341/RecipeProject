@@ -119,12 +119,10 @@ def Home():
     elif request.method == "POST":
 
         recipes_data = sql.get_filtered_recipe(form.sortBy.data, form.order.data, form.searchField.data)
-        print(recipes_data)
         recipes = []
         for recipe in recipes_data:
             recipes.append(Recipe(sql_data=recipe))
 
-        print(recipes)
 
         return render_template("Home.html", user=current_user, recipes=recipes, form=form)
 
