@@ -356,6 +356,7 @@ def cookRecipe():
 
     if request.method == "GET":
         if recipeId is None:
+            print("recipe id was none, cant cook")
             return redirect("/Home")
 
         # we will need to get the id for the recipe that we are trying to cook
@@ -378,12 +379,16 @@ def cookRecipe():
                                                    f"INNER JOIN \"recipeContains\" rC on i.ingredient_id = rC.ingredient_id " \
                                                    f"WHERE pantry.uid = {current_user['uuid']} and rC.ruid = {recipeId} "
 
+        get_user_recipe_ingredients_intersection2 = f"SELECT i.item_name, i.current_quantity FROM ingredient i " \
+                                                    f"INNER JOIN pantry on i.pantry_id = pantry.pantry_id " \
+                                                    f"WHERE pantry.uid = {current_user['uuid']}"
 
 
 
-        user_quantities = sql.get_all_query(get_user_recipe_ingredients_intersection)
 
+        user_quantities = sql.get_all_query(get_user_recipe_ingredients_intersection2)
 
+        print(recipe_quantities, user_quantities)
         if len(recipe_quantities) == len(user_quantities):
 
             recipe_quantities = {x[0]: x[1] for x in recipe_quantities}
