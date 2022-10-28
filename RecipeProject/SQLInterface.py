@@ -28,7 +28,6 @@ class SQLInterface:
         self.connection = psycopg2.connect(**params)
         print("Server is up and running")
 
-
     def get_by(self, table: str, column: str, where: str):
         """
         Returns all instances from the database that match the
@@ -101,7 +100,6 @@ class SQLInterface:
         cursor.close()
         return result
 
-
     def get_columns(self, table_name: str):
         cursor = self.connection.cursor()
         sql_statement = f'SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = \'{table_name}\'' \
@@ -122,7 +120,6 @@ class SQLInterface:
         if search_value is not None:
             contains_clause = f" AND i.item_name LIKE '%{search_value}%' "
 
-
         query = f"SELECT i FROM \"User\" " \
                 f"INNER JOIN ingredient i on \"User\".pantry_id = i.pantry_id " \
                 f"WHERE \"User\".uid={uid} {contains_clause}" \
@@ -133,21 +130,36 @@ class SQLInterface:
         cursor.close()
         return pantry
 
-    def get_filtered_recipe(self, order_by, order, search_value):
+    def get_filtered_recipe(self, order_by, order, name_search, ingredient_search, category_search):
         if order == "Ascending":
             order = "ASC"
         elif order == "Descending":
             order = "DESC"
         else:
             order = "ASC"
-        print(order)
-        contains_clause = ""
-        if search_value is not None:
-            contains_clause = f" WHERE recipe_name LIKE '%{search_value}%' "
+        clauses = []
+        if name_search:
 
-        query = f"SELECT * FROM recipe " \
-                f"{contains_clause} " \
+            clauses.append(f" WHERE recipe_name LIKE '%{name_search}%'")
+
+        if category_search:
+            clauses.append(f"category LIKE '%{category_search}% ")
+
+        if ingredient_search:
+            clauses.append(f"i.item_name LIKE '%{ingredient_search}%'")
+
+
+
+
+
+
+
+        query = f"SELECT recipe.* FROM recipe " \
+                f"INNER JOIN \"recipeContains\" rC on recipe.ruid = rC.ruid " \
+                f"INNER JOIN ingredient i on i.ingredient_id = rC.ingredient_id "\
+                f"{' AND '.join(clauses)} " \
                 f"ORDER BY {order_by} {order} LIMIT 50"
+
         cursor = self.connection.cursor()
         cursor.execute(query)
         recipe = cursor.fetchall()

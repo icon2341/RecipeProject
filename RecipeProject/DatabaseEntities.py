@@ -13,6 +13,7 @@ from RecipeProject import sql
 def load_user(uuid):
     user = get_user_by_uuid(uuid)
     user.update_access_time()
+    print(user.data)
     return user
 
 
@@ -135,10 +136,9 @@ class Recipe(DatabaseObject):
 class User(UserMixin):  # UserMixin tracks user sessions
     # TODO make username unique in the database
     def __init__(self, sql_data=None, **kwargs):
-
         if sql_data is not None:
             self.data = {"uuid": sql_data[0], "username": sql_data[1], "email": sql_data[2], "password": sql_data[3],
-                         "create_datetime": sql_data[4], "last_access": sql_data[5], "pantry_id": sql_data[6]}
+                         "pantry_id": sql_data[4], "create_datetime": sql_data[5], "last_access": sql_data[6]}
 
         else:
             self.data = kwargs
