@@ -1,0 +1,15 @@
+{% extends "Sidebar.html"%}
+
+{% block title %}
+Recipes
+{% endblock title %}
+
+
+{%block content %}
+
+<div class="content">
+    {% for i in listCooked %}
+        <a class="recipeTitleCooked"> {{ i }}</a>
+    {% endfor %}
+</div>
+{% endblock content %}
