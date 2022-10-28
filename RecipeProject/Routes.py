@@ -5,7 +5,7 @@ Author: Group 7 CSCI 320 01-02
 import datetime
 import json
 
-from flask import render_template, request, redirect
+from flask import render_template, request, redirect, flash
 from flask_login import login_user, login_required, logout_user, current_user
 from RecipeProject import sql
 from RecipeProject import app, bcrypt, login_manager
@@ -326,6 +326,9 @@ def EditRecipe():
 @app.route("/cookRecipe", methods=["GET", "POST"])
 @login_required
 def cookRecipe():
+
+    recipeId = request.args.get("rId")
+
     if request.method == "GET":
         if recipeId is None:
             return redirect("/Home")
@@ -336,6 +339,7 @@ def cookRecipe():
         # then need to get the ingredients/quantites that the user OWNS that are ALSO in the recipe
         # if the lists are not equal OR the quantities are not greater or equal then we will FAIL and redirect the user
         # back to home and tell them to add the ingredients to their pantry.
+
         get_recipe_req_query = \
                             f"SELECT i.item_name, rC.quantity FROM recipe " \
                             f"INNER JOIN \"recipeContains\" rC on recipe.ruid = rC.ruid " \
