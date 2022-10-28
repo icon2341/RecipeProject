@@ -77,7 +77,7 @@ def Pantry():
         print([x.data for x in ingreds])
         print(request.data)
         for ingredient in ingreds:
-            print(request.form[ingredient['ingredient_id']])
+            # print(request.form[ingredient['ingredient_id']])
             if ingredient['current_quantity'] != request.form.get(ingredient['ingredient_id']):
                 print(request.form.get(ingredient['ingredient_id']))
         """
