@@ -429,13 +429,16 @@ def deleteRecipe():
         # if green, then delete the recipe, and the recipeContains entry
         check_cooked_query = f'SELECT * FROM cooks where ruid={recipeId}'
         recipeCooks = sql.query(check_cooked_query)
+        print(recipeCooks)
 
-        if not recipeCooks:
+        if recipeCooks is None:
             # query returned nothing, run query
             delete_rc_query = f'DELETE FROM "recipeContains" WHERE "recipeContains".ruid ={recipeId} '
             delete_recipe_query = f'DELETE FROM recipe WHERE recipe.ruid={recipeId}'
             sql.query(delete_rc_query)
             sql.query(delete_recipe_query)
+        else:
+            print("cant delete")
 
     return redirect("/MyRecipes")
     '''
