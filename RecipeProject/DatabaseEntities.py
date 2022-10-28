@@ -13,7 +13,6 @@ from RecipeProject import sql
 def load_user(uuid):
     user = get_user_by_uuid(uuid)
     user.update_access_time()
-    print(user.data)
     return user
 
 

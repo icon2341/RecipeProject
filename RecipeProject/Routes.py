@@ -32,6 +32,7 @@ def Login():
                     return redirect('/Home')
     return render_template("Login.html", form=form)
 
+
 @app.route("/SignUp", methods=["GET", "POST"])
 def SignUp():
     # the object we created above
@@ -96,7 +97,6 @@ def Pantry():
         return render_template("Pantry.html", user=current_user, pantry=pantry, form=form)
 
 
-
 @app.route("/MyRecipes")
 @login_required
 def myRecipes():
@@ -108,7 +108,7 @@ def myRecipes():
     return render_template("MyRecipes.html", user=current_user, recipes=recipes)
 
 
-@app.route("/Home",  methods=["GET", "POST"])
+@app.route("/Home", methods=["GET", "POST"])
 @login_required
 def Home():
     form = RecipeSearch()
@@ -118,11 +118,11 @@ def Home():
         return render_template("Home.html", user=current_user, recipes=recipes, form=form)
     elif request.method == "POST":
 
-        recipes_data = sql.get_filtered_recipe(form.sortBy.data, form.order.data, form.searchField.data)
+        recipes_data = sql.get_filtered_recipe(form.sortBy.data, form.order.data, form.nameSearch.data,
+                                               form.ingredientSearch.data, form.categorySearch.data)
         recipes = []
         for recipe in recipes_data:
             recipes.append(Recipe(sql_data=recipe))
-
 
         return render_template("Home.html", user=current_user, recipes=recipes, form=form)
 
@@ -182,9 +182,16 @@ def Logout():
 def NewRecipe():
     # TODO do stuff with
     form = RecipeEditing()
-    if request.method == "GET":
 
-        return render_template("NewRecipe.html", user=current_user, form=form)
+    if request.method == "GET":
+        """
+        ingredients = []
+        for ingredient in get_pantry(current_user['uuid']):
+            ingredient = ingredient[0][1:-1]
+            ingredients.append(Ingredient(sql_data=ingredient.split(",")))
+        """
+
+        return render_template("newRecipe.html", user=current_user, form=form)
     elif request.method == "POST":
         sql_query = f"INSERT INTO recipe (servings, recipe_name, difficulty, cook_time," \
                     f" category, steps, description, rating, uid, date_created) " \
@@ -203,7 +210,30 @@ def NewRecipe():
             datetime.datetime.now()
         )
         sql.query(sql_query, args)
-        return redirect("/MyRecipes")
+
+        """
+
+        ingredients = request.form.getlist('ingredients')
+        for ingredient in ingredients:
+
+            recipe_contains_data = sql.get_one_by("recipeContains", "ingredient_id", ingredient)
+            if not recipe_contains_data:
+                ingredientEntity = Ingredient(sql_data=sql.get_one_by("ingredient", "ingredient_id", ingredient))
+                measure = ingredientEntity["unit_of_measure"]
+                quantity = 0
+            else:
+                recipe_contains = RecipeContains(sql_data=recipe_contains_data)
+                measure = recipe_contains['unit']
+                quantity = recipe_contains['quantity']
+            # Check if the item is already in the recipe
+
+            add_query = f"INSERT INTO \"recipeContains\" (quantity, unit, ruid, ingredient_id) VALUES (%s, %s, %s, %s)"
+            add_args = (quantity, measure, recipe_id, ingredient)
+
+            sql.query(add_query, add_args)
+"""
+        # return render_template("EditRecipe.html", user=current_user, form=form)
+        return redirect("/EditIngredientQuantities")
 
 
 @app.route("/EditIngredientQuantities", methods=["GET", "POST"])
@@ -225,10 +255,8 @@ def EditIngredientQuantities():
 
             # will need to update based on inner join with ingredients and recipeContain
             sql.query(sql_query)
-        #return render_template("editIngredientQuantity.html", user=current_user, ingredients=ingredients)
         return redirect("/MyRecipes")
     elif request.method == "GET":
-
 
         return render_template("editIngredientQuantity.html", user=current_user, ingredients=ingredients)
 
@@ -254,7 +282,6 @@ def EditRecipe():
             form.description.data = recipe['description']
             form.rating.data = recipe['rating']
             ingredients_checked = get_ingredients(recipe['ruid'])
-            print(ingredients_checked)
             ingredients = []
             for ingredient in get_pantry(current_user['uuid']):
                 ingredient = ingredient[0][1:-1]
@@ -298,7 +325,6 @@ def EditRecipe():
         sql.query(delete_query)
 
         ingredients = request.form.getlist('ingredients')
-        print(ingredients)
         for ingredient in ingredients:
 
             recipe_contains_data = sql.get_one_by("recipeContains", "ingredient_id", ingredient)
@@ -320,10 +346,10 @@ def EditRecipe():
         # return render_template("EditRecipe.html", user=current_user, form=form)
         return redirect("/EditIngredientQuantities")
 
+
 @app.route("/cookRecipe", methods=["GET", "POST"])
 @login_required
 def cookRecipe():
-
     recipeId = request.args.get("rId")
     scalar = float(request.args.get("multiplier"))
 
@@ -339,25 +365,23 @@ def cookRecipe():
         # back to home and tell them to add the ingredients to their pantry.
 
         get_recipe_req_query = \
-                            f"SELECT i.item_name, rC.quantity FROM recipe " \
-                            f"INNER JOIN \"recipeContains\" rC on recipe.ruid = rC.ruid " \
-                            f"INNER JOIN ingredient i on i.ingredient_id = rC.ingredient_id " \
-                            f"WHERE recipe.ruid={recipeId};"
+            f"SELECT i.item_name, rC.quantity FROM recipe " \
+            f"INNER JOIN \"recipeContains\" rC on recipe.ruid = rC.ruid " \
+            f"INNER JOIN ingredient i on i.ingredient_id = rC.ingredient_id " \
+            f"WHERE recipe.ruid={recipeId};"
 
         recipe_quantities = sql.get_all_query(get_recipe_req_query)
 
         get_user_recipe_ingredients_intersection = f"SELECT i.item_name, i.current_quantity FROM pantry " \
-                                                    f"INNER JOIN ingredient i on pantry.pantry_id = i.pantry_id " \
-                                                    f"INNER JOIN \"recipeContains\" rC on i.ingredient_id = rC.ingredient_id " \
-                                                    f"WHERE pantry.uid = {current_user['uuid']} and rC.ruid = {recipeId} "
+                                                   f"INNER JOIN ingredient i on pantry.pantry_id = i.pantry_id " \
+                                                   f"INNER JOIN \"recipeContains\" rC on i.ingredient_id = rC.ingredient_id " \
+                                                   f"WHERE pantry.uid = {current_user['uuid']} and rC.ruid = {recipeId} "
 
         user_quantities = sql.get_all_query(get_user_recipe_ingredients_intersection)
-        print(recipe_quantities)
-        print(user_quantities)
         if len(recipe_quantities) == len(user_quantities):
 
-            recipe_quantities = {x[0]:x[1] for x in recipe_quantities}
-            user_quantities = {remove_quotations(x[0]):x[1] for x in user_quantities}
+            recipe_quantities = {x[0]: x[1] for x in recipe_quantities}
+            user_quantities = {remove_quotations(x[0]): x[1] for x in user_quantities}
 
             # Sends the user to the home page if they dont have enough ingredients for the thing0
             for key in recipe_quantities.keys():
@@ -366,10 +390,10 @@ def cookRecipe():
 
             recipe = Recipe(sql_data=sql.get_one_by("recipe", "ruid", recipeId))
 
-            insert_cook = f"INSERT INTO cooks SET uid={current_user['uuid']}, " \
-                          f" ruid={recipeId}, date_made={datetime.datetime.now()}, " \
-                          f" quantity_made={scalar * float(recipe['servings'])}, " \
-                          f"portions_made={scalar} "
+            insert_cook = f"INSERT INTO cooks (uid, ruid, date_made, quantity_made, portions_made) Values ({current_user['uuid']}," \
+                          f" {recipeId},\'{datetime.datetime.now()}\', " \
+                          f"{scalar * float(recipe['servings'])}, " \
+                          f"{scalar}) "
 
             sql.query(insert_cook)
 
@@ -377,7 +401,7 @@ def cookRecipe():
             print("User does not have the ingredients to cook this recipe")
             return redirect("/Home")
 
-       # User can do stuff
+        # User can do stuff
         flash('You were successfully logged in')
         return redirect("/Home")
 

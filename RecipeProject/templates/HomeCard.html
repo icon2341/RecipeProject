@@ -1,20 +1,5 @@
 {% block content %}
 
- <form action="" method="POST">
-        {{ form.csrf_token }}
-            {{ form.hidden_tag() }}
-            {{ form.sortBy.label }}
-            {{ form.sortBy }}
-            {{ form.nameSearch.label }}
-            {{ form.nameSearch }}
-            {{ form.categorySearch.label }}
-            {{ form.categorySearch }}
-            {{ form.ingredientSearch.label }}
-            {{ form.ingredientSearch }}
-            {{ form.searchField }}
-            {{ form.submit }}
-        </form>
-
 {% for recipe in recipes %}
 
 
