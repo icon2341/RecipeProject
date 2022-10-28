@@ -388,8 +388,18 @@ def cookRecipe():
 
         user_quantities = sql.get_all_query(get_user_recipe_ingredients_intersection2)
 
+        #get ingredient names in user quantities
+        userIngredientQuantities = set()
+        for ingredientTuple in user_quantities:
+            userIngredientQuantities.add(ingredientTuple[0])
+
+        recipeIngredienQuantities = set()
+        for ingredientTuple in recipe_quantities:
+            recipeIngredienQuantities.add(ingredientTuple[0])
+
         print(recipe_quantities, user_quantities)
-        if len(recipe_quantities) == len(user_quantities):
+        print(userIngredientQuantities, recipeIngredienQuantities)
+        if userIngredientQuantities.issubset(recipeIngredienQuantities):
 
             recipe_quantities = {x[0]: x[1] for x in recipe_quantities}
             user_quantities = {remove_quotations(x[0]): x[1] for x in user_quantities}
