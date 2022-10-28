@@ -162,7 +162,7 @@ class SQLInterface:
                 f"INNER JOIN \"recipeContains\" rC on recipe.ruid = rC.ruid " \
                 f"INNER JOIN ingredient i on i.ingredient_id = rC.ingredient_id "\
                 f"{' AND '.join(clauses)} " \
-                f"ORDER BY {order_by} {order} LIMIT 50"
+                f"ORDER BY {order_by} {order}"
 
         cursor = self.connection.cursor()
         cursor.execute(query)
