@@ -78,7 +78,12 @@ Pantry
       <td class="Field"> {{ingredient.purchase_date}} </td>
       <td class="Field"> {{ingredient.expiration_date}} </td>
       <td class="Field"> {{ingredient.unit_of_measure}} </td>
-    <td></td>
+    <td>
+            <label for="newQuantityForm" style="display: block">New Quantity</label>
+            <input type="text" name="newQuantity" id="newQuantityForm" value="{{ingredient.current_quantity}}" onkeydown="myFunction(this)"/>
+            <button class= "editButton" onclick="document.location.href='/editIngredientQuantity?iId={{ ingredient.ingredient_id }}&newQuantity='+ document.getElementById('newQuantityForm').value;"> Submit new Quantity </button>
+
+  </td>
   </tr>
 </table>
 {%endfor%}
