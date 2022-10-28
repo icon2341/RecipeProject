@@ -431,7 +431,7 @@ def deleteRecipe():
         recipeCooks = sql.get_all_query(check_cooked_query)
         print(recipeCooks)
 
-        if recipeCooks is None:
+        if not recipeCooks:
             # query returned nothing, run query
             delete_rc_query = f'DELETE FROM "recipeContains" WHERE "recipeContains".ruid ={recipeId} '
             delete_recipe_query = f'DELETE FROM recipe WHERE recipe.ruid={recipeId}'
