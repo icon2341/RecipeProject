@@ -8,6 +8,12 @@ New Recipe
 {%block content %}
 
 <div class="content">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500;900&display=swap" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/EditRecipe.css') }}" rel="stylesheet">
+        <h1 id="recipeTitle"> New Recipe </h1>
+
     <form action="" method="POST">
 
         {{ form.csrf_token }}
@@ -28,8 +34,25 @@ New Recipe
         {{ form.description(cols="35", rows="20",class="formInput") }}
         {{ form.steps.label(class="formLabel") }}
         {{ form.steps(cols="35", rows="20", class="formInput") }}
-        {{ form.submit.label }}
-        {{ form.submit }}
+{#        {{ form.submit.label }}#}
+        <hr>
+            <a class="formLabel"> Ingredients Can be Added from Edit Recipe Page in 'My Recipes'</a>
+{#            {{ form.ingredients.label(class="formLabel") }}#}
+
+            {% for ingredient in ingredients %}
+{#                NOTE THIS CHECKBOX IS UNCHECKED BY DEFAULT, THIS FUNCTIONALITY CAN BE ADDED USING an if statment
+that would have to cross query current ingredients in the pantry#}
+                {% if ingredient.item_name in ingredients_checked %}
+                    <label>
+                        <input type="checkbox" name="ingredients" value={{ ingredient.ingredient_id }} checked>{{ ingredient.item_name }}
+                    </label>
+                {% else %}
+                    <label>
+                        <input type="checkbox" name="ingredients" value={{ ingredient.ingredient_id }} >{{ ingredient.item_name }}
+                    </label>
+                {% endif %}
+            {% endfor %}
+        {{ form.submit(class="submitButtonEditor") }}
         </form>
 
 </div>

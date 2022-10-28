@@ -3,7 +3,7 @@
 {% for recipe in recipes %}
 
 
-<div class="recipeCard" onclick="change_size();">
+<div class="recipeCard">
 
     <div class="topRowComponent">
         <div class="recipeElementsContainer">
@@ -60,6 +60,15 @@
             <a class="recipeBody"> {{ recipe.description }} </a>
         </div>
 
+        <div class="buttonSections">
+            <label for="multiplierForm" style="display: block">Multiplier:</label>
+            <input type="text" name="multiplier" id="multiplierForm" style="display: block" value="1" onkeydown="myFunction(this)"/>
+{#            <button class= "editButton" onclick="document.location.href='/editRecipe?rId={{ recipe.ruid }}';"> Edit Recipe </button>#}
+            <button class= "editButton" onclick="document.location.href='/cookRecipe?rId={{ recipe.ruid }}&multiplier='+ document.getElementById('multiplierForm').value;"> Cook Recipe </button>
+{#            <button class= "editButton" onclick="document.location.href='/EditIngredientQuantities?rId={{ recipe.ruid }}';"> Edit <br> Ingredient <br> Quantities</button>#}
+{#            <button class="editButton" onclick="document.location.href='/deleteRecipe?rId={{ recipe.ruid }}';"> Delete Recipe </button>#}
+
+        </div>
         <div class="ingredientsSection">
             <a class="textEditorTitle" id="ingredientsTitle"> Ingredients and Quantity: </a>
             {% for i in recipe.ingredients.keys() %}
@@ -84,5 +93,11 @@
 
 
 </div>
+
+
+
+    {# These are fonts #}
+
+
 {%endfor%}
 {% endblock content %}

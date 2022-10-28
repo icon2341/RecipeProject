@@ -405,7 +405,8 @@ def cookRecipe():
         flash('You were successfully logged in')
         return redirect("/Home")
 
-@app.route("/deleteRecipe")
+
+@app.route("/deleteRecipe", methods=["GET"])
 @login_required
 def deleteRecipe():
     recipeId = request.args.get("rId")
@@ -430,3 +431,18 @@ def ingredientSearch():
     form = ingredientSearch()
     if form.validate_on_submit():
         args = form.searchField.data'''
+
+
+@app.route("/cookedRecipes", methods=["GET"])
+@login_required
+def cookedRecipes():
+    uid = current_user['uuid']
+    if request.method == "GET":
+        get_cooked_query = f'SELECT r.* FROM cooks INNER JOIN recipe r on r.ruid = cooks.ruid WHERE cooks.uid={uid}'
+        recipe_data = sql.get_all_query(get_cooked_query)
+        foodCooked = []
+        print(recipe_data)
+        if recipe_data is not None:
+            foodCooked = [Recipe(sql_data=x) for x in recipe_data]
+
+        return render_template("cookedRecipes.html", user=current_user, recipes=foodCooked)
