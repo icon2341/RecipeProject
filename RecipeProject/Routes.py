@@ -396,7 +396,7 @@ def cookRecipe():
 
 
             for key in recipe_quantities.keys():
-                new_quant = user_quantities[key] - recipe_quantities[key]
+                new_quant = user_quantities[key] - recipe_quantities[key] * scalar
 
                 update_query = f"UPDATE ingredient as i SET current_quantity={new_quant} FROM pantry as p " \
                 f"WHERE p.uid = {current_user['uuid']} AND p.pantry_id = i.pantry_id AND i.item_name = \'{key}\'"
@@ -458,9 +458,15 @@ def cookedRecipes():
         get_cooked_query = f'SELECT r.* FROM cooks INNER JOIN recipe r on r.ruid = cooks.ruid WHERE cooks.uid={uid}'
         recipe_data = sql.get_all_query(get_cooked_query)
         foodCooked = []
-        print(recipe_data)
-        if recipe_data is not None:
-            foodCooked = [Recipe(sql_data=x) for x in recipe_data]
+
+        for x in recipe_data:
+            new_recipe = Recipe(sql_data=x)
+            get_cooked_time_query = f'SELECT date_made FROM cooks where ruid={new_recipe["ruid"]}'
+            new_recipe.data['cooked_last'] = sql.get_one_query(get_cooked_time_query)[0]
+            foodCooked.append(new_recipe)
+
+        #if recipe_data is not None:
+            #foodCooked = [Recipe(sql_data=x) for x in recipe_data]
 
         return render_template("cookedRecipes.html", user=current_user, recipes=foodCooked)
 

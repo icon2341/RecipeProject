@@ -99,7 +99,6 @@ class RecipeSearch(FlaskForm):
     nameSearch = StringField("NameSearch")
     categorySearch = StringField("Category Search")
     ingredientSearch = StringField("Ingredient Search")
-
     columns = list(zip(sql.get_columns("recipe"), get_nice_columns("recipe")))
 
     sortBy = SelectField("Sort By", choices=columns)
