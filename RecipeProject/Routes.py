@@ -327,6 +327,7 @@ def EditRecipe():
 def cookRecipe():
 
     recipeId = request.args.get("rId")
+    scalar = float(request.args.get("multiplier"))
 
     if request.method == "GET":
         if recipeId is None:
@@ -364,6 +365,15 @@ def cookRecipe():
             for key in recipe_quantities.keys():
                 if recipe_quantities[key] > user_quantities[key]:
                     return redirect("/Home")
+
+            recipe = Recipe(sql_data=sql.get_one_by("recipe", "ruid", recipeId))
+
+            insert_cook = f"INSERT INTO cooks SET uid={current_user['uuid']}, " \
+                          f" ruid={recipeId}, date_made={datetime.datetime.now()}, " \
+                          f" quantity_made={scalar * float(recipe['servings'])}, " \
+                          f"portions_made={scalar} "
+
+            sql.query(insert_cook)
 
         else:
             print("User does not have the ingredients to cook this recipe")
