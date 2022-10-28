@@ -141,6 +141,7 @@
 
 .editButton {
     background: #41d8fc;
+    display: block;
     color: white;
     font-family: 'Roboto', sans-serif;
     font-size: 30px;

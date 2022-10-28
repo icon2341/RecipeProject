@@ -32,7 +32,6 @@ def Login():
                     return redirect('/Home')
     return render_template("Login.html", form=form)
 
-
 @app.route("/SignUp", methods=["GET", "POST"])
 def SignUp():
     # the object we created above
@@ -374,8 +373,20 @@ def cookRecipe():
         flash('You were successfully logged in')
         return redirect("/Home")
 
+@app.route("/deleteRecipe")
+@login_required
+def deleteRecipe():
+    recipeId = request.args.get("rId")
+    if request.method == "GET":
+        # if a user has cooked this recipe, then deletion fail, do nothing
+        # if green, then delete the recipe, and the recipeContains entry
+        check_cooked_query = f'SELECT * FROM cooks where uid = 18 and ruid={recipeId}'
+        recipeCooks = sql.query()
 
+        delete_rc_query = f'DELETE FROM "recipeContains" WHERE "recipeContains".ruid ={recipeId} '
 
+        delete_recipe_query = f'DELETE FROM recipe WHERE recipe.ruid={recipeId}'
+        pass
 
     '''
 @app.route('/IngredientSearch', methods=["POST"])
