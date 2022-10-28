@@ -115,12 +115,16 @@ class SQLInterface:
             order = "ASC"
         elif order == "Descending":
             order = "DESC"
+        else:
+            order="ASC"
 
+        if not order_by:
+            order_by = "item_name"
         contains_clause = ""
         if search_value is not None:
             contains_clause = f" AND i.item_name LIKE '%{search_value}%' "
 
-        query = f"SELECT i FROM \"User\" " \
+        query = f"SELECT i.* FROM \"User\" " \
                 f"INNER JOIN ingredient i on \"User\".pantry_id = i.pantry_id " \
                 f"WHERE \"User\".uid={uid} {contains_clause}" \
                 f"ORDER BY i.{order_by} {order}"

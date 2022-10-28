@@ -26,6 +26,7 @@ Pantry
     <link href="{{ url_for('static', filename='css/PantryCard.css') }}" rel="stylesheet">
     <div class="Title">
         <b>My&nbsp;Pantry</b>
+
     </div>
 
         <!--
@@ -63,12 +64,17 @@ Pantry
     <td></td>
   </tr>
 </table>
-{% for ingredient in pantry %}
+
+    {% for ingredient in pantry %}
 <table class="Row">
   <tr>
       <td class="Field"> {{ingredient.item_name}} </td>
       <td class="Field"> {{ingredient.quantity_bought}} </td>
-      <td class="Field"> {{ingredient.current_quantity}} </td>
+      <td class="Field">
+
+         {{ingredient.current_quantity}}
+
+      </td>
       <td class="Field"> {{ingredient.purchase_date}} </td>
       <td class="Field"> {{ingredient.expiration_date}} </td>
       <td class="Field"> {{ingredient.unit_of_measure}} </td>
@@ -77,6 +83,8 @@ Pantry
 </table>
 {%endfor%}
 
+
+</form>
 </div>
 
 {% endblock content %}
