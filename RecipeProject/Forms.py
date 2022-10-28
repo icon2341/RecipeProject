@@ -68,7 +68,7 @@ class RecipeEditing(FlaskForm):
     difficulty = StringField("Difficulty")
     rating = IntegerField("Rating")
     possible_categories = [x[0] for x in sql.get_all_query(f"SELECT DISTINCT category FROM recipe")]
-    category = SelectField("Category", choices=possible_categories)
+    category = StringField("Category", validators=[DataRequired()])
     prep_time = DateTimeField("Preparation Time", format="%H:%M")
     description = StringField("Description", widget=TextArea())
     steps = StringField("Steps", widget=TextArea())

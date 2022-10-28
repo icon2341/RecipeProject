@@ -373,7 +373,7 @@ def cookRecipe():
 
 
 
-'''
+    '''
 @app.route('/IngredientSearch', methods=["POST"])
 @login_required
 def ingredientSearch():
