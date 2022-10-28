@@ -428,7 +428,7 @@ def deleteRecipe():
         # if a user has cooked this recipe, then deletion fail, do nothing
         # if green, then delete the recipe, and the recipeContains entry
         check_cooked_query = f'SELECT * FROM cooks where ruid={recipeId}'
-        recipeCooks = sql.query(check_cooked_query)
+        recipeCooks = sql.get_all_query(check_cooked_query)
         print(recipeCooks)
 
         if recipeCooks is None:
