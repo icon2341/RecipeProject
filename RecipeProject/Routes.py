@@ -456,6 +456,7 @@ def cookedRecipes():
     uid = current_user['uuid']
     if request.method == "GET":
         get_cooked_query = f'SELECT r.* FROM cooks INNER JOIN recipe r on r.ruid = cooks.ruid WHERE cooks.uid={uid}'
+
         recipe_data = sql.get_all_query(get_cooked_query)
         foodCooked = []
 
