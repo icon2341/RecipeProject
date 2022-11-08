@@ -70,7 +70,7 @@ def Pantry():
 
     elif request.method == "POST":
 
-        pantry = sql.get_filtered_pantry(current_user['uuid'], form.sortBy.data, form.order.data, form.searchField.data)\
+        pantry = sql.get_filtered_pantry(current_user['uuid'], form.sortBy.data, form.order.data, form.searchField.data)
 
         ingreds = [Ingredient(sql_data=x) for x in pantry]
 
@@ -94,7 +94,7 @@ def Pantry():
                          "unit_of_measure": x[2]
                          }
         """
-            #if request.form.get(pantry[y]['item_name'])
+        # if request.form.get(pantry[y]['item_name'])
         return render_template("Pantry.html", user=current_user, pantry=ingreds, form=form)
 
 
@@ -285,7 +285,6 @@ def EditRecipe():
             ingredients_checked = get_ingredients(recipe['ruid'])
             ingredients = []
             for ingredient in get_pantry(current_user['uuid']):
-
                 ingredients.append(Ingredient(sql_data=ingredient))
 
             return render_template("EditRecipe.html", user=current_user, form=form,
@@ -385,7 +384,7 @@ def cookRecipe():
 
         user_quantities = sql.get_all_query(get_user_recipe_ingredients_intersection2)
 
-        #get ingredient names in user quantities
+        # get ingredient names in user quantities
         userIngredientQuantities = set()
         for ingredientTuple in user_quantities:
             userIngredientQuantities.add(ingredientTuple[0])
@@ -410,7 +409,7 @@ def cookRecipe():
                 new_quant = user_quantities[key] - recipe_quantities[key] * scalar
 
                 update_query = f"UPDATE ingredient as i SET current_quantity={new_quant} FROM pantry as p " \
-                f"WHERE p.uid = {current_user['uuid']} AND p.pantry_id = i.pantry_id AND i.item_name = \'{key}\'"
+                               f"WHERE p.uid = {current_user['uuid']} AND p.pantry_id = i.pantry_id AND i.item_name = \'{key}\'"
                 sql.query(update_query)
 
             recipe = Recipe(sql_data=sql.get_one_by("recipe", "ruid", recipeId))
@@ -478,38 +477,69 @@ def cookedRecipes():
             new_recipe.data['cooked_last'] = sql.get_one_query(get_cooked_time_query)[0]
             foodCooked.append(new_recipe)
 
-        #if recipe_data is not None:
-            #foodCooked = [Recipe(sql_data=x) for x in recipe_data]
+        # if recipe_data is not None:
+        # foodCooked = [Recipe(sql_data=x) for x in recipe_data]
 
         return render_template("cookedRecipes.html", user=current_user, recipes=foodCooked)
+
 
 @app.route("/editIngredientQuantity", methods=["GET"])
 @login_required
 def change_ingredient_quantity():
-
     ingredient = request.args.get("iId")
     new_quantity = request.args.get("newQuantity")
 
     if ingredient is None or new_quantity is None:
         print("ERROR")
 
-
-
-
-
     sql_query = f"UPDATE ingredient SET current_quantity={new_quantity} WHERE ingredient_id={ingredient}"
     sql.query(sql_query
-                    )
+              )
     return redirect("/Pantry")
 
 
 @app.route("/TopFifty")
 @login_required
 def myTopFifty():
+    limit = 50  # Limit of the number of recipes returned
+    recipes = [Recipe(sql_data=data) for data in
 
-   limit = 50  # Limit of the number of recipes returned
-   recipes = [Recipe(sql_data=data) for data in
+               sql.get_all_query(f"SELECT * FROM recipe ORDER BY recipe.rating DESC LIMIT {limit}")]
+    return render_template("TopFifty.html", user=current_user, recipes=recipes)
 
-              sql.get_all_query(f"SELECT * FROM recipe ORDER BY recipe.rating DESC LIMIT {limit}")]
-   return render_template("TopFifty.html", user=current_user, recipes=recipes)
 
+@app.route("/RecentlyCreated")
+@login_required
+def RecentlyCreatedRecipes():
+    limit = 50  # Limit of the number of recipes returned
+    recipes = [Recipe(sql_data=data) for data in
+
+               sql.get_all_query(f"SELECT * FROM recipe ORDER BY recipe.date_created DESC LIMIT {limit}")]
+    return render_template("RecentlyCreated.html", user=current_user, recipes=recipes)
+
+
+@app.route("/InPantry")
+@login_required
+def InPantry():
+    limit = 50  # Limit of the number of recipes returned
+    recipes = [Recipe(sql_data=data) for data in
+
+               sql.get_all_query(f"SELECT * FROM recipe ORDER BY recipe.date_created DESC LIMIT {limit}")]
+    return render_template("InPantry.html", user=current_user, recipes=recipes)
+
+
+@app.route("/Recommended")
+@login_required
+def Recommended():
+    limit = 50  # Limit of the number of recipes returned
+
+    query = f"SELECT DISTINCT recipe.* FROM cooks as c1 " \
+        f"INNER JOIN cooks as c2 on c1.ruid = c2.ruid " \
+        f"INNER JOIN recipe on c2.ruid = recipe.ruid " \
+        f"WHERE c1.uid={current_user['uuid']} AND NOT c2.uid={current_user['uuid']} " \
+        f"LIMIT {limit}"
+
+    query_result = sql.get_all_query(query)
+    recipes = [Recipe(sql_data=data) for data in query_result]
+    return render_template("InPantry.html", user=current_user, recipes=recipes)
+    # Todo  make a new html file for recommended recipes, but not really necessary

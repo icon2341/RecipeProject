@@ -23,8 +23,10 @@ in SQL, you will have have one of these to define it.
 """
 
 
-def remove_quotations(string:str):
+def remove_quotations(string: str):
     return string.replace("\"", "")
+
+
 def add_ingredient_to_recipe(ruid, ingredient_id, quantity_required, unit):
     sql_query = f"INSERT INTO recipeContains (quantity, unit, ruid, ingredient_id) VALUES ({quantity_required}, {unit}, {ruid}, {ingredient_id})"
     sql.query(sql_query)
@@ -102,9 +104,13 @@ class DatabaseObject:
 
     def __getitem__(self, item):
         return self.data[item]
+
+
 class RecipeContains(DatabaseObject):
     def __init__(self, sql_data=None, columns=None, **kwargs):
         super().__init__("recipeContains", sql_data=sql_data, columns=columns, **kwargs)
+
+
 class Ingredient(DatabaseObject):
 
     def __init__(self, sql_data=None, columns=None, **kwargs):
