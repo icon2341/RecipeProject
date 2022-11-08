@@ -524,4 +524,14 @@ def RecentlyCreatedRecipes():
    recipes = [Recipe(sql_data=data) for data in
 
               sql.get_all_query(f"SELECT * FROM recipe ORDER BY recipe.date_created DESC LIMIT {limit}")]
-   return render_template("TopFifty.html", user=current_user, recipes=recipes)
+   return render_template("RecentlyCreated.html", user=current_user, recipes=recipes)
+
+@app.route("/InPantry")
+@login_required
+def InPantry():
+
+   limit = 50  # Limit of the number of recipes returned
+   recipes = [Recipe(sql_data=data) for data in
+
+              sql.get_all_query(f"SELECT * FROM recipe ORDER BY recipe.date_created DESC LIMIT {limit}")]
+   return render_template("InPantry.html", user=current_user, recipes=recipes)
