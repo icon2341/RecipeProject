@@ -512,6 +512,7 @@ def myTopFifty():
 
    limit = 50  # Limit of the number of recipes returned
    recipes = [Recipe(sql_data=data) for data in
-              sql.get_all_query(f"SELECT * FROM recipe LIMIT {limit} ORDER BY recipe.rating DESC")]
+
+              sql.get_all_query(f"SELECT * FROM recipe ORDER BY recipe.rating DESC LIMIT {limit}")]
    return render_template("TopFifty.html", user=current_user, recipes=recipes)
 
