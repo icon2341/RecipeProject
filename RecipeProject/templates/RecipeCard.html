@@ -58,14 +58,17 @@
         <div class="textEditor">
             <a class="textEditorTitle"> Recipe Body: </a>
             <a class="recipeBody"> {{ recipe.description }} </a>
-            <a class="textEditorTitle"> Rating: {{ recipe.rating }}</a>
+            <a class="textEditorTitle"> Rating: {{ recipe.rating }}/5</a>
         </div>
 
         <div class="buttonSections">
-            <label for="multiplierForm" style="display: block">Multiplier:</label>
-            <input type="text" name="multiplier" id="multiplierForm" style="display: block" value="1" onkeydown="myFunction(this)"/>
+            <label for="multiplierForm" style="display: block; color: black">Multiplier:</label>
+            <input type="text" name="multiplier" id="multiplierForm" style="display: block" value="1"/>
+            <label for="ratingForm" style="display: block; color: black">Rating:</label>
+            <input type="text" name="rating" id="ratingForm" style="display: block" value="1"/>
             <button class= "editButton" onclick="document.location.href='/editRecipe?rId={{ recipe.ruid }}';"> Edit Recipe </button>
-            <button class= "editButton" onclick="document.location.href='/cookRecipe?rId={{ recipe.ruid }}&multiplier='+ document.getElementById('multiplierForm').value;"> Cook Recipe </button>
+            <button class= "editButton" onclick="document.location.href='/cookRecipe?rId={{ recipe.ruid }}&multiplier='+ document.getElementById('multiplierForm').value
+                    + '&ratingPassed=' + document.getElementById('ratingForm').value;"> Cook Recipe </button>
             <button class= "editButton" onclick="document.location.href='/EditIngredientQuantities?rId={{ recipe.ruid }}';"> Edit <br> Ingredient <br> Quantities</button>
             <button class="editButton" onclick="document.location.href='/deleteRecipe?rId={{ recipe.ruid }}';"> Delete Recipe </button>
         </div>

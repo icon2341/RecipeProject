@@ -352,6 +352,7 @@ def EditRecipe():
 def cookRecipe():
     recipeId = request.args.get("rId")
     scalar = float(request.args.get("multiplier"))
+    rating = int(request.args.get('ratingPassed'))
 
     if request.method == "GET":
         if recipeId is None:
@@ -364,7 +365,6 @@ def cookRecipe():
         # then need to get the ingredients/quantites that the user OWNS that are ALSO in the recipe
         # if the lists are not equal OR the quantities are not greater or equal then we will FAIL and redirect the user
         # back to home and tell them to add the ingredients to their pantry.
-
         get_recipe_req_query = \
             f"SELECT i.item_name, rC.quantity FROM recipe " \
             f"INNER JOIN \"recipeContains\" rC on recipe.ruid = rC.ruid " \
@@ -373,10 +373,10 @@ def cookRecipe():
 
         recipe_quantities = sql.get_all_query(get_recipe_req_query)
 
-        get_user_recipe_ingredients_intersection = f"SELECT i.item_name, i.current_quantity FROM pantry " \
-                                                   f"INNER JOIN ingredient i on pantry.pantry_id = i.pantry_id " \
-                                                   f"INNER JOIN \"recipeContains\" rC on i.ingredient_id = rC.ingredient_id " \
-                                                   f"WHERE pantry.uid = {current_user['uuid']} and rC.ruid = {recipeId} "
+        # get_user_recipe_ingredients_intersection = f"SELECT i.item_name, i.current_quantity FROM pantry " \
+        #                                            f"INNER JOIN ingredient i on pantry.pantry_id = i.pantry_id " \
+        #                                            f"INNER JOIN \"recipeContains\" rC on i.ingredient_id = rC.ingredient_id " \
+        #                                            f"WHERE pantry.uid = {current_user['uuid']} and rC.ruid = {recipeId} "
 
         get_user_recipe_ingredients_intersection2 = f"SELECT i.item_name, i.current_quantity FROM ingredient i " \
                                                     f"INNER JOIN pantry on i.pantry_id = pantry.pantry_id " \
@@ -395,7 +395,7 @@ def cookRecipe():
 
         print(recipe_quantities, user_quantities)
         print(userIngredientQuantities, recipeIngredienQuantities)
-        if userIngredientQuantities.issubset(recipeIngredienQuantities):
+        if recipeIngredienQuantities.issubset(userIngredientQuantities):
 
             recipe_quantities = {x[0]: x[1] for x in recipe_quantities}
             user_quantities = {remove_quotations(x[0]): x[1] for x in user_quantities}
@@ -414,10 +414,11 @@ def cookRecipe():
 
             recipe = Recipe(sql_data=sql.get_one_by("recipe", "ruid", recipeId))
 
-            insert_cook = f"INSERT INTO cooks (uid, ruid, date_made, quantity_made, portions_made) Values ({current_user['uuid']}," \
+            insert_cook = f"INSERT INTO cooks (uid, ruid, date_made, quantity_made, portions_made, user_rating) Values ({current_user['uuid']}," \
                           f" {recipeId},\'{datetime.datetime.now()}\', " \
                           f"{scalar * float(recipe['servings'])}, " \
-                          f"{scalar}) "
+                          f"{scalar}" \
+                          f", {rating})"
 
             sql.query(insert_cook)
 
