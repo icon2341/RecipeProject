@@ -504,3 +504,14 @@ def change_ingredient_quantity():
     sql.query(sql_query
                     )
     return redirect("/Pantry")
+
+
+@app.route("/TopFifty")
+@login_required
+def myTopFifty():
+
+   limit = 50  # Limit of the number of recipes returned
+   recipes = [Recipe(sql_data=data) for data in
+              sql.get_all_query(f"SELECT * FROM recipe LIMIT {limit} ORDER BY recipe.rating DESC")]
+   return render_template("TopFifty.html", user=current_user, recipes=recipes)
+
