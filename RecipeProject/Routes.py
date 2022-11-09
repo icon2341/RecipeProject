@@ -522,9 +522,36 @@ def RecentlyCreatedRecipes():
 @login_required
 def InPantry():
     limit = 50  # Limit of the number of recipes returned
-    recipes = [Recipe(sql_data=data) for data in
+    in_pantry_query = f"""
+    SELECT recipe.* FROM recipe
+INNER JOIN
+(SELECT MIN(conditional_table.ValidIngredient) as valid_recipe, conditional_table.ruid FROM
+(SELECT
+    CASE WHEN (user_ingredients.current_quantity IS NOT NULL AND recipe_ingredient.quantity <= user_ingredients.current_quantity) THEN 1 ELSE 0 END AS ValidIngredient,
+    recipe_ingredient.quantity,
+    recipe_ingredient.ruid,
+    recipe_ingredient.recipe_name,
+    recipe_ingredient.item_name,
+    user_ingredients.current_quantity
+    FROM
+    (SELECT i.item_name, rC.quantity, recipe.ruid, recipe_name FROM recipe
+    INNER JOIN "recipeContains" rC on recipe.ruid = rC.ruid
+    INNER JOIN ingredient i on i.ingredient_id = rC.ingredient_id) as recipe_ingredient
+    FULL JOIN (SELECT i2.item_name, i2.current_quantity FROM "User"
+                         INNER JOIN pantry p on "User".pantry_id = p.pantry_id
+                         INNER JOIN ingredient i2 on p.pantry_id = i2.pantry_id
+                         WHERE "User".uid={current_user['uuid']}) as user_ingredients
+    ON user_ingredients.item_name=recipe_ingredient.item_name) as conditional_table
+GROUP BY ruid) as makeable_recipes
 
-               sql.get_all_query(f"SELECT * FROM recipe ORDER BY recipe.date_created DESC LIMIT {limit}")]
+ON recipe.ruid=makeable_recipes.ruid
+WHERE makeable_recipes.valid_recipe=1
+ORDER BY recipe.rating DESC
+LIMIT {limit};
+    """
+    recipe_data = sql.get_all_query(in_pantry_query)
+    recipes = [Recipe(sql_data=data) for data in recipe_data]
+
     return render_template("InPantry.html", user=current_user, recipes=recipes)
 
 
