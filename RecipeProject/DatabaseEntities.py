@@ -129,6 +129,13 @@ class Recipe(DatabaseObject):
         self.data["ingredients"] = get_ingredients(self['ruid'])
         self.data["numberIngredients"] = len(self["ingredients"])
 
+        aggregate_rating = sql.get_one_query(f"SELECT AVG(cooks.user_rating) FROM cooks "
+                                             f"WHERE ruid={self.data['ruid']} "
+                                             f"GROUP BY ruid")
+        if aggregate_rating is not None:
+            self.data['rating'] = round(float(aggregate_rating[0]), 2)
+
+
     def make_recipe(self):
         """
         Makes the recipe and changes ingredient quantities in accordance
