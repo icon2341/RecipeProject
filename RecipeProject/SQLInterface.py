@@ -156,13 +156,25 @@ class SQLInterface:
 
 
 
+        if order_by == "rating":
+            order_by = "cookrat,avg_rating"
 
+        query = f"""
+                SELECT recipe.*, CASE WHEN cookrat.avg_rating IS NULL THEN recipe.rating ELSE cookrat.avg_rating END
+                FROM recipe FULL JOIN
+                    (SELECT AVG(user_rating) as avg_rating, ruid FROM cooks GROUP BY ruid)
+                    as cookrat ON cookrat.ruid=recipe.ruid
+                    INNER JOIN \"recipeContains\" rC on recipe.ruid = rC.ruid 
+                    INNER JOIN ingredient i on i.ingredient_id = rC.ingredient_id 
+                    {' AND '.join(clauses)} 
+                    ORDER BY {order_by} {order}
+                """
 
-        query = f"SELECT recipe.* FROM recipe " \
-                f"INNER JOIN \"recipeContains\" rC on recipe.ruid = rC.ruid " \
-                f"INNER JOIN ingredient i on i.ingredient_id = rC.ingredient_id "\
-                f"{' AND '.join(clauses)} " \
-                f"ORDER BY {order_by} {order} limit 50"
+        #query = f"SELECT recipe.* FROM recipe " \
+        #        f"INNER JOIN \"recipeContains\" rC on recipe.ruid = rC.ruid " \
+        #        f"INNER JOIN ingredient i on i.ingredient_id = rC.ingredient_id "\
+        #        f"{' AND '.join(clauses)} " \
+        #        f"ORDER BY {order_by} {order} limit 50"
 
         cursor = self.connection.cursor()
         cursor.execute(query)

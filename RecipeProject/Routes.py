@@ -181,7 +181,6 @@ def Logout():
 @app.route("/newRecipe", methods=["GET", "POST"])
 @login_required
 def NewRecipe():
-    # TODO do stuff with
     form = RecipeEditing()
 
     if request.method == "GET":
@@ -265,7 +264,7 @@ def EditIngredientQuantities():
 @app.route("/editRecipe", methods=["GET", "POST"])
 @login_required
 def EditRecipe():
-    # TODO Do stuff with ingredients
+
     form = RecipeEditing()
     # requests recipe ID for passing onto system and later usage.
 
@@ -373,10 +372,9 @@ def cookRecipe():
 
         recipe_quantities = sql.get_all_query(get_recipe_req_query)
 
-        # get_user_recipe_ingredients_intersection = f"SELECT i.item_name, i.current_quantity FROM pantry " \
-        #                                            f"INNER JOIN ingredient i on pantry.pantry_id = i.pantry_id " \
-        #                                            f"INNER JOIN \"recipeContains\" rC on i.ingredient_id = rC.ingredient_id " \
-        #                                            f"WHERE pantry.uid = {current_user['uuid']} and rC.ruid = {recipeId} "
+        # get_user_recipe_ingredients_intersection = f"SELECT i.item_name, i.current_quantity FROM pantry " \ f"INNER
+        # JOIN ingredient i on pantry.pantry_id = i.pantry_id " \ f"INNER JOIN \"recipeContains\" rC on
+        # i.ingredient_id = rC.ingredient_id " \ f"WHERE pantry.uid = {current_user['uuid']} and rC.ruid = {recipeId} "
 
         get_user_recipe_ingredients_intersection2 = f"SELECT i.item_name, i.current_quantity FROM ingredient i " \
                                                     f"INNER JOIN pantry on i.pantry_id = pantry.pantry_id " \
@@ -502,9 +500,12 @@ def change_ingredient_quantity():
 @login_required
 def myTopFifty():
     limit = 50  # Limit of the number of recipes returned
-    recipes = [Recipe(sql_data=data) for data in
-
-               sql.get_all_query(f"SELECT * FROM recipe ORDER BY recipe.rating DESC LIMIT {limit}")]
+    query = f"""SELECT recipe.*, CASE WHEN cookrat.avg_rating IS NULL THEN recipe.rating ELSE cookrat.avg_rating END as rat
+FROM recipe FULL JOIN 
+    (SELECT AVG(user_rating) as avg_rating, ruid FROM cooks GROUP BY ruid) 
+        as cookrat ON cookrat.ruid=recipe.ruid
+     ORDER BY rat DESC LIMIT {limit}"""
+    recipes = [Recipe(sql_data=data) for data in sql.get_all_query(query)]
     return render_template("TopFifty.html", user=current_user, recipes=recipes)
 
 
@@ -523,7 +524,8 @@ def RecentlyCreatedRecipes():
 def InPantry():
     limit = 50  # Limit of the number of recipes returned
     in_pantry_query = f"""
-    SELECT recipe.* FROM recipe
+    SELECT recipe.*, CASE WHEN cookrat.avg_rating IS NULL THEN recipe.rating ELSE cookrat.avg_rating END
+FROM (SELECT recipe.* FROM recipe
 INNER JOIN
 (SELECT MIN(conditional_table.ValidIngredient) as valid_recipe, conditional_table.ruid FROM
 (SELECT
@@ -546,9 +548,14 @@ GROUP BY ruid) as makeable_recipes
 
 ON recipe.ruid=makeable_recipes.ruid
 WHERE makeable_recipes.valid_recipe=1
-ORDER BY recipe.rating DESC
-LIMIT {limit};
+ORDER BY recipe.rating DESC) as recipe FULL JOIN
+    (SELECT AVG(user_rating) as avg_rating, ruid FROM cooks GROUP BY ruid)
+        as cookrat ON cookrat.ruid=recipe.ruid
+     WHERE recipe.ruid IS NOT NULL
+     ORDER BY cookrat.avg_rating DESC
+    LIMIT {limit};
     """
+
     recipe_data = sql.get_all_query(in_pantry_query)
     recipes = [Recipe(sql_data=data) for data in recipe_data]
 
@@ -560,11 +567,20 @@ LIMIT {limit};
 def Recommended():
     limit = 50  # Limit of the number of recipes returned
 
-    query = f"SELECT DISTINCT recipe.* FROM cooks as c1 " \
-        f"INNER JOIN cooks as c2 on c1.ruid = c2.ruid " \
-        f"INNER JOIN recipe on c2.ruid = recipe.ruid " \
-        f"WHERE c1.uid={current_user['uuid']} AND NOT c2.uid={current_user['uuid']} " \
-        f"LIMIT {limit}"
+    query = f"""
+    SELECT recipe.*, CASE WHEN cookrat.avg_rating IS NULL THEN recipe.rating ELSE cookrat.avg_rating END
+FROM (SELECT DISTINCT recipe.*
+      FROM cooks as c1
+               INNER JOIN cooks as c2 on c1.ruid = c2.ruid
+               INNER JOIN recipe on c2.ruid = recipe.ruid
+      WHERE c1.uid = {current_user['uuid']}
+        AND NOT c2.uid = {current_user['uuid']}) as recipe FULL JOIN
+    (SELECT AVG(user_rating) as avg_rating, ruid FROM cooks GROUP BY ruid)
+        as cookrat ON cookrat.ruid=recipe.ruid
+    WHERE recipe.ruid is not NULL
+     ORDER BY cookrat.avg_rating DESC
+    LIMIT {limit}
+    """
 
     query_result = sql.get_all_query(query)
     recipes = [Recipe(sql_data=data) for data in query_result]

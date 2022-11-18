@@ -120,11 +120,29 @@ class Ingredient(DatabaseObject):
         return self["name"]
 
 
-class Recipe(DatabaseObject):
+class Recipe():
     columns = []
 
     def __init__(self, sql_data=None, columns=None, **kwargs):
-        super().__init__("recipe", sql_data=sql_data, columns=columns, **kwargs)
+        self.name = "recipe"
+        if sql_data is not None:
+            if columns is not None:
+                self.columns = columns
+            else:
+                self.columns = sql.get_columns(self.name)
+                self.data = {}
+                for i in range(len(self.columns)):
+                    self.data[self.columns[i]] = sql_data[i]
+                self.data['rating'] = sql_data[-1]
+
+        elif kwargs is not None:
+            self.data = kwargs
+            self.columns = [x for x in self.data.keys()]
+            self.data['rating'] = self.data['cookrat.avg_rating']
+        else:
+            raise ValueError("Either pass with kwargs or sql_data and columns")
+
+
 
         self.data["ingredients"] = get_ingredients(self['ruid'])
         self.data["numberIngredients"] = len(self["ingredients"])
@@ -134,6 +152,12 @@ class Recipe(DatabaseObject):
                                              f"GROUP BY ruid")
         if aggregate_rating is not None:
             self.data['rating'] = round(float(aggregate_rating[0]), 2)
+
+    def valid(self):
+        return len(self.data) > 0
+
+    def __getitem__(self, item):
+        return self.data[item]
 
 
     def make_recipe(self):
