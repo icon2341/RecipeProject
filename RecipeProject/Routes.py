@@ -524,7 +524,7 @@ def RecentlyCreatedRecipes():
 def InPantry():
     limit = 50  # Limit of the number of recipes returned
     in_pantry_query = f"""
-    SELECT recipe.*, CASE WHEN cookrat.avg_rating IS NULL THEN recipe.rating ELSE cookrat.avg_rating END
+    SELECT recipe.*, CASE WHEN cookrat.avg_rating IS NULL THEN recipe.rating ELSE cookrat.avg_rating END as avg_rating
 FROM (SELECT recipe.* FROM recipe
 INNER JOIN
 (SELECT MIN(conditional_table.ValidIngredient) as valid_recipe, conditional_table.ruid FROM
@@ -552,7 +552,7 @@ ORDER BY recipe.rating DESC) as recipe FULL JOIN
     (SELECT AVG(user_rating) as avg_rating, ruid FROM cooks GROUP BY ruid)
         as cookrat ON cookrat.ruid=recipe.ruid
      WHERE recipe.ruid IS NOT NULL
-     ORDER BY cookrat.avg_rating DESC
+     ORDER BY avg_rating DESC
     LIMIT {limit};
     """
 
@@ -568,21 +568,22 @@ def Recommended():
     limit = 50  # Limit of the number of recipes returned
 
     query = f"""
-    SELECT recipe.*, CASE WHEN cookrat.avg_rating IS NULL THEN recipe.rating ELSE cookrat.avg_rating END
-FROM (SELECT DISTINCT recipe.*
+    SELECT DISTINCT recipe.*, CASE WHEN cookrat.avg_rating IS NULL THEN recipe.rating ELSE cookrat.avg_rating END as avg_rating
+FROM (SELECT r2.* FROM recipe as r2 INNER JOIN (
+SELECT cooks.ruid FROM cooks INNER JOIN (
+SELECT DISTINCT c1.ruid, c2.uid
       FROM cooks as c1
-               INNER JOIN cooks as c2 on c1.ruid = c2.ruid
-               INNER JOIN recipe on c2.ruid = recipe.ruid
-      WHERE c1.uid = {current_user['uuid']}
-        AND NOT c2.uid = {current_user['uuid']}) as recipe FULL JOIN
+               FULL JOIN cooks as c2 on c1.ruid = c2.ruid
+        WHERE c1.uid = {current_user['uuid']} AND c2.uid != c1.uid) as common
+        ON cooks.uid = common.uid
+        WHERE cooks.ruid != common.ruid) as rec_recipe ON r2.ruid=rec_recipe.ruid) as recipe FULL JOIN
     (SELECT AVG(user_rating) as avg_rating, ruid FROM cooks GROUP BY ruid)
         as cookrat ON cookrat.ruid=recipe.ruid
-    WHERE recipe.ruid is not NULL
-     ORDER BY cookrat.avg_rating DESC
-    LIMIT {limit}
+    WHERE recipe.ruid IS NOT NULL
+     ORDER BY avg_rating DESC
+     LIMIT {limit}
     """
 
     query_result = sql.get_all_query(query)
     recipes = [Recipe(sql_data=data) for data in query_result]
     return render_template("InPantry.html", user=current_user, recipes=recipes)
-    # Todo  make a new html file for recommended recipes, but not really necessary

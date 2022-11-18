@@ -157,10 +157,10 @@ class SQLInterface:
 
 
         if order_by == "rating":
-            order_by = "cookrat,avg_rating"
+            order_by = "avg_rating"
 
         query = f"""
-                SELECT recipe.*, CASE WHEN cookrat.avg_rating IS NULL THEN recipe.rating ELSE cookrat.avg_rating END
+                SELECT recipe.*, CASE WHEN cookrat.avg_rating IS NULL THEN recipe.rating ELSE cookrat.avg_rating END as avg_rating
                 FROM recipe FULL JOIN
                     (SELECT AVG(user_rating) as avg_rating, ruid FROM cooks GROUP BY ruid)
                     as cookrat ON cookrat.ruid=recipe.ruid
