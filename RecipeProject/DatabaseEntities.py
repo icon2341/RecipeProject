@@ -133,7 +133,8 @@ class Recipe():
                 self.data = {}
                 for i in range(len(self.columns)):
                     self.data[self.columns[i]] = sql_data[i]
-                self.data['rating'] = sql_data[-1]
+                if len(sql_data) == len(self.columns) + 1:
+                    self.data['rating'] = sql_data[-1]
 
         elif kwargs is not None:
             self.data = kwargs
